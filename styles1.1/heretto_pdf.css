@@ -271,7 +271,7 @@ div.mini-toc-wrapper a::after {
 /* TOC */
 @page toc:left{
   @bottom-left{
-      content: "Copyright © 2021 Heretto Inc.";
+      content: "Copyright © 2022 Heretto Inc.";
       font-family: 'Montserrat', sans-serif;        
       letter-spacing: 0;
 }
@@ -285,7 +285,7 @@ div.mini-toc-wrapper a::after {
 }
 @page toc:right{
   @bottom-left{
-      content: "Copyright © 2021 Heretto Inc.";
+      content: "Copyright © 2022 Heretto Inc.";
       font-family: 'Montserrat', sans-serif;        
       letter-spacing: 0;
 }
