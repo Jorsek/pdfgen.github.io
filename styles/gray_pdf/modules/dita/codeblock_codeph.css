@@ -1,4 +1,4 @@
-/* Style the code inside codeblock and codeph elements. */
+/* Style the code inside codeblock, screen, and codeph elements. */
 code {
   font-family: "DejaVu Sans Mono", Monaco, Consolas, "Andale Mono",  monospace;
   color: #404040;
@@ -6,8 +6,8 @@ code {
   background-color: #f4f4f4;
 }
 
-/* Style codeblock elements. */
-.codeblock > code {
+/* Style codeblock and screen elements. */
+.codeblock > code, .screen > code {
   white-space: pre-wrap;
   display: block;
   clear: both;
@@ -17,8 +17,8 @@ code {
   border-left: solid 5px #dcdcdc;
 }
 
-/* Reduce margins before codeblocks. */
-pre.codeblock {
+/* Reduce margins before codeblock and screen. */
+pre.codeblock, pre.screen {
   margin: 10px 0px 10px 0px;
   padding: 0px;
   }
@@ -32,7 +32,7 @@ p > .codeph {
   width: auto;
 }
 
-/* Assert the same styling in codeblocks and codephs regardless of their children elements. */
+/* Assert the same styling in codeblock, screen, and codeph regardless of their children elements. */
 code * {
   font-size: inherit;
   background-color: inherit;
@@ -41,7 +41,7 @@ code * {
   text-align: inherit;
 }
 
-/* Set consistent margins for codeblocks in task topics. */
+/* Set consistent margins for codeblock in task topics. */
 .stepresult > pre.codeblock,
 .info > pre.codeblock,
 .stepxmp > pre.codeblock,
@@ -50,8 +50,18 @@ code * {
   margin: 5px 0px 10px 0px;
 }
 
+/* Set consistent margins for screen in task topics. */
+.stepresult > pre.screen,
+.info > pre.screen,
+.stepxmp > pre.screen,
+.example > pre.screen,
+.result > pre.screen {
+  margin: 5px 0px 10px 0px;
+}
+
 /* Avoid overflowing text in the following elements: */
 .codeph,
-.codeblock {
+.codeblock,
+.screen {
   word-wrap: break-word;
 }
