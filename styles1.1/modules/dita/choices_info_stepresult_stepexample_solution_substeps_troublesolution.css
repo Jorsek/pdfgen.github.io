@@ -3,6 +3,7 @@
 /* Uniformly style step element children.
 Style trouble solution elements. */
 .stepresult,
+.steptroubleshooting,
 .info,
 .stepxmp,
 .troubleSolution,
@@ -25,7 +26,8 @@ Span the left border across the cause and remedy elements. */
 /* Style the step element children captions. */
 .stepresult::before,
 .info::before,
-.stepxmp::before {
+.stepxmp::before,
+.steptroubleshooting {
   font-weight: bold;
   font-style: normal;
   letter-spacing: 0.025em;
@@ -48,6 +50,11 @@ Span the left border across the cause and remedy elements. */
   content: "Result: ";
 }
 
+/* Add a task label before steptroubleshooting elements. */
+.steptroubleshooting::before {
+  content: "Troubleshooting: ";
+}
+
 /* Fix the dotted border transition between elements. */
 .choices ~ .stepresult,
 .choices ~ .stepxmp,
@@ -68,6 +75,7 @@ Span the left border across the cause and remedy elements. */
 .taskbody > div.step > .info,
 .taskbody > div.step > .stepresult,
 .taskbody > div.step > .stepxmp,
+.taskbody > div.step > .steptroubleshooting,
 .taskbody > div.step > .troubleSolution,
 .taskbody > div.step > .choices,
 .taskbody > div.step > .substeps {
