@@ -1,5 +1,6 @@
 /*  Style footnote elements at the bottom of the page. */
 @page {
+      counter-reset: none;
   @footnotes {
     margin-top: 10px;
     border-top: 2px dotted #000;
