@@ -271,7 +271,7 @@ div.mini-toc-wrapper a::after {
 /* TOC */
 @page toc:left{
   @bottom-left{
-      content: "Copyright © 2022 Heretto Inc.";
+      content: "Copyright © 2023 Heretto Inc.";
       font-family: 'Montserrat', sans-serif;        
       letter-spacing: 0;
 }
@@ -285,7 +285,7 @@ div.mini-toc-wrapper a::after {
 }
 @page toc:right{
   @bottom-left{
-      content: "Copyright © 2022 Heretto Inc.";
+      content: "Copyright © 2023 Heretto Inc.";
       font-family: 'Montserrat', sans-serif;        
       letter-spacing: 0;
 }
@@ -299,63 +299,63 @@ div.mini-toc-wrapper a::after {
 }
 @page toc_portrait_small:left{
   @bottom-left{
-      content: "Copyright © 2022 Heretto Inc.";
+      content: "Copyright © 2023 Heretto Inc.";
     }
 }
 @page toc_portrait_small:right{
   @bottom-left{
-      content: "Copyright © 2022 Heretto Inc.";
+      content: "Copyright © 2023 Heretto Inc.";
     }
 }
 @page toc_portrait_large:left{
   @bottom-left{
-      content: "Copyright © 2022 Heretto Inc.";
+      content: "Copyright © 2023 Heretto Inc.";
     }
 }
 @page toc_portrait_large:right{
   @bottom-left{
-      content: "Copyright © 2022 Heretto Inc.";
+      content: "Copyright © 2023 Heretto Inc.";
     }
 }
 @page toc_portrait:left{
   @bottom-left{
-      content: "Copyright © 2022 Heretto Inc.";
+      content: "Copyright © 2023 Heretto Inc.";
     }
 }
 @page toc_portrait:right{
   @bottom-left{
-      content: "Copyright © 2022 Heretto Inc.";
+      content: "Copyright © 2023 Heretto Inc.";
     }
 }
 
 @page toc_landscape_small:left{
   @bottom-left{
-      content: "Copyright © 2022 Heretto Inc.";
+      content: "Copyright © 2023 Heretto Inc.";
     }
 }
 @page toc_landscape_small:right{
   @bottom-left{
-      content: "Copyright © 2022 Heretto Inc.";
+      content: "Copyright © 2023 Heretto Inc.";
     }
 }
 @page toc_landscape_large:left{
   @bottom-left{
-      content: "Copyright © 2022 Heretto Inc.";
+      content: "Copyright © 2023 Heretto Inc.";
     }
 }
 @page toc_landscape_large:right{
   @bottom-left{
-      content: "Copyright © 2022 Heretto Inc.";
+      content: "Copyright © 2023 Heretto Inc.";
     }
 }
 @page toc_landscape:left{
   @bottom-left{
-      content: "Copyright © 2022 Heretto Inc.";
+      content: "Copyright © 2023 Heretto Inc.";
     }
 }
 @page toc_landscape:right{
   @bottom-left{
-      content: "Copyright © 2022 Heretto Inc.";
+      content: "Copyright © 2023 Heretto Inc.";
     }
 }
 /* BODY */
