@@ -1,6 +1,6 @@
 /* Add image borders to image elements. */
 .image,
-.body img {
+svg {
     border: 5px solid #000;
 }
 
