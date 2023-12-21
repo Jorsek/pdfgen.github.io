@@ -25,6 +25,7 @@ table:has(thead) {
 /* Set padding for table entries. */
 td {
   padding: 10px;
+  word-break: break-all;
 }
 
 /* Style the table and choicetable headers. 
