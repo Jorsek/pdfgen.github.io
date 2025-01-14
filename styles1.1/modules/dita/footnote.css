@@ -20,7 +20,7 @@
   break-inside: avoid;
 }
 
-/* Footnote text inherites parent styling in Prince. Remove inherited formatting. */
+/* Footnote text inherits parent styling in Prince. Remove inherited formatting. */
 .fn,
 .fn * {
   font-size: 14px !important; /* The important property is needed to ensure that the elements contained in footnotes are uniformly styled. */
