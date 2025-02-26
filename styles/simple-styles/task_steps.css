@@ -32,7 +32,7 @@
     padding: 0px; 
     margin-left: 30px;}
 .sublist .substep::before{
-    content: counter(my-counter); 
+    content: counter(my-counter, lower-alpha); 
     position: absolute; 
     left: 55px; 
     border: 1px solid #aaa; 
