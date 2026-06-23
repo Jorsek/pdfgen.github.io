@@ -1,4 +1,4 @@
-.ct-del, .ct-del .title, .ct-del .p
+.ct-del, .ct-del .title, .ct-del p
 {
   color:red!important;
   text-decoration: line-through!important;
@@ -6,10 +6,31 @@
   border-top:2px solid transparent;
 }
 
-.ct-ins, .ct-ins .title, .ct-ins .p, .ct-split, .ct-split .title, .ct-split .p
+.ct-ins, .ct-ins .title, .ct-ins p, .ct-split, .ct-split .title, .ct-split p
 {
   color:red!important;
   text-decoration: underline!important;
   border-bottom:2px solid transparent;
   border-top:2px solid transparent;
+}
+
+span.jorsek-review-marker.jorsek-review-start.ct-ins,
+span.jorsek-review-marker.jorsek-review-end.ct-ins,
+.jorsek-review-marker.ct-ins {
+  color: red !important;
+  text-decoration: underline !important;
+}
+
+span.jorsek-review-marker.jorsek-review-start.ct-del,
+span.jorsek-review-marker.jorsek-review-end.ct-del,
+.jorsek-review-marker.ct-del {
+  color: red !important;
+  text-decoration: line-through !important;
+}
+
+span.jorsek-review-marker.jorsek-review-start.ct-split,
+span.jorsek-review-marker.jorsek-review-end.ct-split,
+.jorsek-review-marker.ct-split {
+  color: red !important;
+  text-decoration: underline !important;
 }
