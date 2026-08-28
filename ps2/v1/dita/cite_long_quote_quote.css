@@ -1,0 +1,23 @@
+/* Style cite elements. */
+.cite {
+  color: var(--color-body);
+  font-style: normal;
+  font-weight: normal;
+}
+
+/* Style long quote elements. */
+.lq {
+  font-size: var(--font-size-small);
+  border-left: var(--border-width-accent) solid var(--color-primary);
+  margin: var(--space-2) 0px var(--space-2) 0px;
+  padding-left: var(--space-2);
+}
+.lq * {
+  font-size: var(--font-size-small);
+}
+
+/* Style quote elements.
+q {
+
+}
+*/

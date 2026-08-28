@@ -1,0 +1,22 @@
+/* Insert page number labels after links **/
+article a[href]::after {
+    content: " on page " target-counter(attr(href), page);
+}
+
+/* Remove page number labels for glossary links. */
+article a[href*="glossentry"]::after {
+    content:"";
+}
+
+/* Remove page number labels for external links. */
+article a[href*="https:"]::after,
+article a[href*="http:"]::after,
+article a[href*="mailto:"]::after {
+    content:"";
+}
+
+/* Remove page number labels for step and substep links. */
+article a[href*="step"]::after,
+article a[href*="substep"]::after {
+    content:"";
+}

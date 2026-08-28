@@ -1,0 +1,27 @@
+/* ═══════════════════════════════════════════════════════════════════
+   ROUND CORNERS
+   Applies border-radius to notes, tables, code, images, and
+   interactive elements. Radius is controlled by --radius in the
+   palette file (default: 0 = no rounding; heretto: 0.15rem).
+
+   Enable by uncommenting in core_pdf.css or your customer file.
+═══════════════════════════════════════════════════════════════════ */
+
+.note,
+.table,
+.lq,
+code,
+.image,
+.image.no_borders,
+.userinput,
+.troubleSolution {
+  border-radius: var(--radius);
+}
+
+.dt {
+  border-top-left-radius: var(--radius);
+}
+
+.dd {
+  border-bottom-left-radius: var(--radius);
+}

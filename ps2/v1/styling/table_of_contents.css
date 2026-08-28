@@ -1,0 +1,179 @@
+/* Remove the map title that appears before the Table of Contents (TOC). */
+body > .topictitle1 {
+    display: none;
+}
+
+/* Add a custom TOC heading. */
+nav > ul:first-child::before { 
+    content: "Contents";
+    font-size: var(--font-size-toc-title);
+    color: var(--color-body);
+    text-align: left;
+    font-style: normal;
+    font-weight: bold;
+    display: block;
+    clear: both;
+    margin: 0px 0px var(--space-5) -1.5px;
+    letter-spacing: 0.025em;
+}
+
+/* Set padding, margins, and letter spacing for the whole TOC. */
+nav {
+    letter-spacing: 0.025em;
+    page-break-after: always;
+}
+
+/* Style the font for the entire TOC. */
+nav * {
+    font-style: normal;
+    color: var(--color-body); 
+    text-decoration: none;
+}
+
+/* Style "<topic_title>.....................<page>". */
+nav a::after {
+    content: leader(".") target-counter(attr(href), page); 
+    margin-left: 0px;
+    font-weight: normal;
+    font-size: var(--font-size-base);
+}
+
+/* Set margins and padding for the TOC links. */
+nav ul { 
+    margin: 2.5px 0px 0px 0px;
+    padding: 0px;
+}
+
+/*.topichead {
+    font-weight: bold;
+    font-style: normal;
+}*/
+
+/* Level-1 (chapter). */
+nav ul li {
+    list-style-type: none;
+    padding: inherit;
+    padding: 2px 0px 2px 0px; 
+    font-size: var(--font-size-base);
+    margin-left: 0px;
+  }
+
+/* Style level-1 (chapter) topics that have children. */
+nav > ul:has(ul) > li {
+    padding-top: var(--space-3);
+}
+nav > ul:has(ul) > li:first-child {
+    padding-top: var(--space-2);
+}
+nav > ul:has(ul) > li > a {
+    color: var(--color-body);
+    font-size: 22px;
+    font-weight: bold;
+}
+nav > ul:has(ul) > li, 
+nav > ul:has(ul) > li:before {
+    color: var(--color-body);
+    font-weight: bold;
+    font-size: 22px;
+}
+nav > ul:has(ul) > li > a::after {
+    color: var(--color-body);
+    font-weight: bold;
+}  
+/* Style level-1 (chapter) topics that do not have children. */
+nav > ul > li > a,
+nav > ul > li:before {
+    font-weight: normal;
+    font-size: var(--font-size-header-footer);
+    color: var(--color-body);
+}
+
+/* Level-2 (subchapter) and deeper. */
+nav ul li ul li {
+    padding-left: 32px;
+}
+nav > ul > li > ul > li {
+    padding-top: var(--space-1);
+}
+nav ul li ul li, 
+nav ul li ul li:before {
+    font-weight: bold;
+}
+nav > ul > li > ul > li {
+    font-weight: bold;
+    font-size: var(--font-size-header-footer);
+}
+nav > ul > li > ul > li > a::after {
+    font-weight: bold;
+}
+
+/* Level-3 and deeper. */
+nav ul li ul li ul li, 
+nav ul li ul li ul li:before {
+    font-weight: normal;
+}
+
+/* Level-5 and deeper (hidden). */
+nav ul ul ul ul ul {
+    content: none;
+}
+
+/* You can assign the @outputclass="no_toc" to the root element of a map to hide the table of contents. */
+body.no_toc > nav {
+    display: none;
+}
+
+/* Avoid overflowing text in the following elements: */
+a {
+    word-wrap: break-word;
+}
+
+/* Hide ditavalrefs from the TOC */
+.ditavalref {
+    display: none;
+}
+
+/* Style chapter-level Tables of Contents (TOCs)*/
+div.mini-toc-wrapper > ul::before {
+    display: block;
+    content: "Chapter Contents";
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0 0 var(--space-1) -1.5px;
+    letter-spacing: 0.025em;
+}
+div.mini-toc-wrapper > ul:empty:before {
+    display: none;
+}
+
+div.mini-toc-wrapper {
+    display: block;
+    margin: var(--space-3) 0 var(--space-5) 0;
+    letter-spacing: 0.025em;
+}
+/* Set margins for nested topics */
+div.mini-toc-wrapper ul ul {
+    margin: 0 0 0 32px;
+    padding: 0px;
+}
+/* Remove bullets */
+div.mini-toc-wrapper li {
+    list-style-type: none;
+}
+/* Style linktext */
+div.mini-toc-wrapper a,
+div.mini-toc-wrapper a * {
+    text-decoration: none;
+    color: var(--color-body);
+    font-weight: inherit;
+    font-family: inherit;
+    font-size: var(--font-size-base);
+    font-style: inherit;
+}
+/* Add dots and pages */
+div.mini-toc-wrapper a::after {
+    content: leader(".") target-counter(attr(href), page); 
+    margin-left: 0px;
+    font-weight: normal;
+    font-size: var(--font-size-base);
+}

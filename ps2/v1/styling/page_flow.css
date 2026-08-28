@@ -1,0 +1,69 @@
+/* ═══════════════════════════════════════════════════════════════════
+   PAGE FLOW
+   Controls how content breaks across pages. Increases orphan and
+   widow thresholds to improve print quality.
+
+   Enable by adding to your customer file or shell.
+═══════════════════════════════════════════════════════════════════ */
+
+/* ── WIDOW / ORPHAN THRESHOLDS ─────────────────────────────────────
+   Industry standard for quality print publishing is 3, not 2.
+   A value of 2 meets the CSS minimum but still produces single-line
+   widows/orphans that look like layout defects.
+
+   p     — body paragraphs, shortdesc, section content
+   li    — list items; Prince applies orphan/widow logic per item
+
+   div is intentionally excluded — it encompasses layout containers
+   and interferes with structured elements.
+─────────────────────────────────────────────────────────────────── */
+p,
+li {
+  orphans: 3;
+  widows: 3;
+}
+
+/* ── ELEMENTS THAT MAY BREAK FREELY ───────────────────────────────
+   Long tables, code, and inline elements must be allowed to break
+   across pages — preventing breaks here would overflow the page.   */
+table,
+code,
+.entry,
+.xref,
+.sysoutput,
+.varname,
+.filepath,
+.userinput,
+.stepxmp,
+.stepresult,
+.info,
+.dd,
+.result,
+choices {
+  break-inside: auto;
+}
+
+/* ── ELEMENTS THAT MUST NOT BREAK ─────────────────────────────────
+   Structural and inline elements where a mid-element page break
+   destroys comprehension or visual integrity.
+
+   NOTE: article is intentionally excluded. Setting break-inside:avoid
+   on article would prevent any break within a topic — catastrophic
+   for long chapters. Chapter-level break control is handled in
+   breaks.css via the topictitle1 and article:has() selectors.      */
+.note,
+.dt,
+.title,
+.codeph,
+.userinput,
+.sysoutput,
+.fig,
+.abstract,
+.shortdesc,
+.example,
+.context,
+.prereq,
+.postreq,
+.dlentry {
+  break-inside: avoid;
+}
