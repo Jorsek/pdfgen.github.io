@@ -5,7 +5,7 @@
 | File | What's in it |
 |---|---|
 | `style.css` | This scenario's `:root` tokens (brand colors, spacing scale, border widths, font sizes), `@page` geometry, cover page, TOC container, and chapter-hero rules. The one file meant to be imported wholesale, then built on per-customer. |
-| `style_ps2_imports.css` | The manifest — what's active, what's optional, and the GitHub URL for every module. Start here to find a specific element. |
+| `style_styles2.0_imports.css` | The manifest — what's active, what's optional, and the GitHub URL for every module. Start here to find a specific element. |
 | `xsl.xsl` | Controls document assembly: chapter body order, cover/back-cover/front-matter inclusion (each toggled by uncommenting a `call-template` line), cover metadata field extraction (subtitle, author, publisher, company, address, etc., with map vs. bookmap fallbacks), and the `get.map.title` fallback logic for the document title. |
 | `cover-page.html` | Empty placeholder (`<span/>`) — this scenario uses the system-generated default cover rather than a custom HTML cover. Only needs content if you want to override that default. |
 

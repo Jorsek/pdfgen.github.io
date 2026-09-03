@@ -4,7 +4,7 @@
     <xsl:import href="../../../../../../../../sdk2/internal/pdf_generator/pdf_generator.xsl"/>
 
     <!-- ############################################################################
-         START HERE — xsl_ps2.xsl
+         START HERE — xsl_styles2.0.xsl
          Controls document structure, section order, and metadata sourcing.
 
          SAFE TO EDIT
@@ -14,7 +14,7 @@
 
          EDIT ELSEWHERE
          - Metadata values            - ditamap topicmeta
-         - Visual appearance          - style_ps2.css
+         - Visual appearance          - style_styles2.0.css
 
          CHANGE CAREFULLY
          - chapterBody template (document assembly order)

@@ -1,6 +1,6 @@
 /* ══════════════════════════════════════════════════════════════════════════
-   NOTE (ps2 reorg): this file is hosted at
-   https://jorsek.github.io/pdfgen.github.io/ps2/v1/style.css as a starter
+   NOTE (styles2.0 reorg): this file is hosted at
+   https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/style.css as a starter
    default — brand tokens, @page layout, cover, TOC, chapter hero. Import it
    wholesale into your own scenario's CSS tab, then add YOUR OWN overrides
    below that import in your own scenario (not in this shared file).
@@ -8,19 +8,19 @@
    The dita/, styling/, and layout/ folders below are shared reference
    modules, resolved by Prince directly from GitHub over HTTPS at render
    time — not through the CCMS's own document/UUID resolution, which is
-   why every import here (and in style_ps2_imports.css) is a full URL.
+   why every import here (and in style_styles2.0_imports.css) is a full URL.
 ═══════════════════════════════════════════════════════════════════════════ */
 
-@import url("https://jorsek.github.io/pdfgen.github.io/ps2/v1/style_ps2_imports.css");
+@import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/style_styles2.0_imports.css");
 
 /* ##########################################################################
-   style_ps2.css — PDF layout, brand, and page architecture
+   style_styles2.0.css — PDF layout, brand, and page architecture
 
    ── ARCHITECTURE ────────────────────────────────────────────────────────────
    This file is the top of the stack:
 
-     style.css              ← YOU ARE HERE (https://.../ps2/v1/style.css)
-       └─ style_ps2_imports.css      (element module manifest)
+     style.css              ← YOU ARE HERE (https://.../styles2.0/v1/style.css)
+       └─ style_styles2.0_imports.css      (element module manifest)
             ├─ dita/*.css            (DITA element reference — tables, lists, notes…)
             ├─ styling/*.css         (optional formatting toggles)
             └─ layout/*.css          (page-break control)
@@ -39,7 +39,7 @@
    Change TOC heading label       → --toc-text
    Add a label to a metadata field→ --cover-*-label  (e.g. --cover-version-label: "Ver. ")
    Replace the logo               → --logo-front / --logo-back  (Base64 SVG or url())
-   Style a DITA element           → open style_ps2_imports.css, find the section, edit the file
+   Style a DITA element           → open style_styles2.0_imports.css, find the section, edit the file
 
    ── SAFE TO EDIT ────────────────────────────────────────────────────────────
    - Brand colors, fonts, logos         → :root
@@ -48,10 +48,10 @@
    - Metadata field appearance          → .cover-* rules below
 
    ── EDIT ELSEWHERE ──────────────────────────────────────────────────────────
-   - Cover structure / content order    → xsl_ps2.xsl
-   - Section on/off (cover, TOC, etc.)  → xsl_ps2.xsl
+   - Cover structure / content order    → xsl_styles2.0.xsl
+   - Section on/off (cover, TOC, etc.)  → xsl_styles2.0.xsl
    - Metadata sources                   → ditamap topicmeta
-   - DITA element styles                → style_ps2_imports.css  →  dita/  or  styling/
+   - DITA element styles                → style_styles2.0_imports.css  →  dita/  or  styling/
 
    ── CHANGE CAREFULLY ────────────────────────────────────────────────────────
    - @page rules (margins, headers, footers)
