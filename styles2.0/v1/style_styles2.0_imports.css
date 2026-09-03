@@ -1,0 +1,106 @@
+/* ═══════════════════════════════════════════════════════════════════
+   STYLES2.0 ELEMENT IMPORTS — style_styles2.0_imports.css
+   Hosted at: https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/style_styles2.0_imports.css
+
+   Single manifest for all DITA element, formatting, and page-break
+   modules. Imported by style.css, which owns :root tokens, @page
+   layout, cover, TOC, and chapter structure.
+
+   PDF ONLY. This scenario does not ship the site/Zendesk-oriented
+   modules that exist in the shared upstream module library (title_site,
+   title_zendesk, no_breadcrumbs, zendesk_fixes, and the *_jorsek header/
+   footer variants) — they don't apply to PDF output.
+
+   WHY ABSOLUTE URLS, NOT RELATIVE PATHS
+   ──────────────────────────────────────
+   These imports are resolved by Prince at PDF render time over plain
+   HTTPS — the same way it fetches a linked image or web font. That's
+   a different, more stable path than the Heretto CCMS's own internal
+   document-by-UUID resolution, which is why every import below is a
+   full URL rather than a relative filename.
+
+   HOW TO USE
+   ──────────
+   • Find styling for an element → locate its section below and open
+     the file. These are reference — don't edit them (see OVERRIDES
+     in readme.md).
+   • Enable an optional module   → remove the comment markers on its line
+   • Disable an active module    → wrap its line in comment markers
+   • Pin to this version         → this file lives under /styles2.0/v1/. A
+     future breaking change ships as /styles2.0/v2/, not an edit to v1, so
+     nothing changes under you without an explicit version bump.
+
+   OVERRIDES
+   ─────────
+   This file does not import a shared "custom.css" — overrides are
+   scenario-specific, not shared. In YOUR OWN CCMS scenario's CSS tab,
+   after importing this file (or style.css), add your own overrides
+   directly: redeclare a :root token, or copy a rule block from the
+   relevant file below and edit it there. See readme.md for what each
+   file contains.
+═══════════════════════════════════════════════════════════════════ */
+
+/* ── Paragraphs & body structure ────────────────────────────────── */
+@import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/dita/paragraph.css");
+@import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/dita/abstract_shortdesc.css");
+@import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/dita/description.css");
+@import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/dita/section.css");
+
+/* ── Titles & headings ──────────────────────────────────────────── */
+@import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/dita/title.css");
+
+/* ── Tables ─────────────────────────────────────────────────────── */
+@import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/dita/choicetable_table.css");
+
+/* ── Lists, steps & choices ─────────────────────────────────────── */
+@import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/dita/ordered_list_unordered_list_step_substep_choice.css");
+@import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/dita/choices_steps_substeps_numbering.css");
+@import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/dita/choices_info_stepresult_stepexample_solution_substeps_troublesolution.css");
+@import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/dita/cause_condition_context_example_postreq_prereq_remedy_result_steps_stepsection.css");
+
+/* ── Notes ──────────────────────────────────────────────────────── */
+@import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/dita/note.css");
+
+/* ── Code ───────────────────────────────────────────────────────── */
+@import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/dita/codeblock_codeph.css");
+
+/* ── Figures & images ───────────────────────────────────────────── */
+@import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/dita/figure_image.css");
+
+/* ── Links & xrefs ──────────────────────────────────────────────── */
+@import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/dita/xref_related_links.css");
+
+/* ── Inline elements ────────────────────────────────────────────── */
+@import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/dita/filepath_sysoutput_userinput_varname.css");
+@import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/dita/uicontrol_wintitle_shortcut_menucascade.css");
+@import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/dita/cite_long_quote_quote.css");
+@import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/dita/definition_list.css");
+@import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/dita/footnote.css");
+
+/* ── Formatting & display ───────────────────────────────────────── */
+@import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/formatting.css");
+@import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/hide_empty_elements.css");
+@import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/image_borders.css");
+@import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/suggestions.css");
+@import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/typography.css");
+
+/* ── Page breaks & flow ─────────────────────────────────────────── */
+@import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/layout/breaks.css");
+
+/* ── Optional modules ───────────────────────────────────────────── */
+/* Remove comment markers to enable. Each module is independent.    */
+
+/* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/page_flow.css");           <- tighter widow/orphan control (recommended for print) */
+/* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/chapter_numbering.css");   <- numbered chapters (1., 2., 3.) */
+/* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/figure_no_numbering.css"); <- removes figure numbering labels */
+/* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/table_no_numbering.css");  <- removes table numbering labels  */
+/* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/image_shadows.css");       <- drop shadows on images          */
+/* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/round_corners.css");       <- rounds notes, tables, and code  */
+/* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/link_page_number.css");    <- appends page numbers after links */
+/* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/table_of_contents.css");                     <- custom TOC heading + spacing */
+/* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/table_of_contents_page_numbering.css");      <- adds page numbers to TOC entries */
+/* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/table_of_contents_page_numbering_alternate.css"); <- alternate TOC page-number style */
+
+/* ── Your overrides ──────────────────────────────────────────────
+   Add them in YOUR OWN scenario's CSS tab, below your @import of
+   this file (or of style.css) — not here. See readme.md.          */

@@ -1,0 +1,45 @@
+/* Avoid overflowing text in links: */
+a {
+  word-wrap: break-word;
+}
+
+/* Style inline cross-references. */
+.xref,
+.link {
+  color: var(--color-body);
+  text-decoration: none;
+  font-size: var(--font-size-base);
+}
+
+/* Correctly display links to steps. */
+.taskbody a[href*="step"] {
+  content: "step " target-counter(attr(href), li);
+}
+
+/* Correctly display links to substeps. */
+.taskbody a[href*="substep"] {
+  content: "substep " target-counter(attr(href), li, lower-alpha);
+}
+
+/* Style Related links. */
+section.related-links {
+    margin-top: var(--space-3);
+}
+li.linklist {
+    margin-left: 35px;
+}
+
+/* Style Related links and relationship tables captions */
+.linklist > strong,
+.linklist > strong * {
+  display: block;
+  clear: both;
+  font-style: normal;
+  font-weight: bold;
+  font-size: var(--font-size-base);
+  letter-spacing: 0.025em;
+  color: var(--color-body);
+}
+.linklist > strong {
+  margin-top: 15px;
+}

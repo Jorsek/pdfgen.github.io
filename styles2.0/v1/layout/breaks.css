@@ -1,0 +1,222 @@
+/* ═══════════════════════════════════════════════════════════════════
+   PAGE BREAKS — layout/breaks.css
+
+   Chapter break control and heading/content bonding rules. Works
+   together with styling/page_flow.css (widow/orphan thresholds):
+   this file owns chapter-level breaks and structural integrity;
+   page_flow.css owns paragraph/list-level widow/orphan control.
+
+   Materialized from styles2.0_default_1_2's compiled style.css, where this
+   content already existed but had no standalone source file.
+═══════════════════════════════════════════════════════════════════ */
+
+/* ── CHAPTER BREAKS ────────────────────────────────────────────────
+   Level-1 topic titles (h1.topictitle1) do not trigger a break by
+   themselves — the break is placed on the containing article so that
+   the title and its first lines of content land together on the new
+   page.                                                             */
+
+/* Do not break pages before chapters (level-1 topics) that do not contain children topics. */
+.topictitle1 {
+  page-break-before: avoid;
+}
+
+/* ── CHAPTER BREAKS ────────────────────────────────────────────────
+   Level-1 topic titles (h1.topictitle1) do not trigger a break by
+   themselves — the break is placed on the containing article so that
+   the title and its first lines of content land together on the new
+   page.                                                             */
+
+/* Do not break pages before chapters (level-1 topics) that do not contain children topics. */
+.topictitle1 {
+  page-break-before: avoid;
+}
+
+/* Insert a page-break before chapters (level-1 topics) that contain children topics. */
+article:has(>.topictitle1) {
+  page-break-before: always;
+  break-inside: auto;
+}
+
+/* ── HEADING-CONTENT BONDS ─────────────────────────────────────────
+   A heading stranded at the bottom of a page with content starting
+   on the next page is one of the most common print defects.
+
+   break-after: avoid on the heading keeps at least the first line(s)
+   of following content on the same page as the heading.
+
+   break-before: avoid on the :first-child content reinforces the
+   bond from the content side, preventing a forced break between
+   the heading and its immediate child.                              */
+
+/* h2 — section/chapter subtitles */
+.topictitle2,
+h2.sectiontitle {
+  break-after: avoid;
+  page-break-after: avoid;
+}
+
+/* h3 */
+.topictitle3 {
+  break-after: avoid;
+  page-break-after: avoid;
+}
+
+/* h4–h6 */
+.topictitle4,
+.topictitle5,
+.topictitle6 {
+  break-after: avoid;
+  page-break-after: avoid;
+}
+
+/* Section titles (sectiontitle is an h2 in the PDF output) */
+.sectiontitle {
+  break-after: avoid;
+  page-break-after: avoid;
+}
+
+/* First paragraph or shortdesc immediately after any heading —
+   prevents a break being inserted between the heading and its
+   opening content from the content side.                           */
+.topictitle2 + p,
+.topictitle2 + .shortdesc,
+.topictitle3 + p,
+.topictitle3 + .shortdesc,
+.topictitle4 + p,
+.topictitle4 + .shortdesc,
+h2.sectiontitle + p,
+.sectiontitle + p {
+  break-before: avoid;
+  page-break-before: avoid;
+}
+
+/* ── STEP PROCEDURE BONDS ──────────────────────────────────────────
+   .cmd is the command line of a step — the most important line.
+   Its children (.info, .stepresult, .stepxmp) are the explanation.
+   Letting .cmd be the last line on a page orphans the step.        */
+.cmd {
+  break-after: avoid;
+  page-break-after: avoid;
+}
+
+/* .stepsection introduces a named group of steps (e.g. "Installation
+   steps"). It must not be stranded at the bottom of a page.        */
+.stepsection {
+  break-after: avoid;
+  page-break-after: avoid;
+}
+
+/* ── TASK SECTION LABEL BONDS ──────────────────────────────────────
+   Prerequisites, Context, Result etc. generate their labels via
+   ::before pseudo-elements. break-inside:avoid on the container
+   keeps the generated label and the first line of content together. */
+.prereq,
+.postreq,
+.context,
+.result,
+.example {
+  break-inside: avoid;
+}
+
+/* ── DEFINITION LIST INTEGRITY ─────────────────────────────────────
+   .dt (term) already has break-after:avoid to prevent it from being
+   the last element on a page. break-inside:avoid on .dlentry ensures
+   the term and its description always appear on the same page.     */
+.dlentry {
+  break-inside: avoid;
+}
+
+/* Keep definition titles and definition descriptions together. */
+.dt {
+  break-after: avoid;
+  page-break-after: avoid;
+}
+
+.dd {
+  page-break-before: avoid;
+  break-before: avoid;
+}
+
+/* ── FIGURE INTEGRITY ──────────────────────────────────────────────
+   A figure with its caption split across pages is a serious layout
+   defect. break-inside:avoid is set here in core (not just in the
+   optional page_flow.css) so it applies by default.                */
+.fig {
+  break-inside: avoid;
+}
+
+/* ── FREELY BREAKING ELEMENTS ──────────────────────────────────────
+   Long tables, code blocks, and inline elements must break freely —
+   preventing breaks would cause content to overflow the page.      */
+table,
+code,
+pre.codeblock,
+.entry,
+.xref,
+.sysoutput,
+.varname,
+.filepath,
+.userinput,
+.dd {
+  break-inside: auto;
+}
+
+/* ── ELEMENTS THAT MUST NOT BREAK ─────────────────────────────────
+   NOTE: article is intentionally excluded. Setting break-inside:avoid
+   on article would prevent any page break within a topic, which is
+   catastrophic for long chapters. Chapter breaks are controlled
+   above via the topictitle1 / article:has() selectors.             */
+.note,
+dt,
+dd,
+.title,
+.codeph,
+.abstract,
+.shortdesc,
+.info,
+.stepxmp,
+.stepresult {
+  break-inside: avoid;
+}
+
+/* ── TOPICHEAD / TITLE-ONLY TOPICS ────────────────────────────────
+   Avoids excessive page breaks after topicheads with navtitles
+   and topics that contain only a title.                            */
+article > .title + article.topic {
+  break-inside: auto;
+}
+
+/* ── break_topics OUTPUTCLASS ──────────────────────────────────────
+   Assign @outputclass="break_topics" to the root map element to
+   force a break before every topic.                                */
+body.break_topics article {
+  break-inside: auto;
+}
+body.break_topics article:has(.topictitle1) {
+  break-inside: avoid;
+}
+
+/* ── OUTPUTCLASS UTILITIES ─────────────────────────────────────────
+   Apply these @outputclass values to any DITA element to override
+   the default page-break behavior for that specific element.       */
+
+/* Force a page-break before this element. */
+.break_before {
+  page-break-before: always;
+}
+
+/* Force a page-break after this element. */
+.break_after {
+  page-break-after: always;
+}
+
+/* Prevent this element from breaking across pages. */
+.break_avoid {
+  break-inside: avoid;
+}
+
+/* Allow this element to break freely across pages. */
+.break_inside {
+  break-inside: auto;
+}

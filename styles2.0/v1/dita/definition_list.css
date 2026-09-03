@@ -1,0 +1,51 @@
+/* Position the definition list. */
+.dl {
+  display: block;
+  clear: both;
+  margin: var(--space-2) 0px 0px 0px;
+}
+
+/* Add a border on the left of definition terms and definition descriptions. */
+.dt,
+.dd {
+  border-left: solid var(--border-width-accent) var(--color-primary);
+  padding: 0px var(--space-2) 0px var(--space-2);
+}
+
+/* Style titles in definition lists.
+Assert the same styling in definition titles and their children elements. */
+.dt,
+.dt * {
+  color: var(--color-primary);
+  font-weight: bold;
+  font-style: normal;
+  font-size: var(--font-size-base);
+  letter-spacing: 0.025em;
+}
+
+/* Style definition descriptions. */
+.dd {
+  margin: 0px;
+  margin-bottom: var(--space-4);
+  margin-top: -2px; /* This ensures correct border transition. */
+}
+
+/* Ensure correct border transition. */
+dt.dt {
+    padding-bottom: 5px;
+}
+dd.dd > *:first-child {
+  margin-top: 0px;
+}
+
+/* Reduce spacing between consecutive definition descriptions. */
+.dd + .dd {
+  margin-top: -20px;
+}
+
+/* Fix paragraphs in definition descriptions. */
+.dd > .p:first-child,
+.dd > p:first-child {
+  margin-top: 0px;
+  padding-top: 0px;
+}

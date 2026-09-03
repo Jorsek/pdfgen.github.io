@@ -1,0 +1,1303 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   NOTE (styles2.0 reorg): this file is hosted at
+   https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/style.css as a starter
+   default — brand tokens, @page layout, cover, TOC, chapter hero. Import it
+   wholesale into your own scenario's CSS tab, then add YOUR OWN overrides
+   below that import in your own scenario (not in this shared file).
+
+   The dita/, styling/, and layout/ folders below are shared reference
+   modules, resolved by Prince directly from GitHub over HTTPS at render
+   time — not through the CCMS's own document/UUID resolution, which is
+   why every import here (and in style_styles2.0_imports.css) is a full URL.
+═══════════════════════════════════════════════════════════════════════════ */
+
+@import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/style_styles2.0_imports.css");
+
+/* ##########################################################################
+   style_styles2.0.css — PDF layout, brand, and page architecture
+
+   ── ARCHITECTURE ────────────────────────────────────────────────────────────
+   This file is the top of the stack:
+
+     style.css              ← YOU ARE HERE (https://.../styles2.0/v1/style.css)
+       └─ style_styles2.0_imports.css      (element module manifest)
+            ├─ dita/*.css            (DITA element reference — tables, lists, notes…)
+            ├─ styling/*.css         (optional formatting toggles)
+            └─ layout/*.css          (page-break control)
+
+   Add YOUR overrides in your own scenario's CSS tab, after importing this
+   file — see readme.md for the token-override vs. selector-override pattern.
+
+   This file owns: :root tokens, @page layout, cover, TOC, chapter hero, back cover.
+   It does NOT style DITA body elements — those live in the imported modules.
+
+   ── COMMON CUSTOMIZATIONS ───────────────────────────────────────────────────
+   Change brand colors            → --brand-primary, --brand-secondary  in :root
+   Change page margins            → --standard-margin, --top-margin, --bottom-margin
+   Change cover background        → --cover-bg-color, --cover-hero-height
+   Change running footer text     → --footer-inside-content, --footer-outside-content
+   Change TOC heading label       → --toc-text
+   Add a label to a metadata field→ --cover-*-label  (e.g. --cover-version-label: "Ver. ")
+   Replace the logo               → --logo-front / --logo-back  (Base64 SVG or url())
+   Style a DITA element           → open style_styles2.0_imports.css, find the section, edit the file
+
+   ── SAFE TO EDIT ────────────────────────────────────────────────────────────
+   - Brand colors, fonts, logos         → :root
+   - Spacing, margins, cover geometry   → :root
+   - TOC label and formatting           → :root  +  nav rules below
+   - Metadata field appearance          → .cover-* rules below
+
+   ── EDIT ELSEWHERE ──────────────────────────────────────────────────────────
+   - Cover structure / content order    → xsl_styles2.0.xsl
+   - Section on/off (cover, TOC, etc.)  → xsl_styles2.0.xsl
+   - Metadata sources                   → ditamap topicmeta
+   - DITA element styles                → style_styles2.0_imports.css  →  dita/  or  styling/
+
+   ── CHANGE CAREFULLY ────────────────────────────────────────────────────────
+   - @page rules (margins, headers, footers)
+   - string-set declarations (feed running headers — see comments on each)
+   - prince-page-group and break-before (control section page sequencing)
+   ########################################################################## */
+
+/* ##########################################################################
+   GLOBAL SETTINGS
+   ########################################################################## */
+@page {
+    size: letter;
+    margin-top:    var(--top-margin);
+    margin-bottom: var(--bottom-margin);
+    margin-left:   var(--standard-margin);
+    margin-right:  var(--standard-margin);
+}
+
+/*  ########################################################################## */
+/*  BRANDING AND LAYOUT PALLETE
+/*  ########################################################################## */
+:root {
+/* === GLOBAL LOGIC === */
+    /* right = each section starts on a right-hand (odd) page; auto = starts on next available page */
+    --page-break-logic: right;
+    --back-cover-break: right;
+    /* lower-roman = i, ii, iii; decimal = 1, 2, 3 */
+    --frontmatter-page-numbering: lower-roman;
+
+    /* === BRANDING PALETTE === */
+    /* Primary: Used for Cover backgrounds, Page Headers, Links */
+    --brand-primary: #005A9C;
+    --brand-secondary: #4A5568;
+    --brand-accent: #CCCCCC;
+
+    /* === COPYRIGHT ===
+       Set once here. Referenced by .cover-copyright and .back-cover-copyright ::before rules,
+       and available for @page margin boxes or any other CSS-driven context.
+       DITA builds pull copyright from <copyrholder> via XSL instead. */
+    --copyright-notice: "REPLACE WITH YOUR ORGANIZATION";
+
+    /* === TYPOGRAPHY === */
+    --font-family-main:   'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --font-family-header: "Arial", sans-serif;
+    --font-family-footer: "Arial", sans-serif;
+
+    --title-size:         32pt;
+    --title-weight:       300;
+    --title-line-height:  1.1;
+
+    --subtitle-size:      14pt;
+    --subtitle-color:     var(--brand-primary);
+
+    /* === COVER METADATA BLOCK === */
+    --cover-meta-font-size:   12pt;
+    --cover-meta-line-height: 1.8;
+    --cover-meta-color:       var(--text-main);   /* dark — block sits in white area */
+
+    /* === COVER METADATA FIELDS === */
+    --cover-subtitle-size:       14pt;
+    --cover-subtitle-color:      rgba(255, 255, 255, 0.80);
+    --cover-subtitle-weight:     normal;
+    --cover-subtitle-margin-top: 10pt;
+
+    --cover-prodname-size:       var(--cover-meta-font-size, 9pt);
+    --cover-prodname-color:      var(--cover-meta-color, rgba(255, 255, 255, 0.90));
+    --cover-prodname-weight:     normal;
+
+    --cover-version-size:        var(--cover-meta-font-size, 9pt);
+    --cover-version-color:       var(--cover-meta-color, rgba(255, 255, 255, 0.90));
+    --cover-version-weight:      normal;
+
+    --cover-platform-size:       var(--cover-meta-font-size, 9pt);
+    --cover-platform-color:      var(--cover-meta-color, rgba(255, 255, 255, 0.90));
+    --cover-platform-weight:     normal;
+
+    --cover-partno-size:         var(--cover-meta-font-size, 9pt);
+    --cover-partno-color:        var(--cover-meta-color, rgba(255, 255, 255, 0.90));
+    --cover-partno-weight:       normal;
+
+    --cover-doc-revision-size:   var(--cover-meta-font-size, 9pt);
+    --cover-doc-revision-color:  var(--cover-meta-color, rgba(255, 255, 255, 0.90));
+    --cover-doc-revision-weight: normal;
+
+    --cover-audience-size:       var(--cover-meta-font-size, 9pt);
+    --cover-audience-color:      var(--cover-meta-color, rgba(255, 255, 255, 0.90));
+    --cover-audience-weight:     normal;
+
+    --cover-author-size:         var(--cover-meta-font-size, 9pt);
+    --cover-author-color:        var(--cover-meta-color, rgba(255, 255, 255, 0.90));
+    --cover-author-weight:       normal;
+
+    --cover-publisher-size:      var(--cover-meta-font-size, 9pt);
+    --cover-publisher-color:     var(--cover-meta-color, rgba(255, 255, 255, 0.90));
+    --cover-publisher-weight:    normal;
+
+    --cover-created-size:        var(--cover-meta-font-size, 9pt);
+    --cover-created-color:       var(--cover-meta-color, rgba(255, 255, 255, 0.90));
+    --cover-created-weight:      normal;
+
+    --cover-revised-size:        var(--cover-meta-font-size, 9pt);
+    --cover-revised-color:       var(--cover-meta-color, rgba(255, 255, 255, 0.90));
+    --cover-revised-weight:      normal;
+
+    --cover-copyright-size:      var(--cover-meta-font-size, 9pt);
+    --cover-copyright-color:     var(--cover-meta-color, rgba(255, 255, 255, 0.90));
+    --cover-copyright-weight:    normal;
+
+    /* === COVER METADATA LABELS (::before) ===
+       Each variable is the text prepended to its field. Default is empty (no label).
+       Override any variable to add a visible label, e.g.:
+         --cover-version-label: "Version: ";
+         --cover-created-label: "Date: ";                                          */
+    --cover-subtitle-label:      "";
+    --cover-prodname-label:      "";
+    --cover-version-label:       "Version: ";
+    --cover-platform-label:      "";
+    --cover-partno-label:        "";
+    --cover-doc-revision-label:  "Rev. ";
+    --cover-audience-label:      "";
+    --cover-author-label:        "";
+    --cover-publisher-label:     "";
+    --cover-created-label:       "";
+    --cover-revised-label:       "";
+    --cover-copyright-label:     "\A9 ";  /* © prefix — full text comes from --copyright-notice */
+
+    /* === TEXT & BODY COLORS === */
+    --text-main:          #333333;   /* body copy, cover metadata block */
+    --text-muted:         #666666;   /* secondary text, captions */
+
+    /* === RUNNING HEADERS & FOOTERS === */
+    --running-head-size:  11pt;
+    --footer-font-size:   10pt;
+    --footer-font-weight: normal;
+    --footer-text-color:  var(--brand-secondary);
+
+    /* === RULE & BORDER SETTINGS === */
+    --title-rule-weight:   0;
+    --title-rule-color:    var(--brand-accent);
+    --running-rule-weight: .5pt;
+    --header-rule-color:   var(--brand-primary);
+    --footer-rule-color:   var(--brand-primary);
+
+    /* === PAGE MARGINS & GAPS === */
+    --top-margin:         .85in;
+    --bottom-margin:      .65in;
+    --standard-margin:    0.75in;
+    --gutter-margin:      .75in;
+    --header-gap:         15pt;
+    --footer-padding:     6pt;
+
+    /* === TITLE & HERO SPACING === */
+    --title-margin-top:   0.5in;
+    --title-margin-bot:   50pt;
+    --title-padding-bot:  25pt;
+
+    /* === TOC STYLING === */
+    --toc-text: "Contents";
+    --toc-level1-size:   13pt;
+    --toc-level2-size:   11pt;
+    --toc-level3-size:   10pt;
+    --toc-link-color:    var(--brand-primary);
+    --toc-indent-step:   15pt;
+    --toc-dot-color:     var(--brand-primary);
+    --toc-text-color:    var(--brand-primary);
+
+    /* === COVER & BACK COVER GEOMETRY  === */
+    --cover-bg-color:     var(--brand-primary);
+    --cover-text-color:   #FFFFFF;
+    --cover-hero-height:  8.25in;
+    --cover-inset:        1in;
+    --cover-logo-width:   2.33in;
+    --cover-logo-height:  1in;
+
+    --back-logo-width:    3.24in;
+    --back-logo-height:   2in;
+    --back-footer-bottom: 0.75in;
+
+    /* === FOOTER CONTENT LOGIC === */
+    --toc-footer-outside:     counter(page, lower-roman);
+    --toc-footer-inside:      string(map-title);
+    --footer-outside-content: counter(page);
+    --footer-inside-content:  string(map-title);
+
+    /* === LOGO ASSETS (Base64 SVG) === */
+    /* Front Cover Logo: Typically your standard brand logo */
+    --logo-front: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzUwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDM1MCAxNTAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjM1MCIgaGVpZ2h0PSIxNTAiIHJ4PSIxMiIgZmlsbD0iIzMzMzMzMyIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiIGxldHRlci1zcGFjaW5nPSIxIj5SRVBMQUNFIExPR088L3RleHQ+PC9zdmc+");
+
+    /* Back Cover Logo: Typically a simplified or white version */
+    --logo-back:  url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzUwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDM1MCAxNTAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjM1MCIgaGVpZ2h0PSIxNTAiIHJ4PSIxMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjI0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSI+Q09NUEFOWSBMT0dPPC90ZXh0Pjwvc3ZnPg==");
+
+    /* === STYLES2.0 MODULE TOKEN BRIDGE ════════════════════════════
+       The imported element modules (dita/, styling/) use their own token names.
+       This block maps those names to our values so modules automatically inherit
+       our brand. Do not rename these — the module files consume them by name.
+       To change brand appearance, edit the source tokens above, not here.      */
+
+    --color-primary:            var(--brand-primary);    /* table headers, note borders, xref link color */
+    --color-primary-dark:       var(--brand-secondary);  /* table header hover, heading accents */
+    --color-body:               var(--text-main);         /* paragraph text in all element modules */
+    --color-body-light:         #ffffff;                  /* text on dark backgrounds (e.g. table headers) */
+    --color-border:             var(--brand-accent);      /* table borders, definition list rules */
+    --color-bg-subtle:          #f4f4f4;                  /* alternating table rows, code block backgrounds */
+    --color-bg-step:            var(--brand-accent);      /* step number badge background */
+    --font-body:                var(--font-family-main);  /* body text in paragraphs, lists, tables */
+    --font-heading:             var(--font-family-header);/* section titles, table captions */
+    --font-mono:                "DejaVu Sans Mono", Monaco, Consolas, monospace; /* codeblock, codeph, filepath */
+    --font-size-base:           11pt;                     /* default body text size in element modules */
+    --font-size-small:          9pt;                      /* captions, footnotes, table cell text */
+    --font-size-xs:             8pt;                      /* fine print, metadata labels */
+
+    /* Note accent colors — each note type gets its own border and background.
+       Defaults to brand primary for "note"; others are accessible color-matched defaults.
+       Override any of these in :root to brand specific note types. */
+    --color-note-note:          var(--brand-primary);    /* left border on <note type="note"> */
+    --color-note-note-bg:       #005A9C1A;               /* background tint on <note type="note"> */
+    --color-note-tip:           #3f6c51;                 /* left border on <note type="tip"> */
+    --color-note-tip-bg:        #3f6c512c;               /* background tint on <note type="tip"> */
+    --color-note-warning:       #d95700;                 /* left border on <note type="warning"> */
+    --color-note-warning-bg:    #d9570027;               /* background tint on <note type="warning"> */
+    --color-note-important:     #ffa600;                 /* left border on <note type="important"> */
+    --color-note-important-bg:  #ffc25131;               /* background tint on <note type="important"> */
+
+    /* === SPACING SCALE ===
+       Used by all DITA element modules for consistent margins and padding.
+       Override to control content density across the whole document.
+       --space-1:       paragraph gaps, small list margins
+       --space-2:       content padding: notes, tables, code, definition lists
+       --space-3:       medium gaps: related links, step sections
+       --space-4:       indent: definition list children, step children
+       --space-5:       title margins, large spacing
+       --space-chapter: breathing room above/below h1 chapter titles           */
+    --space-1:              5px;
+    --space-2:             10px;
+    --space-3:             15px;
+    --space-4:             20px;
+    --space-5:             25px;
+    --space-chapter:       50px;
+
+    /* === BORDER WIDTHS ===
+       --border-width-accent: left-border on notes, code, cite, definition lists
+       --border-width-subtle: lighter divider on step children, suggestions
+       --border-width-fine:   thinnest rule (footnote separator)               */
+    --border-width-accent:   5px;
+    --border-width-subtle:   2px;
+    --border-width-fine:     1px;
+
+    /* === HEADING FONT SIZES (used by DITA title module) === */
+    --font-size-h1:          var(--title-size);   /* topictitle1 */
+    --font-size-h2:          18pt;
+    --font-size-h3:          14pt;
+    --font-size-h4:          12pt;
+    --line-height-base:      1.4;
+    /* ════════════════════════════════════════════════════════════ */
+
+}
+
+/* ##########################################################################
+   COVER PAGE
+   ########################################################################## */
+@page cover {
+    margin: 0;
+    @top-left { content: none; }
+    @top-center { content: none; }
+    @top-right { content: none; }
+    @bottom-left { content: none; }
+    @bottom-center { content: none; }
+    @bottom-right { content: none; }
+}
+
+body > .cover-page-container {
+    page: cover;
+    width: 8.5in;
+    height: 11in;
+
+    margin-top: 0in;
+    margin-left: 0in;
+    margin-right: 0in;
+
+    overflow: hidden;
+    position: relative;
+    display: block;
+    z-index: 9999;
+    background-color: white;
+    font-family: var(--font-family-main);
+
+    break-after: avoid;
+}
+
+.cover-top-area {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: var(--cover-hero-height);
+    background-color: var(--cover-bg-color);
+}
+
+.cover-logo {
+    display: block;
+    position: absolute;
+    z-index: 5;
+    bottom: var(--cover-inset);
+    right:  var(--cover-inset);
+    height: var(--cover-logo-height);
+    width:  var(--cover-logo-width);
+
+    /* logo from :root */
+    background-image: var(--logo-front);
+
+    background-color: transparent;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.text-wrapper {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: var(--cover-inset);
+    width: 100%;
+    box-sizing: border-box;
+    color: var(--cover-text-color);
+}
+
+.cover-title {
+    /* string-set captures the cover title text into the named string "map-title".
+       This is consumed by @page footer rules via string(map-title) to populate
+       the inside footer on body and TOC pages. Must appear before those pages render. */
+    string-set: map-title content();
+    font-size: var(--title-size);
+    font-weight: var(--title-weight);
+    line-height: 1.2;
+    text-transform: uppercase;
+}
+
+.category {
+    margin-top: 8pt;
+    font-size: var(--subtitle-size);
+    border-left: 3pt solid var(--cover-text-color);
+    padding-left: 8pt;
+    text-transform: uppercase;
+}
+
+h1.title {
+    /* Prince XML emits a default h1.title from the bookmap title. We hide it
+       because the cover already renders the title via .cover-title above.
+       Removing this rule causes a duplicate title to appear on the cover page. */
+    position: absolute;
+    visibility: hidden;
+    height: 0; width: 0;
+}
+
+/* =========================================================================
+   COVER PAGE - Common metadata components
+   ========================================================================= */
+.metadata-wrapper {
+    position: absolute;
+    bottom: 1in;
+    left: 1in;
+    font-family: sans-serif;
+    font-size: 10pt;
+    color: #666;
+}
+
+.part-number::before { content: "Part Number: "; font-weight: bold; }
+
+/* ########################################################################## */
+
+/* ##########################################################################
+   FRONT MATTER - copyright, preface, legal notices - TBD
+   ########################################################################## */
+/* Trigger the page flow.
+   prince-page-group: start  — tells Prince this element begins a new page group,
+     so :first pseudo-page rules apply to its first page rather than the document's first page.
+     Without this, @page front-matter:first never fires correctly.
+   break-before  — controls whether the section starts on the next right-hand (odd)
+     page or the next available page. Value comes from --page-break-logic in :root. */
+.front-matter-container {
+    page: front-matter;
+    prince-page-group: start;
+    break-before: var(--page-break-logic);
+}
+
+@page front-matter {
+    margin-top:    var(--standard-margin);
+    margin-bottom: var(--standard-margin);
+
+    /* Default: No headers or footers in front matter to keep it clean */
+    @top-left { content: none; }
+    @top-center { content: none; }
+    @top-right { content: none; }
+    @bottom-center { content: none !important; }
+}
+
+/* Specific styling for Left/Right if you want different margins for gutters */
+@page front-matter:left {
+    margin-left:   var(--standard-margin);
+    margin-right:  var(--gutter-margin);
+}
+
+@page front-matter:right {
+    margin-left:   var(--gutter-margin);
+    margin-right:  var(--standard-margin);
+}
+
+/* Usually, the very first page of the Front Matter (e.g. Preface) has no footer */
+@page front-matter:first {
+    @bottom-center { content: none; }
+}
+
+/* ----------------- Copyright Page Styling ------------------- */
+.copyright-section {
+    page-break-after: always;
+    font-size: 9pt;
+    line-height: 1.4;
+    margin-top: 4in;
+}
+
+.notices-section h1,
+.preface-section h1 {
+    font-size: 20pt;
+    color: var(--brand-secondary);
+    border-bottom: 1pt solid #ccc;
+    margin-bottom: 1in;
+    text-transform: uppercase;
+}
+/* ########################################################################## */
+
+/* ##########################################################################
+   TABLE OF CONTENTS - LAYOUT
+   ########################################################################## */
+/* General TOC Page */
+@page toc-flow {
+    margin-top:    var(--standard-margin);
+    margin-bottom: var(--standard-margin);
+    @bottom-center { content: none; }
+    @bottom-left { content: string(map-title); }
+    @bottom-right { content: counter(page, lower-roman); }
+}
+
+/* TOC First Page (Right - Page i)
+   Running headers are intentionally suppressed on the first TOC page —
+   the TOC heading itself acts as the visual anchor. Headers appear on page ii+.
+   counter-reset: page 0 — resets the page counter to 0 here so the first
+   printed number is 1 (i). Without this reset, the cover page increments the
+   counter first and the TOC starts at ii. */
+@page toc-flow:first {
+    margin-top:    var(--top-margin);
+    margin-bottom: var(--bottom-margin);
+    margin-left:   var(--standard-margin);
+    margin-right:  var(--standard-margin);
+    background-color: white !important;
+    counter-reset: page 0;
+
+    @top-center { content: none; }
+    @top-left   { content: none; }
+    @top-right  { content: none; }
+
+    @bottom-left {
+        content: "";
+        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
+        padding-top: var(--footer-padding);
+        width: 40%;
+        vertical-align: top;
+    }
+    @bottom-right {
+        content: "";
+        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
+        padding-top: var(--footer-padding);
+        width: 40%;
+        vertical-align: top;
+    }
+    @bottom-center {
+        content: counter(page, var(--frontmatter-page-numbering));
+        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
+        font-family: var(--font-family-footer);
+        font-size: 12pt;
+        padding-top: var(--footer-padding);
+        width: 20%;
+        text-align: center;
+        vertical-align: top;
+    }
+}
+
+@page toc-flow:left {
+    margin-top:    var(--top-margin);
+    margin-bottom: var(--bottom-margin);
+    margin-left:   var(--standard-margin);
+    margin-right:  var(--gutter-margin);
+    background-color: white !important;
+    /* === running-header === */
+    @top-left {
+        content: string(toc-header-string);
+        text-transform: uppercase;
+        font-family: var(--font-family-header);
+        font-size:   var(--running-head-size);
+        border-bottom: var(--running-rule-weight) solid var(--header-rule-color);
+        vertical-align: bottom;
+        padding-bottom: 5pt;
+        margin-bottom: var(--header-gap);
+    }
+    @top-center {
+        content: "";
+        border-bottom: var(--running-rule-weight) solid var(--header-rule-color);
+        padding-bottom: 5pt;
+        margin-bottom: var(--header-gap);
+    }
+    @top-right {
+        content: "";
+        border-bottom: var(--running-rule-weight) solid var(--header-rule-color);
+        padding-bottom: 5pt;
+        margin-bottom: var(--header-gap);
+    }
+    /* === running-footer === */
+    @bottom-left {
+        content: var(--toc-footer-outside); /* page number */
+        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
+        padding-top: var(--footer-padding);
+        width: 20%;
+        font-family: var(--font-family-footer);
+        font-size:   var(--footer-font-size);
+        font-weight: var(--footer-font-weight);
+        color:       var(--footer-text-color);
+        vertical-align: top;
+    }
+    @bottom-center {
+        content: "";
+        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
+        padding-top: var(--footer-padding);
+        width: 20%;
+        font-family: var(--font-family-footer);
+        font-size:   var(--footer-font-size);
+        font-weight: var(--footer-font-weight);
+        color:       var(--footer-text-color);
+        vertical-align: top;
+    }
+    @bottom-right {
+        content: var(--toc-footer-inside); /* map-title */
+        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
+        padding-top: var(--footer-padding);
+        width: 60%;
+        text-align: right;
+        font-family: var(--font-family-footer);
+        font-size:   var(--footer-font-size);
+        font-weight: var(--footer-font-weight);
+        color:       var(--footer-text-color);
+        vertical-align: top;
+    }
+}
+
+@page toc-flow:right {
+    margin-top:    var(--top-margin);
+    margin-bottom: var(--bottom-margin);
+    margin-left:   var(--gutter-margin);
+    margin-right:  var(--standard-margin);
+    /* === running-header === */
+    @top-left   {
+        content: "";
+        border-bottom: var(--running-rule-weight) solid var(--header-rule-color);
+        padding-bottom: 5pt;
+        margin-bottom: var(--header-gap);
+    }
+    @top-center {
+        content: "";
+        border-bottom: var(--running-rule-weight) solid var(--header-rule-color);
+        padding-bottom: 5pt;
+        margin-bottom: var(--header-gap);
+    }
+    @top-right {
+        content: string(toc-header-string);
+        text-transform: uppercase;
+        font-family: var(--font-family-header);
+        font-size:   var(--running-head-size);
+        border-bottom: var(--running-rule-weight) solid var(--header-rule-color);
+        vertical-align: bottom;
+        padding-bottom: 5pt;
+        margin-bottom: var(--header-gap);
+    }
+    /* === running-footer === */
+    @bottom-left {
+        content: var(--toc-footer-inside); /* map-title */
+        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
+        padding-top: var(--footer-padding);
+        width: 40%;
+        font-family: var(--font-family-footer);
+        font-size:   var(--footer-font-size);
+        font-weight: var(--footer-font-weight);
+        color:       var(--footer-text-color);
+        vertical-align: top;
+    }
+    @bottom-center {
+        content: "";
+        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
+        padding-top: var(--footer-padding);
+        width: 20%;
+        font-family: var(--font-family-footer);
+        font-size:   var(--footer-font-size);
+        font-weight: var(--footer-font-weight);
+        color:       var(--footer-text-color);
+        vertical-align: top;
+    }
+    @bottom-right {
+        content: var(--toc-footer-outside); /* page number */
+        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
+        padding-top: var(--footer-padding);
+        width: 20%;
+        font-family: var(--font-family-footer);
+        font-size:   var(--footer-font-size);
+        font-weight: var(--footer-font-weight);
+        color:       var(--footer-text-color);
+        vertical-align: top;
+    }
+}
+
+@page toc-flow:blank {
+    /* :blank matches intentionally empty pages inserted by Prince when a section
+       must start on a right-hand (odd) page and the previous section ended on an
+       odd page. Without this rule, the blank page inherits running headers and
+       footers from the surrounding flow, which looks incorrect in print. */
+    @top-left   { content: none !important; border: none !important; }
+    @top-center { content: none !important; border: none !important; }
+    @top-right  { content: none !important; border: none !important; }
+
+    @bottom-left   { content: none !important; border: none !important; }
+    @bottom-center { content: none !important; border: none !important; }
+    @bottom-right  { content: none !important; border: none !important; }
+}
+/* ########################################################################## */
+
+/* ##########################################################################
+   MAIN BODY CONTENT
+   ########################################################################## */
+body > article {
+    page: body-flow;
+    prince-page-group: start;
+    break-before: var(--page-break-logic);
+}
+
+@page body-flow {
+    margin-top:    var(--standard-margin);
+    margin-bottom: var(--standard-margin);
+    @top-left { content: none; }
+    @top-right { content: none; }
+    @top-center { content: none; }
+    @bottom-center { content: none; }
+}
+
+@page body-flow:first {
+    margin-top:    var(--top-margin);
+    margin-bottom: var(--bottom-margin);
+    margin-left:   var(--standard-margin);
+    margin-right:  var(--standard-margin);
+
+    @top-center { content: none !important; border: none !important; }
+    @top-left   { content: none !important; border: none !important; }
+    @top-right  { content: none !important; border: none !important; }
+
+    @bottom-left {
+        content: "";
+        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
+        padding-top: var(--footer-padding);
+        width: 40%;
+        vertical-align: top;
+    }
+    @bottom-center {
+        content: counter(page);
+        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
+        padding-top: var(--footer-padding);
+        width: 20%;
+        font-family: var(--font-family-footer);
+        font-size: 12pt;
+        text-align: center;
+        vertical-align: top;
+    }
+    @bottom-right {
+        content: "";
+        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
+        padding-top: var(--footer-padding);
+        width: 40%;
+        vertical-align: top;
+    }
+}
+
+/* Body Left (Even) Pages */
+@page body-flow:left {
+    margin-top:    var(--top-margin);
+    margin-bottom: var(--bottom-margin);
+    margin-left:   var(--standard-margin);
+    margin-right:  var(--gutter-margin);
+
+    /* === running-header === */
+    @top-left {
+        content: string(chapter-title);
+        text-transform: uppercase;
+        font-family: var(--font-family-header);
+        font-size:   var(--running-head-size);
+        border-bottom: var(--running-rule-weight) solid var(--header-rule-color);
+        vertical-align: bottom;
+        padding-bottom: 5pt;
+        margin-bottom: var(--header-gap);
+    }
+    @top-center {
+        content: "";
+        border-bottom: var(--running-rule-weight) solid var(--header-rule-color);
+        padding-bottom: 5pt;
+        margin-bottom: var(--header-gap);
+    }
+    @top-right {
+        content: "";
+        border-bottom: var(--running-rule-weight) solid var(--header-rule-color);
+        padding-bottom: 5pt;
+        margin-bottom: var(--header-gap);
+    }
+
+    /* === running-footer === */
+    @bottom-left {
+        content: var(--footer-outside-content);
+        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
+        padding-top: var(--footer-padding);
+        font-family: var(--font-family-footer);
+        font-size:   var(--footer-font-size);
+        font-weight: var(--footer-font-weight);
+        color:       var(--footer-text-color);
+        vertical-align: top;
+        width: 20%;
+    }
+    @bottom-center {
+        content: "";
+        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
+        padding-top: var(--footer-padding);
+        font-family: var(--font-family-footer);
+        font-size:   var(--footer-font-size);
+        font-weight: var(--footer-font-weight);
+        color:       var(--footer-text-color);
+        vertical-align: top;
+        width: 20%;
+    }
+    @bottom-right {
+        content: var(--footer-inside-content);
+        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
+        padding-top: var(--footer-padding);
+        font-family: var(--font-family-footer);
+        font-size:   var(--footer-font-size);
+        font-weight: var(--footer-font-weight);
+        color:       var(--footer-text-color);
+        vertical-align: top;
+        width: 60%;
+        text-align: right;
+    }
+}
+
+/* Body Right (Odd) Pages */
+@page body-flow:right {
+    margin-top:    var(--top-margin);
+    margin-bottom: var(--bottom-margin);
+    margin-left:   var(--gutter-margin);
+    margin-right:  var(--standard-margin);
+    /* === running-header === */
+    @top-left {
+        content: "";
+        border-bottom: var(--running-rule-weight) solid var(--header-rule-color);
+        padding-bottom: 5pt;
+        margin-top: 15pt;
+        margin-bottom: var(--header-gap);
+    }
+    @top-center {
+        content: "";
+        border-bottom: var(--running-rule-weight) solid var(--header-rule-color);
+        padding-bottom: 5pt;
+        margin-top: 15pt;
+        margin-bottom: var(--header-gap);
+    }
+    @top-right {
+        content: string(chapter-title);
+        text-transform: uppercase;
+        font-family: var(--font-family-header);
+        font-size:   var(--running-head-size);
+        border-bottom: var(--running-rule-weight) solid var(--header-rule-color);
+        vertical-align: bottom;
+        padding-bottom: 5pt;
+        margin-top: 15pt;
+        margin-bottom: var(--header-gap);
+    }
+    /* === running-footer === */
+    @bottom-left {
+        content: var(--footer-inside-content); /* map-title */
+        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
+        padding-top: var(--footer-padding);
+        width: 60%;
+        font-family: var(--font-family-footer);
+        font-size:   var(--footer-font-size);
+        font-weight: var(--footer-font-weight);
+        color:       var(--footer-text-color);
+        vertical-align: top;
+    }
+    @bottom-center {
+        content: "";
+        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
+        padding-top: var(--footer-padding);
+        width: 20%;
+        font-family: var(--font-family-footer);
+        font-size:   var(--footer-font-size);
+        font-weight: var(--footer-font-weight);
+        color:       var(--footer-text-color);
+        vertical-align: top;
+    }
+    @bottom-right {
+        content: var(--footer-outside-content); /* page number */
+        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
+        padding-top: var(--footer-padding);
+        width: 20%;
+        font-family: var(--font-family-footer);
+        font-size:   var(--footer-font-size);
+        font-weight: var(--footer-font-weight);
+        color:       var(--footer-text-color);
+        vertical-align: top;
+    }
+}
+
+@page body-flow:blank {
+    /* Suppresses headers and footers on blank pages inserted between chapters.
+       See toc-flow:blank above for the full explanation. */
+    @top-left   { content: none !important; border: none !important; }
+    @top-center { content: none !important; border: none !important; }
+    @top-right  { content: none !important; border: none !important; }
+
+    @bottom-left   { content: none !important; border: none !important; }
+    @bottom-center { content: none !important; border: none !important; }
+    @bottom-right  { content: none !important; border: none !important; }
+}
+
+body > article,
+body > article > *:last-child {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+/* ########################################################################## */
+
+/* ##########################################################################
+   BACK COVER
+   ########################################################################## */
+@page back_cover_style {
+    margin: 0;
+}
+
+.back-cover-page-container {
+    page: back_cover_style;
+    prince-page-group: start;
+    background-color: var(--cover-bg-color);
+    height: 11in;
+    width: 100%;
+    position: relative;
+    display: block;
+    color: var(--cover-text-color);
+    break-before: var(--back-cover-break);
+}
+
+.back-cover-logo {
+    position: absolute;
+    top: 0; bottom: 0; left: 0; right: 0;
+    margin: auto;
+    width:  var(--back-logo-width);
+    height: var(--back-logo-height);
+    z-index: 2;
+    /* from :root */
+    background-image: var(--logo-back);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+.companydetails {
+    position: absolute;
+    bottom: var(--back-footer-bottom);
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-family: var(--font-family-main);
+    line-height: 1.6;
+}
+
+.orgname {
+    font-weight: bold;
+    font-size: var(--subtitle-size);
+    margin-bottom: 3pt;
+}
+
+.address {
+    font-size: var(--footer-font-size);
+    opacity: 0.8;
+}
+
+.url {
+    font-size: var(--footer-font-size);
+    margin-top: 6pt;
+    font-weight: 500;
+    color: inherit;
+    text-decoration: none;
+}
+
+/* ########################################################################## */
+/* TABLE OF CONTENTS FORMATTING                                               */
+/* ########################################################################## */
+nav {
+    /* Layout & Page Flow */
+    page: toc-flow;
+    /* prince-page-group: start — makes :first apply to the TOC's own first page,
+       not the document's first page. Required for correct TOC page numbering. */
+    prince-page-group: start;
+    break-before: var(--page-break-logic);
+    page-break-after: always;
+    /* string-set captures the TOC label (default "Contents") into "toc-header-string".
+       Consumed by @page toc-flow:left and :right @top rules as the running header text.
+       Change the label by editing --toc-text in :root. */
+    string-set: toc-header-string var(--toc-text);
+    /* Reset default spacing */
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+}
+nav li {
+    list-style-type: none;
+    padding: 2pt 0;
+    font-size: 12pt;
+    font-style: normal;
+}
+
+nav a {
+    color: var(--toc-link-color);
+    text-decoration: none;
+    display: block;
+}
+
+nav a::after {
+    content: leader(".") target-counter(attr(href), page);
+    margin-left: 8pt;
+    color: var(--toc-dot-color);
+}
+
+nav ul { margin-left: var(--toc-indent-step); }
+nav > ul { margin-left: 0; }
+
+/* === Level 1 === */
+nav > ul > li > a {
+    font-weight: bold;
+    font-size: var(--toc-level1-size);
+    margin-top: 10pt;
+    color: var(--brand-primary);
+}
+/* === Level 2 === */
+nav > ul > li > ul > li > a {
+    font-weight: normal;
+    font-size: var(--toc-level2-size);
+    margin-top: 0;
+    color: var(--text-muted);
+}
+/* === Level 3 === */
+nav > ul > li > ul > li > ul > li > a {
+    font-weight: normal;
+    font-size: var(--toc-level3-size);
+    color: var(--text-muted);
+}
+
+/* === Header Text "CONTENTS" ===*/
+nav > ul:first-child::before {
+    content: var(--toc-text);
+    display: block;
+
+    /* Matches body > article > h1.topictitle1 */
+    font-family: var(--font-family-main);
+    font-size:   var(--title-size);
+    font-weight: var(--title-weight);
+    color: var(--brand-primary);
+    line-height: var(--title-line-height);
+    letter-spacing: -0.3pt;
+
+    /* Consistent spacing */
+    margin-top:    var(--title-margin-top) !important;
+    margin-bottom: var(--title-margin-bot) !important;
+    padding-bottom: var(--title-padding-bot) !important;
+    border-bottom: var(--title-rule-weight) solid var(--title-rule-color);
+}
+
+/* ########################################################################## */
+/* MINI TOC                                                                   */
+/* ########################################################################## */
+div.mini-toc-wrapper::before {
+  display: block;
+  font-size: 18pt;
+  font-weight: normal;
+  margin: 0 0 4pt -1pt;
+  letter-spacing: 0.5pt;
+  color: #ccc;
+}
+div.mini-toc-wrapper {
+  display: block;
+  margin: 11pt 0 19pt 0;
+}
+div.mini-toc-wrapper ul ul {
+  margin: 0 0 0 8pt;
+  padding: 0;
+}
+div.mini-toc-wrapper li {
+  list-style-type: none;
+  padding-right: 0;
+}
+div.mini-toc-wrapper a,
+div.mini-toc-wrapper a * {
+  text-decoration: none;
+  color:#404040;
+  font-weight: inherit;
+  font-family: inherit;
+  font-size: 11pt;
+  font-style: normal;
+}
+div.mini-toc-wrapper a::after {
+  content: leader(".") target-counter(attr(href), page);
+  margin-left: 0;
+  font-weight: normal;
+  font-size: 11pt;
+}
+
+/* ##########################################################################
+   CHAPTER HERO HEADER (TOPIC TITLE 1)
+   ########################################################################## */
+body > article > h1.topictitle1 {
+    /* string-set captures this chapter's h1 text into "chapter-title" on each new chapter.
+       Consumed by @page body-flow:left and :right @top rules as the running header.
+       The value updates automatically each time a new h1.topictitle1 is encountered. */
+    string-set: chapter-title content();
+
+    display: block !important;
+    visibility: visible !important;
+    position: relative !important;
+    height: auto !important;
+    width: 100% !important;
+
+    margin-top:    var(--title-margin-top) !important;
+    margin-bottom: var(--title-margin-bot) !important;
+    padding-bottom: var(--title-padding-bot) !important;
+
+    font-family: var(--font-family-main);
+    font-size:   var(--title-size);
+    font-weight: var(--title-weight);
+    line-height: var(--title-line-height);
+    color: var(--brand-primary);
+    letter-spacing: -0.3pt;
+}
+
+body > article > h1.topictitle1::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: var(--title-rule-weight);
+    background-color: var(--title-rule-color);
+    display: block !important;
+}
+
+body > article > h1.topictitle1 + p,
+body > article > .shortdesc,
+body > article > div.body > section.section > h2.sectiontitle:first-child {
+    font-size: var(--subtitle-size);
+    color: var(--subtitle-color);
+    font-weight: 600;
+    margin-top: 19pt !important;
+    margin-bottom: 26pt;
+    display: block !important;
+    clear: both;
+}
+/* ########################################################################## */
+
+/* ########################################################################## */
+/* Headings (H1-H6) */
+/* ########################################################################## */
+h1.topictitle1, h2, h3, h4, h5, h6,
+.title, .table--title-label, .fig--title-label {
+    color: var(--brand-primary);
+}
+/* ########################################################################## */
+
+/* ##########################################################################
+   COVER PAGE METADATA
+   ########################################################################## */
+
+.cover-meta-block {
+    position:        absolute;
+    /* Vertically centers the block in the white band below the hero image.
+       The white band spans from --cover-hero-height to the bottom of the 11in page.
+       Its midpoint = (11in + --cover-hero-height) / 2.
+       transform: translateY(-50%) then shifts the block up by half its own rendered height,
+       so the block's center sits exactly on that midpoint regardless of how many fields are shown.
+       If metadata overflows the band, that is an intentional design boundary — reduce field count. */
+    top:             calc((11in + var(--cover-hero-height)) / 2);
+    transform:       translateY(-50%);
+    left:            var(--cover-inset);
+    right:           calc(var(--cover-inset) + var(--cover-logo-width));
+
+    display:         flex;
+    flex-direction:  column;
+
+    font-family: var(--font-family-main);
+    font-size:   var(--cover-meta-font-size,   9pt);
+    line-height: var(--cover-meta-line-height, 1.8);
+    color:       var(--cover-meta-color,       rgba(255, 255, 255, 0.90));
+}
+
+.cover-meta-item {
+    display: block;
+}
+
+.cover-subtitle {
+    font-size:   var(--cover-subtitle-size);
+    color:       var(--cover-subtitle-color);
+    font-weight: var(--cover-subtitle-weight);
+    margin-top:  var(--cover-subtitle-margin-top);
+}
+.cover-subtitle::before {
+    content: var(--cover-subtitle-label);
+    font-weight: bold;
+}
+
+.cover-prodname {
+    font-size:   var(--cover-prodname-size);
+    color:       var(--cover-prodname-color);
+    font-weight: var(--cover-prodname-weight);
+}
+.cover-prodname::before {
+    content: var(--cover-prodname-label);
+    font-weight: bold;
+}
+
+.cover-version {
+    font-size:   var(--cover-version-size);
+    color:       var(--cover-version-color);
+    font-weight: var(--cover-version-weight);
+}
+.cover-version::before {
+    content: var(--cover-version-label);
+    font-weight: bold;
+}
+
+.cover-platform {
+    font-size:   var(--cover-platform-size);
+    color:       var(--cover-platform-color);
+    font-weight: var(--cover-platform-weight);
+}
+.cover-platform::before {
+    content: var(--cover-platform-label);
+    font-weight: bold;
+}
+
+.cover-partno {
+    font-size:   var(--cover-partno-size);
+    color:       var(--cover-partno-color);
+    font-weight: var(--cover-partno-weight);
+}
+.cover-partno::before {
+    content: var(--cover-partno-label);
+    font-weight: bold;
+}
+
+.cover-doc-revision {
+    font-size:   var(--cover-doc-revision-size);
+    color:       var(--cover-doc-revision-color);
+    font-weight: var(--cover-doc-revision-weight);
+}
+.cover-doc-revision::before {
+    content: var(--cover-doc-revision-label);
+    font-weight: bold;
+}
+
+.cover-audience {
+    font-size:   var(--cover-audience-size);
+    color:       var(--cover-audience-color);
+    font-weight: var(--cover-audience-weight);
+}
+.cover-audience::before {
+    content: var(--cover-audience-label);
+    font-weight: bold;
+}
+
+.cover-author {
+    font-size:   var(--cover-author-size);
+    color:       var(--cover-author-color);
+    font-weight: var(--cover-author-weight);
+}
+.cover-author::before {
+    content: var(--cover-author-label);
+    font-weight: bold;
+}
+
+.cover-publisher {
+    font-size:   var(--cover-publisher-size);
+    color:       var(--cover-publisher-color);
+    font-weight: var(--cover-publisher-weight);
+}
+.cover-publisher::before {
+    content: var(--cover-publisher-label);
+    font-weight: bold;
+}
+
+.cover-created {
+    font-size:   var(--cover-created-size);
+    color:       var(--cover-created-color);
+    font-weight: var(--cover-created-weight);
+}
+.cover-created::before {
+    content: var(--cover-created-label);
+    font-weight: bold;
+}
+
+.cover-revised {
+    font-size:   var(--cover-revised-size);
+    color:       var(--cover-revised-color);
+    font-weight: var(--cover-revised-weight);
+}
+.cover-revised::before {
+    content: var(--cover-revised-label);
+    font-weight: bold;
+}
+
+.cover-copyright {
+    font-size:   var(--cover-copyright-size);
+    color:       var(--cover-copyright-color);
+    font-weight: var(--cover-copyright-weight);
+}
+/* Injects full copyright string from --copyright-notice; div content should be empty. */
+.cover-copyright::before {
+    content: "\A9 " var(--copyright-notice);
+    font-weight: bold;
+}
+
+/* Back cover copyright — DITA builds: XSL outputs year + holder as text content.
+   Static HTML builds: leave div empty and set --copyright-notice in :root. */
+.back-cover-copyright {
+    font-size:   var(--footer-font-size);
+    color:       var(--cover-text-color);
+    opacity:     0.8;
+    margin-top:  6pt;
+    text-align:  center;
+}
+.back-cover-copyright::before {
+    content: "\A9 ";  /* symbol only — text content follows from XSL or div content */
+}
+
+/* ########################################################################## */
+

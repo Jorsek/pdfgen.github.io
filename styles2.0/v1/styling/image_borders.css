@@ -1,0 +1,12 @@
+/* Add image borders to image elements. */
+.image,
+svg {
+    border: var(--border-width-accent) solid #000;
+}
+
+/* Disable image borders by assigning the @outputclass="no_borders" attribute to the image element. */
+.image.no_borders,
+.body img.no_borders,
+svg {
+    border: none;
+}
