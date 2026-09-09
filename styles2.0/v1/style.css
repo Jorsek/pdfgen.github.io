@@ -1,63 +1,13 @@
-/* ══════════════════════════════════════════════════════════════════════════
-   NOTE (styles2.0 reorg): this file is hosted at
-   https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/style.css as a starter
-   default — brand tokens, @page layout, cover, TOC, chapter hero. Import it
-   wholesale into your own scenario's CSS tab, then add YOUR OWN overrides
-   below that import in your own scenario (not in this shared file).
-
-   The dita/, styling/, and layout/ folders below are shared reference
-   modules, resolved by Prince directly from GitHub over HTTPS at render
-   time — not through the CCMS's own document/UUID resolution, which is
-   why every import here (and in style_styles2.0_imports.css) is a full URL.
-═══════════════════════════════════════════════════════════════════════════ */
+/* style.css — starter default, hosted at .../styles2.0/v1/style.css. Brand
+   tokens (:root below), @page layout, cover/TOC/back-cover markup. Full guide
+   (architecture, common customizations, safe/unsafe-to-edit map): readme.md.
+   Element styles (tables, notes, lists…): one import away, in
+   style_styles2.0_imports.css → dita/ + styling/.
+   Import this file wholesale into your own scenario's CSS tab, then add YOUR
+   overrides below that import in your own scenario — there is no custom.css;
+   see readme.md. */
 
 @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/style_styles2.0_imports.css");
-
-/* ##########################################################################
-   style_styles2.0.css — PDF layout, brand, and page architecture
-
-   ── ARCHITECTURE ────────────────────────────────────────────────────────────
-   This file is the top of the stack:
-
-     style.css              ← YOU ARE HERE (https://.../styles2.0/v1/style.css)
-       └─ style_styles2.0_imports.css      (element module manifest)
-            ├─ dita/*.css            (DITA element reference — tables, lists, notes…)
-            ├─ styling/*.css         (optional formatting toggles)
-            └─ layout/*.css          (page-break control)
-
-   Add YOUR overrides in your own scenario's CSS tab, after importing this
-   file — see readme.md for the token-override vs. selector-override pattern.
-
-   This file owns: :root tokens, @page layout, cover, TOC, chapter hero, back cover.
-   It does NOT style DITA body elements — those live in the imported modules.
-
-   ── COMMON CUSTOMIZATIONS ───────────────────────────────────────────────────
-   Change brand colors            → --brand-primary, --brand-secondary  in :root
-   Change page margins            → --standard-margin, --top-margin, --bottom-margin
-   Change cover background        → --cover-bg-color, --cover-hero-height
-   Change running footer text     → --footer-inside-content, --footer-outside-content
-   Change TOC heading label       → --toc-text
-   Add a label to a metadata field→ --cover-*-label  (e.g. --cover-version-label: "Ver. ")
-   Replace the logo               → --logo-front / --logo-back  (Base64 SVG or url())
-   Style a DITA element           → open style_styles2.0_imports.css, find the section, edit the file
-
-   ── SAFE TO EDIT ────────────────────────────────────────────────────────────
-   - Brand colors, fonts, logos         → :root
-   - Spacing, margins, cover geometry   → :root
-   - TOC label and formatting           → :root  +  nav rules below
-   - Metadata field appearance          → .cover-* rules below
-
-   ── EDIT ELSEWHERE ──────────────────────────────────────────────────────────
-   - Cover structure / content order    → xsl_styles2.0.xsl
-   - Section on/off (cover, TOC, etc.)  → xsl_styles2.0.xsl
-   - Metadata sources                   → ditamap topicmeta
-   - DITA element styles                → style_styles2.0_imports.css  →  dita/  or  styling/
-
-   ── CHANGE CAREFULLY ────────────────────────────────────────────────────────
-   - @page rules (margins, headers, footers)
-   - string-set declarations (feed running headers — see comments on each)
-   - prince-page-group and break-before (control section page sequencing)
-   ########################################################################## */
 
 /* ##########################################################################
    GLOBAL SETTINGS
@@ -70,9 +20,9 @@
     margin-right:  var(--standard-margin);
 }
 
-/*  ########################################################################## */
-/*  BRANDING AND LAYOUT PALLETE
-/*  ########################################################################## */
+/* ##########################################################################
+   BRANDING & LAYOUT PALETTE — every token documented in TOKENS.md
+   ########################################################################## */
 :root {
 /* === GLOBAL LOGIC === */
     /* right = each section starts on a right-hand (odd) page; auto = starts on next available page */
@@ -82,15 +32,11 @@
     --frontmatter-page-numbering: lower-roman;
 
     /* === BRANDING PALETTE === */
-    /* Primary: Used for Cover backgrounds, Page Headers, Links */
     --brand-primary: #005A9C;
     --brand-secondary: #4A5568;
     --brand-accent: #CCCCCC;
 
-    /* === COPYRIGHT ===
-       Set once here. Referenced by .cover-copyright and .back-cover-copyright ::before rules,
-       and available for @page margin boxes or any other CSS-driven context.
-       DITA builds pull copyright from <copyrholder> via XSL instead. */
+    /* === COPYRIGHT === (DITA builds pull from <copyrholder> via XSL instead) */
     --copyright-notice: "REPLACE WITH YOUR ORGANIZATION";
 
     /* === TYPOGRAPHY === */
@@ -160,11 +106,7 @@
     --cover-copyright-color:     var(--cover-meta-color, rgba(255, 255, 255, 0.90));
     --cover-copyright-weight:    normal;
 
-    /* === COVER METADATA LABELS (::before) ===
-       Each variable is the text prepended to its field. Default is empty (no label).
-       Override any variable to add a visible label, e.g.:
-         --cover-version-label: "Version: ";
-         --cover-created-label: "Date: ";                                          */
+    /* === COVER METADATA LABELS (::before) === default empty; e.g. --cover-version-label: "Version: " */
     --cover-subtitle-label:      "";
     --cover-prodname-label:      "";
     --cover-version-label:       "Version: ";
@@ -218,6 +160,22 @@
     --toc-dot-color:     var(--brand-primary);
     --toc-text-color:    var(--brand-primary);
 
+    /* === CONFIGURABLE LABELS (DITA section & note captions) === same pattern as --toc-text */
+    --label-prereq:             "Before you begin";  /* dita/cause_condition_..._stepsection.css → .prereq::before */
+    --label-postreq:            "Next steps";        /* same file → .postreq::before */
+    --label-steps-process:      "Process";           /* same file → .steps::before, article.process */
+    --label-steps-procedure:    "Procedure";         /* same file → .steps::before, default (not process) */
+    --label-context:            "Context";           /* same file → .context::before */
+    --label-condition:          "Condition";         /* same file → .condition::before */
+    --label-cause:               "Cause";             /* same file → .cause::before */
+    --label-remedy:              "Remedy";            /* same file → .remedy::before */
+    --label-example:             "Example";           /* same file → .example::before */
+    --label-result:              "Result";            /* same file → .result::before */
+    --label-info:                 "Info: ";            /* dita/choices_info_..._troublesolution.css → .info::before (disabled by default — see file) */
+    --label-stepxmp-example:     "Example: ";         /* same file → .stepxmp::before */
+    --label-stepresult-result:   "Result: ";          /* same file → .stepresult::before */
+    --label-troubleshooting:     "Troubleshooting: "; /* same file → .steptroubleshooting::before */
+
     /* === COVER & BACK COVER GEOMETRY  === */
     --cover-bg-color:     var(--brand-primary);
     --cover-text-color:   #FFFFFF;
@@ -243,12 +201,7 @@
     /* Back Cover Logo: Typically a simplified or white version */
     --logo-back:  url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzUwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDM1MCAxNTAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjM1MCIgaGVpZ2h0PSIxNTAiIHJ4PSIxMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjI0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSI+Q09NUEFOWSBMT0dPPC90ZXh0Pjwvc3ZnPg==");
 
-    /* === STYLES2.0 MODULE TOKEN BRIDGE ════════════════════════════
-       The imported element modules (dita/, styling/) use their own token names.
-       This block maps those names to our values so modules automatically inherit
-       our brand. Do not rename these — the module files consume them by name.
-       To change brand appearance, edit the source tokens above, not here.      */
-
+    /* === STYLES2.0 MODULE TOKEN BRIDGE === do not rename (consumed by name); edit sources above, not here */
     --color-primary:            var(--brand-primary);    /* table headers, note borders, xref link color */
     --color-primary-dark:       var(--brand-secondary);  /* table header hover, heading accents */
     --color-body:               var(--text-main);         /* paragraph text in all element modules */
@@ -263,9 +216,7 @@
     --font-size-small:          9pt;                      /* captions, footnotes, table cell text */
     --font-size-xs:             8pt;                      /* fine print, metadata labels */
 
-    /* Note accent colors — each note type gets its own border and background.
-       Defaults to brand primary for "note"; others are accessible color-matched defaults.
-       Override any of these in :root to brand specific note types. */
+    /* === NOTE ACCENT COLORS === border + background per note type */
     --color-note-note:          var(--brand-primary);    /* left border on <note type="note"> */
     --color-note-note-bg:       #005A9C1A;               /* background tint on <note type="note"> */
     --color-note-tip:           #3f6c51;                 /* left border on <note type="tip"> */
@@ -275,15 +226,7 @@
     --color-note-important:     #ffa600;                 /* left border on <note type="important"> */
     --color-note-important-bg:  #ffc25131;               /* background tint on <note type="important"> */
 
-    /* === SPACING SCALE ===
-       Used by all DITA element modules for consistent margins and padding.
-       Override to control content density across the whole document.
-       --space-1:       paragraph gaps, small list margins
-       --space-2:       content padding: notes, tables, code, definition lists
-       --space-3:       medium gaps: related links, step sections
-       --space-4:       indent: definition list children, step children
-       --space-5:       title margins, large spacing
-       --space-chapter: breathing room above/below h1 chapter titles           */
+    /* === SPACING SCALE === margins/padding across all DITA element modules */
     --space-1:              5px;
     --space-2:             10px;
     --space-3:             15px;
@@ -291,10 +234,7 @@
     --space-5:             25px;
     --space-chapter:       50px;
 
-    /* === BORDER WIDTHS ===
-       --border-width-accent: left-border on notes, code, cite, definition lists
-       --border-width-subtle: lighter divider on step children, suggestions
-       --border-width-fine:   thinnest rule (footnote separator)               */
+    /* === BORDER WIDTHS === */
     --border-width-accent:   5px;
     --border-width-subtle:   2px;
     --border-width-fine:     1px;
@@ -482,413 +422,23 @@ h1.title {
 /* ########################################################################## */
 
 /* ##########################################################################
-   TABLE OF CONTENTS - LAYOUT
+   TOC & BODY PAGE FLOW
    ########################################################################## */
-/* General TOC Page */
-@page toc-flow {
-    margin-top:    var(--standard-margin);
-    margin-bottom: var(--standard-margin);
-    @bottom-center { content: none; }
-    @bottom-left { content: string(map-title); }
-    @bottom-right { content: counter(page, lower-roman); }
-}
+/* Moved 2026-09-09 to the shared library — pure page-flow mechanics
+   (margins, running headers/footers, blank-page suppression), rarely
+   redesigned per scenario, unlike the cover/back-cover markup below,
+   which stays here because customers commonly redesign it.
 
-/* TOC First Page (Right - Page i)
-   Running headers are intentionally suppressed on the first TOC page —
-   the TOC heading itself acts as the visual anchor. Headers appear on page ii+.
-   counter-reset: page 0 — resets the page counter to 0 here so the first
-   printed number is 1 (i). Without this reset, the cover page increments the
-   counter first and the TOC starts at ii. */
-@page toc-flow:first {
-    margin-top:    var(--top-margin);
-    margin-bottom: var(--bottom-margin);
-    margin-left:   var(--standard-margin);
-    margin-right:  var(--standard-margin);
-    background-color: white !important;
-    counter-reset: page 0;
+   Edit the tokens above (--standard-margin, --gutter-margin, --top-margin,
+   --header-gap, --footer-*, etc.), not these files, unless you're
+   changing the actual page-flow structure itself.
 
-    @top-center { content: none; }
-    @top-left   { content: none; }
-    @top-right  { content: none; }
+     TOC pages  → styles2.0/v1/layout/toc_flow.css
+     Body pages → styles2.0/v1/layout/body_flow.css
 
-    @bottom-left {
-        content: "";
-        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
-        padding-top: var(--footer-padding);
-        width: 40%;
-        vertical-align: top;
-    }
-    @bottom-right {
-        content: "";
-        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
-        padding-top: var(--footer-padding);
-        width: 40%;
-        vertical-align: top;
-    }
-    @bottom-center {
-        content: counter(page, var(--frontmatter-page-numbering));
-        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
-        font-family: var(--font-family-footer);
-        font-size: 12pt;
-        padding-top: var(--footer-padding);
-        width: 20%;
-        text-align: center;
-        vertical-align: top;
-    }
-}
-
-@page toc-flow:left {
-    margin-top:    var(--top-margin);
-    margin-bottom: var(--bottom-margin);
-    margin-left:   var(--standard-margin);
-    margin-right:  var(--gutter-margin);
-    background-color: white !important;
-    /* === running-header === */
-    @top-left {
-        content: string(toc-header-string);
-        text-transform: uppercase;
-        font-family: var(--font-family-header);
-        font-size:   var(--running-head-size);
-        border-bottom: var(--running-rule-weight) solid var(--header-rule-color);
-        vertical-align: bottom;
-        padding-bottom: 5pt;
-        margin-bottom: var(--header-gap);
-    }
-    @top-center {
-        content: "";
-        border-bottom: var(--running-rule-weight) solid var(--header-rule-color);
-        padding-bottom: 5pt;
-        margin-bottom: var(--header-gap);
-    }
-    @top-right {
-        content: "";
-        border-bottom: var(--running-rule-weight) solid var(--header-rule-color);
-        padding-bottom: 5pt;
-        margin-bottom: var(--header-gap);
-    }
-    /* === running-footer === */
-    @bottom-left {
-        content: var(--toc-footer-outside); /* page number */
-        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
-        padding-top: var(--footer-padding);
-        width: 20%;
-        font-family: var(--font-family-footer);
-        font-size:   var(--footer-font-size);
-        font-weight: var(--footer-font-weight);
-        color:       var(--footer-text-color);
-        vertical-align: top;
-    }
-    @bottom-center {
-        content: "";
-        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
-        padding-top: var(--footer-padding);
-        width: 20%;
-        font-family: var(--font-family-footer);
-        font-size:   var(--footer-font-size);
-        font-weight: var(--footer-font-weight);
-        color:       var(--footer-text-color);
-        vertical-align: top;
-    }
-    @bottom-right {
-        content: var(--toc-footer-inside); /* map-title */
-        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
-        padding-top: var(--footer-padding);
-        width: 60%;
-        text-align: right;
-        font-family: var(--font-family-footer);
-        font-size:   var(--footer-font-size);
-        font-weight: var(--footer-font-weight);
-        color:       var(--footer-text-color);
-        vertical-align: top;
-    }
-}
-
-@page toc-flow:right {
-    margin-top:    var(--top-margin);
-    margin-bottom: var(--bottom-margin);
-    margin-left:   var(--gutter-margin);
-    margin-right:  var(--standard-margin);
-    /* === running-header === */
-    @top-left   {
-        content: "";
-        border-bottom: var(--running-rule-weight) solid var(--header-rule-color);
-        padding-bottom: 5pt;
-        margin-bottom: var(--header-gap);
-    }
-    @top-center {
-        content: "";
-        border-bottom: var(--running-rule-weight) solid var(--header-rule-color);
-        padding-bottom: 5pt;
-        margin-bottom: var(--header-gap);
-    }
-    @top-right {
-        content: string(toc-header-string);
-        text-transform: uppercase;
-        font-family: var(--font-family-header);
-        font-size:   var(--running-head-size);
-        border-bottom: var(--running-rule-weight) solid var(--header-rule-color);
-        vertical-align: bottom;
-        padding-bottom: 5pt;
-        margin-bottom: var(--header-gap);
-    }
-    /* === running-footer === */
-    @bottom-left {
-        content: var(--toc-footer-inside); /* map-title */
-        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
-        padding-top: var(--footer-padding);
-        width: 40%;
-        font-family: var(--font-family-footer);
-        font-size:   var(--footer-font-size);
-        font-weight: var(--footer-font-weight);
-        color:       var(--footer-text-color);
-        vertical-align: top;
-    }
-    @bottom-center {
-        content: "";
-        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
-        padding-top: var(--footer-padding);
-        width: 20%;
-        font-family: var(--font-family-footer);
-        font-size:   var(--footer-font-size);
-        font-weight: var(--footer-font-weight);
-        color:       var(--footer-text-color);
-        vertical-align: top;
-    }
-    @bottom-right {
-        content: var(--toc-footer-outside); /* page number */
-        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
-        padding-top: var(--footer-padding);
-        width: 20%;
-        font-family: var(--font-family-footer);
-        font-size:   var(--footer-font-size);
-        font-weight: var(--footer-font-weight);
-        color:       var(--footer-text-color);
-        vertical-align: top;
-    }
-}
-
-@page toc-flow:blank {
-    /* :blank matches intentionally empty pages inserted by Prince when a section
-       must start on a right-hand (odd) page and the previous section ended on an
-       odd page. Without this rule, the blank page inherits running headers and
-       footers from the surrounding flow, which looks incorrect in print. */
-    @top-left   { content: none !important; border: none !important; }
-    @top-center { content: none !important; border: none !important; }
-    @top-right  { content: none !important; border: none !important; }
-
-    @bottom-left   { content: none !important; border: none !important; }
-    @bottom-center { content: none !important; border: none !important; }
-    @bottom-right  { content: none !important; border: none !important; }
-}
-/* ########################################################################## */
-
-/* ##########################################################################
-   MAIN BODY CONTENT
-   ########################################################################## */
-body > article {
-    page: body-flow;
-    prince-page-group: start;
-    break-before: var(--page-break-logic);
-}
-
-@page body-flow {
-    margin-top:    var(--standard-margin);
-    margin-bottom: var(--standard-margin);
-    @top-left { content: none; }
-    @top-right { content: none; }
-    @top-center { content: none; }
-    @bottom-center { content: none; }
-}
-
-@page body-flow:first {
-    margin-top:    var(--top-margin);
-    margin-bottom: var(--bottom-margin);
-    margin-left:   var(--standard-margin);
-    margin-right:  var(--standard-margin);
-
-    @top-center { content: none !important; border: none !important; }
-    @top-left   { content: none !important; border: none !important; }
-    @top-right  { content: none !important; border: none !important; }
-
-    @bottom-left {
-        content: "";
-        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
-        padding-top: var(--footer-padding);
-        width: 40%;
-        vertical-align: top;
-    }
-    @bottom-center {
-        content: counter(page);
-        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
-        padding-top: var(--footer-padding);
-        width: 20%;
-        font-family: var(--font-family-footer);
-        font-size: 12pt;
-        text-align: center;
-        vertical-align: top;
-    }
-    @bottom-right {
-        content: "";
-        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
-        padding-top: var(--footer-padding);
-        width: 40%;
-        vertical-align: top;
-    }
-}
-
-/* Body Left (Even) Pages */
-@page body-flow:left {
-    margin-top:    var(--top-margin);
-    margin-bottom: var(--bottom-margin);
-    margin-left:   var(--standard-margin);
-    margin-right:  var(--gutter-margin);
-
-    /* === running-header === */
-    @top-left {
-        content: string(chapter-title);
-        text-transform: uppercase;
-        font-family: var(--font-family-header);
-        font-size:   var(--running-head-size);
-        border-bottom: var(--running-rule-weight) solid var(--header-rule-color);
-        vertical-align: bottom;
-        padding-bottom: 5pt;
-        margin-bottom: var(--header-gap);
-    }
-    @top-center {
-        content: "";
-        border-bottom: var(--running-rule-weight) solid var(--header-rule-color);
-        padding-bottom: 5pt;
-        margin-bottom: var(--header-gap);
-    }
-    @top-right {
-        content: "";
-        border-bottom: var(--running-rule-weight) solid var(--header-rule-color);
-        padding-bottom: 5pt;
-        margin-bottom: var(--header-gap);
-    }
-
-    /* === running-footer === */
-    @bottom-left {
-        content: var(--footer-outside-content);
-        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
-        padding-top: var(--footer-padding);
-        font-family: var(--font-family-footer);
-        font-size:   var(--footer-font-size);
-        font-weight: var(--footer-font-weight);
-        color:       var(--footer-text-color);
-        vertical-align: top;
-        width: 20%;
-    }
-    @bottom-center {
-        content: "";
-        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
-        padding-top: var(--footer-padding);
-        font-family: var(--font-family-footer);
-        font-size:   var(--footer-font-size);
-        font-weight: var(--footer-font-weight);
-        color:       var(--footer-text-color);
-        vertical-align: top;
-        width: 20%;
-    }
-    @bottom-right {
-        content: var(--footer-inside-content);
-        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
-        padding-top: var(--footer-padding);
-        font-family: var(--font-family-footer);
-        font-size:   var(--footer-font-size);
-        font-weight: var(--footer-font-weight);
-        color:       var(--footer-text-color);
-        vertical-align: top;
-        width: 60%;
-        text-align: right;
-    }
-}
-
-/* Body Right (Odd) Pages */
-@page body-flow:right {
-    margin-top:    var(--top-margin);
-    margin-bottom: var(--bottom-margin);
-    margin-left:   var(--gutter-margin);
-    margin-right:  var(--standard-margin);
-    /* === running-header === */
-    @top-left {
-        content: "";
-        border-bottom: var(--running-rule-weight) solid var(--header-rule-color);
-        padding-bottom: 5pt;
-        margin-top: 15pt;
-        margin-bottom: var(--header-gap);
-    }
-    @top-center {
-        content: "";
-        border-bottom: var(--running-rule-weight) solid var(--header-rule-color);
-        padding-bottom: 5pt;
-        margin-top: 15pt;
-        margin-bottom: var(--header-gap);
-    }
-    @top-right {
-        content: string(chapter-title);
-        text-transform: uppercase;
-        font-family: var(--font-family-header);
-        font-size:   var(--running-head-size);
-        border-bottom: var(--running-rule-weight) solid var(--header-rule-color);
-        vertical-align: bottom;
-        padding-bottom: 5pt;
-        margin-top: 15pt;
-        margin-bottom: var(--header-gap);
-    }
-    /* === running-footer === */
-    @bottom-left {
-        content: var(--footer-inside-content); /* map-title */
-        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
-        padding-top: var(--footer-padding);
-        width: 60%;
-        font-family: var(--font-family-footer);
-        font-size:   var(--footer-font-size);
-        font-weight: var(--footer-font-weight);
-        color:       var(--footer-text-color);
-        vertical-align: top;
-    }
-    @bottom-center {
-        content: "";
-        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
-        padding-top: var(--footer-padding);
-        width: 20%;
-        font-family: var(--font-family-footer);
-        font-size:   var(--footer-font-size);
-        font-weight: var(--footer-font-weight);
-        color:       var(--footer-text-color);
-        vertical-align: top;
-    }
-    @bottom-right {
-        content: var(--footer-outside-content); /* page number */
-        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
-        padding-top: var(--footer-padding);
-        width: 20%;
-        font-family: var(--font-family-footer);
-        font-size:   var(--footer-font-size);
-        font-weight: var(--footer-font-weight);
-        color:       var(--footer-text-color);
-        vertical-align: top;
-    }
-}
-
-@page body-flow:blank {
-    /* Suppresses headers and footers on blank pages inserted between chapters.
-       See toc-flow:blank above for the full explanation. */
-    @top-left   { content: none !important; border: none !important; }
-    @top-center { content: none !important; border: none !important; }
-    @top-right  { content: none !important; border: none !important; }
-
-    @bottom-left   { content: none !important; border: none !important; }
-    @bottom-center { content: none !important; border: none !important; }
-    @bottom-right  { content: none !important; border: none !important; }
-}
-
-body > article,
-body > article > *:last-child {
-    margin-bottom: 0 !important;
-    padding-bottom: 0 !important;
-}
+   Both import automatically via style_styles2.0_imports.css — no action
+   needed here. body > article's page assignment (page: body-flow) also
+   now lives in body_flow.css. */
 /* ########################################################################## */
 
 /* ##########################################################################

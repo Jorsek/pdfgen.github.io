@@ -1,0 +1,223 @@
+/* ═══════════════════════════════════════════════════════════════════
+   BODY PAGE FLOW — layout/body_flow.css
+
+   Page assignment plus @page geometry, margins, and running header/
+   footer plumbing for the main body content (:first, :left, :right,
+   :blank). Pagination mechanics only — the chapter-hero title styling
+   itself lives in style.css.
+
+   Extracted 2026-09-09 from style.css's "MAIN BODY CONTENT" section,
+   where this content already existed but had no standalone source
+   file. Moved here because it's pure page-flow mechanics — rarely
+   redesigned per scenario — unlike the cover/back-cover markup, which
+   stays in style.css because customers commonly redesign it.
+
+   All values are tokens (var(--...)), defined in style.css's :root.
+   Override the token there, not the property here, unless you're
+   changing the actual page-flow structure itself.
+═══════════════════════════════════════════════════════════════════ */
+
+body > article {
+    page: body-flow;
+    prince-page-group: start;
+    break-before: var(--page-break-logic);
+}
+
+@page body-flow {
+    margin-top:    var(--standard-margin);
+    margin-bottom: var(--standard-margin);
+    @top-left { content: none; }
+    @top-right { content: none; }
+    @top-center { content: none; }
+    @bottom-center { content: none; }
+}
+
+@page body-flow:first {
+    margin-top:    var(--top-margin);
+    margin-bottom: var(--bottom-margin);
+    margin-left:   var(--standard-margin);
+    margin-right:  var(--standard-margin);
+
+    @top-center { content: none !important; border: none !important; }
+    @top-left   { content: none !important; border: none !important; }
+    @top-right  { content: none !important; border: none !important; }
+
+    @bottom-left {
+        content: "";
+        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
+        padding-top: var(--footer-padding);
+        width: 40%;
+        vertical-align: top;
+    }
+    @bottom-center {
+        content: counter(page);
+        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
+        padding-top: var(--footer-padding);
+        width: 20%;
+        font-family: var(--font-family-footer);
+        font-size: 12pt;
+        text-align: center;
+        vertical-align: top;
+    }
+    @bottom-right {
+        content: "";
+        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
+        padding-top: var(--footer-padding);
+        width: 40%;
+        vertical-align: top;
+    }
+}
+
+/* Body Left (Even) Pages */
+@page body-flow:left {
+    margin-top:    var(--top-margin);
+    margin-bottom: var(--bottom-margin);
+    margin-left:   var(--standard-margin);
+    margin-right:  var(--gutter-margin);
+
+    /* === running-header === */
+    @top-left {
+        content: string(chapter-title);
+        text-transform: uppercase;
+        font-family: var(--font-family-header);
+        font-size:   var(--running-head-size);
+        border-bottom: var(--running-rule-weight) solid var(--header-rule-color);
+        vertical-align: bottom;
+        padding-bottom: 5pt;
+        margin-bottom: var(--header-gap);
+    }
+    @top-center {
+        content: "";
+        border-bottom: var(--running-rule-weight) solid var(--header-rule-color);
+        padding-bottom: 5pt;
+        margin-bottom: var(--header-gap);
+    }
+    @top-right {
+        content: "";
+        border-bottom: var(--running-rule-weight) solid var(--header-rule-color);
+        padding-bottom: 5pt;
+        margin-bottom: var(--header-gap);
+    }
+
+    /* === running-footer === */
+    @bottom-left {
+        content: var(--footer-outside-content);
+        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
+        padding-top: var(--footer-padding);
+        font-family: var(--font-family-footer);
+        font-size:   var(--footer-font-size);
+        font-weight: var(--footer-font-weight);
+        color:       var(--footer-text-color);
+        vertical-align: top;
+        width: 20%;
+    }
+    @bottom-center {
+        content: "";
+        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
+        padding-top: var(--footer-padding);
+        font-family: var(--font-family-footer);
+        font-size:   var(--footer-font-size);
+        font-weight: var(--footer-font-weight);
+        color:       var(--footer-text-color);
+        vertical-align: top;
+        width: 20%;
+    }
+    @bottom-right {
+        content: var(--footer-inside-content);
+        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
+        padding-top: var(--footer-padding);
+        font-family: var(--font-family-footer);
+        font-size:   var(--footer-font-size);
+        font-weight: var(--footer-font-weight);
+        color:       var(--footer-text-color);
+        vertical-align: top;
+        width: 60%;
+        text-align: right;
+    }
+}
+
+/* Body Right (Odd) Pages */
+@page body-flow:right {
+    margin-top:    var(--top-margin);
+    margin-bottom: var(--bottom-margin);
+    margin-left:   var(--gutter-margin);
+    margin-right:  var(--standard-margin);
+    /* === running-header === */
+    @top-left {
+        content: "";
+        border-bottom: var(--running-rule-weight) solid var(--header-rule-color);
+        padding-bottom: 5pt;
+        margin-top: 15pt;
+        margin-bottom: var(--header-gap);
+    }
+    @top-center {
+        content: "";
+        border-bottom: var(--running-rule-weight) solid var(--header-rule-color);
+        padding-bottom: 5pt;
+        margin-top: 15pt;
+        margin-bottom: var(--header-gap);
+    }
+    @top-right {
+        content: string(chapter-title);
+        text-transform: uppercase;
+        font-family: var(--font-family-header);
+        font-size:   var(--running-head-size);
+        border-bottom: var(--running-rule-weight) solid var(--header-rule-color);
+        vertical-align: bottom;
+        padding-bottom: 5pt;
+        margin-top: 15pt;
+        margin-bottom: var(--header-gap);
+    }
+    /* === running-footer === */
+    @bottom-left {
+        content: var(--footer-inside-content); /* map-title */
+        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
+        padding-top: var(--footer-padding);
+        width: 60%;
+        font-family: var(--font-family-footer);
+        font-size:   var(--footer-font-size);
+        font-weight: var(--footer-font-weight);
+        color:       var(--footer-text-color);
+        vertical-align: top;
+    }
+    @bottom-center {
+        content: "";
+        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
+        padding-top: var(--footer-padding);
+        width: 20%;
+        font-family: var(--font-family-footer);
+        font-size:   var(--footer-font-size);
+        font-weight: var(--footer-font-weight);
+        color:       var(--footer-text-color);
+        vertical-align: top;
+    }
+    @bottom-right {
+        content: var(--footer-outside-content); /* page number */
+        border-top: var(--running-rule-weight) solid var(--footer-rule-color);
+        padding-top: var(--footer-padding);
+        width: 20%;
+        font-family: var(--font-family-footer);
+        font-size:   var(--footer-font-size);
+        font-weight: var(--footer-font-weight);
+        color:       var(--footer-text-color);
+        vertical-align: top;
+    }
+}
+
+@page body-flow:blank {
+    /* Suppresses headers and footers on blank pages inserted between chapters.
+       See toc_flow.css's :blank rule for the full explanation. */
+    @top-left   { content: none !important; border: none !important; }
+    @top-center { content: none !important; border: none !important; }
+    @top-right  { content: none !important; border: none !important; }
+
+    @bottom-left   { content: none !important; border: none !important; }
+    @bottom-center { content: none !important; border: none !important; }
+    @bottom-right  { content: none !important; border: none !important; }
+}
+
+body > article,
+body > article > *:last-child {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}

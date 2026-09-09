@@ -34,25 +34,30 @@ Span the left border across the cause and remedy elements. */
   color: var(--color-body);
 }
 
-/* Add a caption before info elements. 
+/* Add a caption before info elements. Disabled by default — remove the
+comment markers to enable. Caption text is configurable — see --label-info
+in style.css :root.
 .info::before {
-  content: "Info: ";
+  content: var(--label-info);
 }
 */
 
-/* Add a caption before step example and example elements. */
+/* Add a caption before step example and example elements.
+Caption text is configurable — see --label-stepxmp-example in style.css :root. */
 .stepxmp::before {
-  content: "Example: ";
+  content: var(--label-stepxmp-example);
 }
 
-/* Add a caption before stepresult and result elements. */
+/* Add a caption before stepresult and result elements.
+Caption text is configurable — see --label-stepresult-result in style.css :root. */
 .stepresult::before{
-  content: "Result: ";
+  content: var(--label-stepresult-result);
 }
 
-/* Add a task label before steptroubleshooting elements. */
+/* Add a task label before steptroubleshooting elements.
+Caption text is configurable — see --label-troubleshooting in style.css :root. */
 .steptroubleshooting::before {
-  content: "Troubleshooting: ";
+  content: var(--label-troubleshooting);
 }
 
 /* Fix the dotted border transition between elements. */
