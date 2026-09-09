@@ -1,13 +1,58 @@
+**Looking for a specific `--token`, not a file?** See `TOKENS.md` — the full reference of every token in `style.css`'s `:root`, its default, and what it controls.
+
+# Customizing this scenario
+
+## Architecture
+
+```
+style.css                      ← YOU ARE HERE — :root tokens, @page layout
+                                  for cover/front-matter/back-cover, TOC
+                                  visual formatting, chapter hero
+  └─ style_styles2.0_imports.css      (element module manifest)
+       ├─ dita/*.css            (DITA element reference — tables, lists, notes…)
+       ├─ styling/*.css         (optional formatting toggles)
+       └─ layout/*.css          (page-break control; toc_flow.css / body_flow.css
+                                  own TOC- and body-page pagination mechanics)
+```
+Add your own overrides in **your own scenario's CSS tab**, after importing `style.css` — there is no shared `custom.css`; see Overrides in `style_styles2.0_imports.css`'s header for why.
+
+## Common customizations
+
+| To change | Edit |
+|---|---|
+| Brand colors | `--brand-primary`, `--brand-secondary` in `:root` |
+| Page margins | `--standard-margin`, `--top-margin`, `--bottom-margin` |
+| Cover background | `--cover-bg-color`, `--cover-hero-height` |
+| Running footer text | `--footer-inside-content`, `--footer-outside-content` |
+| TOC heading label | `--toc-text` |
+| A DITA section/note caption | `--label-*` (e.g. `--label-prereq`, `--label-remedy` — full list in `TOKENS.md`) |
+| A metadata field's label | `--cover-*-label` (e.g. `--cover-version-label: "Ver. "`) |
+| The logo | `--logo-front` / `--logo-back` (Base64 SVG or `url()`) |
+| A DITA element's style | Open `style_styles2.0_imports.css`, find the section, edit that file |
+
+## Where to make a change
+
+| Safe to edit directly | Edit elsewhere instead |
+|---|---|
+| Brand colors, fonts, logos → `:root` | Cover structure / content order → `xsl.xsl` |
+| Spacing, margins, cover geometry → `:root` | Section on/off (cover, TOC, etc.) → `xsl.xsl` |
+| TOC label and formatting → `:root` + `nav` rules in `style.css` | Metadata sources → ditamap `topicmeta` |
+| Metadata field appearance → `.cover-*` rules in `style.css` | DITA element styles → `style_styles2.0_imports.css` → `dita/` or `styling/` |
+
+**Change carefully:** `@page` rules (margins, headers, footers), `string-set` declarations (feed running headers — see the comment on each), and `prince-page-group`/`break-before` (control section page sequencing). These are documented in place in `style.css` and `layout/toc_flow.css`/`body_flow.css` because changing them affects page-flow structure, not just a value.
+
+---
+
 # File reference — what's in each file
 
 ### Root
 
 | File | What's in it |
 |---|---|
-| `style.css` | This scenario's `:root` tokens (brand colors, spacing scale, border widths, font sizes), `@page` geometry, cover page, TOC container, and chapter-hero rules. The one file meant to be imported wholesale, then built on per-customer. |
+| `style.css` | This scenario's `:root` tokens (brand colors, spacing scale, border widths, font sizes), cover/front-matter/back-cover `@page` geometry and markup, TOC visual formatting, and chapter-hero rules. The one file meant to be imported wholesale, then built on per-customer. TOC- and body-page pagination mechanics (margins, running headers/footers) live in `layout/toc_flow.css` and `layout/body_flow.css` instead — see below. |
 | `style_styles2.0_imports.css` | The manifest — what's active, what's optional, and the GitHub URL for every module. Start here to find a specific element. |
 | `xsl.xsl` | Controls document assembly: chapter body order, cover/back-cover/front-matter inclusion (each toggled by uncommenting a `call-template` line), cover metadata field extraction (subtitle, author, publisher, company, address, etc., with map vs. bookmap fallbacks), and the `get.map.title` fallback logic for the document title. |
-| `cover-page.html` | Empty placeholder (`<span/>`) — this scenario uses the system-generated default cover rather than a custom HTML cover. Only needs content if you want to override that default. |
+| `cover-page.html` | The default static cover, populated out of the box with the same fields as `xsl.xsl`'s `front.cover` template (product name, version, platform, doc revision, author, created date; part number/audience/publisher/revised available but off by default). Edit the placeholder values directly. To use the system-generated cover instead (metadata pulled automatically from the ditamap/bookmap, no per-document edits), delete the contents and leave only `<span/>` — `xsl.xsl` then generates the cover from document metadata. |
 
 ### dita/ — one file per DITA element family
 
@@ -63,3 +108,5 @@
 | File | What's in it |
 |---|---|
 | `breaks.css` | Chapter break-before rules; heading/content bonds (don't strand a heading at the bottom of a page); step-procedure and task-label bonds; definition-list and figure integrity; the `break_topics` outputclass; and `.break_before/_after/_avoid/_inside` utility classes. |
+| `toc_flow.css` | `@page toc-flow` geometry: margins, running headers/footers, and blank-page suppression for TOC pages (`:first`/`:left`/`:right`/`:blank`). Pagination mechanics only — the TOC's visual formatting (nav, links, "Contents" heading) is in `style.css`. Moved out of `style.css` 2026-09-09 — see that file's "TOC & BODY PAGE FLOW" note. |
+| `body_flow.css` | `body > article`'s page assignment plus `@page body-flow` geometry: margins, running headers/footers, and blank-page suppression for body pages (`:first`/`:left`/`:right`/`:blank`). Pagination mechanics only — the chapter-hero title styling is in `style.css`. Moved out of `style.css` 2026-09-09, same note. |

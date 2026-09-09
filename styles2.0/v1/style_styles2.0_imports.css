@@ -86,6 +86,8 @@
 
 /* ── Page breaks & flow ─────────────────────────────────────────── */
 @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/layout/breaks.css");
+@import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/layout/toc_flow.css");
+@import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/layout/body_flow.css");
 
 /* ── Optional modules ───────────────────────────────────────────── */
 /* Remove comment markers to enable. Each module is independent.    */

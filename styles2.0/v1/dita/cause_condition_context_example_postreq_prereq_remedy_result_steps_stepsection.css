@@ -60,27 +60,31 @@
   margin-top: 5px;
 }
 
-/* Add captions before prerequisite elements. */
+/* Add captions before prerequisite elements.
+Caption text is configurable — see --label-prereq in style.css :root. */
 .prereq::before {
-  content: "Before you begin";
+  content: var(--label-prereq);
 }
 
-/* Add captions before postrequisite elements. */
+/* Add captions before postrequisite elements.
+Caption text is configurable — see --label-postreq in style.css :root. */
 .postreq::before {
-  content: "Next steps";
+  content: var(--label-postreq);
 }
 
-/* Add captions before task topics with the @outputclass="process" attribute set on their root elements. */
+/* Add captions before task topics with the @outputclass="process" attribute set on their root elements.
+Caption text is configurable — see --label-steps-process in style.css :root. */
 article.process .steps::before,
 article.process .steps-unordered::before {
-  content: "Process";
+  content: var(--label-steps-process);
 }
 
 /* Add captions before steps elements.
-Prevent the process-topic children from inheriting the "Process" caption. */
+Prevent the process-topic children from inheriting the "Process" caption.
+Caption text is configurable — see --label-steps-procedure in style.css :root. */
 article:not(.process) .steps::before,
 article:not(.process) .steps-unordered::before {
-  content: "Procedure";
+  content: var(--label-steps-procedure);
 }
 
 /* Hide the caption before steps elements if a stepsection element precedes the first step. */
@@ -95,34 +99,40 @@ article:not(.process) .steps-unordered::before {
   display: none;
 }
 
-/* Add captions before context elements. */
+/* Add captions before context elements.
+Caption text is configurable — see --label-context in style.css :root. */
 .context::before {
-  content: "Context";
+  content: var(--label-context);
 }
 
-/* Add captions before condition elements. */
+/* Add captions before condition elements.
+Caption text is configurable — see --label-condition in style.css :root. */
 .condition::before {
-  content: "Condition";
+  content: var(--label-condition);
 }
 
-/* Add captions before cause elements. */
+/* Add captions before cause elements.
+Caption text is configurable — see --label-cause in style.css :root. */
 .cause::before {
-  content: "Cause";
+  content: var(--label-cause);
 }
 
-/* Add captions before remedy elements. */
+/* Add captions before remedy elements.
+Caption text is configurable — see --label-remedy in style.css :root. */
 .remedy::before {
-  content: "Remedy";
+  content: var(--label-remedy);
 }
 
-/* Add captions before stepxmp and example elements. */
+/* Add captions before stepxmp and example elements.
+Caption text is configurable — see --label-example in style.css :root. */
 .example::before {
-  content: "Example";
+  content: var(--label-example);
 }
 
-/* Add captions before stepresult and result elements. */
+/* Add captions before stepresult and result elements.
+Caption text is configurable — see --label-result in style.css :root. */
 .result::before {
-  content: "Result";
+  content: var(--label-result);
 }
 
 /* Fix padding for stepsections. */
