@@ -8,6 +8,9 @@
    see readme.md. */
 
 @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/style_styles2.0_imports.css");
+/* Brand identity (colors, fonts, logos, note colors) — swap this import for
+   a different palettes/*.css file to reskin. See readme.md / TOKENS.md. */
+@import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/palettes/default.css");
 
 /* ##########################################################################
    GLOBAL SETTINGS
@@ -18,32 +21,47 @@
     margin-bottom: var(--bottom-margin);
     margin-left:   var(--standard-margin);
     margin-right:  var(--standard-margin);
+    /* Cascades to every named page (cover, toc-flow, body-flow, back_cover_style) —
+       @page rules combine by specificity like normal CSS. See WEB / PRINT MODE below. */
+    bleed: var(--page-bleed);
+    marks: var(--page-marks);
 }
 
 /* ##########################################################################
-   BRANDING & LAYOUT PALETTE — every token documented in TOKENS.md
+   LAYOUT PALETTE — every token documented in TOKENS.md
+   Brand identity (colors, fonts, logos, note colors) lives in the
+   palettes/default.css import above, not here.
    ########################################################################## */
 :root {
-/* === GLOBAL LOGIC === */
-    /* right = each section starts on a right-hand (odd) page; auto = starts on next available page */
-    --page-break-logic: right;
+/* ══════════════════════════════════════════════════════════════════════
+   WEB / PRINT MODE — active block wins. To switch, comment out PRINT below
+   and uncomment WEB (or vice versa). Bundles every difference between a
+   screen-read PDF and one meant for a duplex/bound printer or a commercial
+   press: forced blank pages so sections start right-hand, binding-side
+   gutter margin, roman-numeral front matter, and bleed/crop marks.
+   Full explanation: readme.md. Token-by-token: TOKENS.md.               */
+
+/* --- PRINT (active default) --- */
+    --page-break-logic: right;           /* right = sections start on the next odd page (forces blanks); auto = next available page */
     --back-cover-break: right;
-    /* lower-roman = i, ii, iii; decimal = 1, 2, 3 */
-    --frontmatter-page-numbering: lower-roman;
+    --frontmatter-page-numbering: lower-roman;  /* lower-roman = i, ii, iii; decimal = 1, 2, 3 */
+    --gutter-margin: .75in;              /* binding-side margin — distinct from --standard-margin below */
+    --page-bleed: 9pt;                   /* ~0.125in bleed allowance — commercial press only, see readme.md */
+    --page-marks: crop cross;            /* crop + registration marks — commercial press only; "none" otherwise */
 
-    /* === BRANDING PALETTE === */
-    --brand-primary: #005A9C;
-    --brand-secondary: #4A5568;
-    --brand-accent: #CCCCCC;
+/* --- WEB (uncomment this block and comment PRINT above to switch) ---
+    --page-break-logic: auto;
+    --back-cover-break: auto;
+    --frontmatter-page-numbering: decimal;
+    --gutter-margin: var(--standard-margin);
+    --page-bleed: 0;
+    --page-marks: none;
+--- END WEB --- */
 
-    /* === COPYRIGHT === (DITA builds pull from <copyrholder> via XSL instead) */
-    --copyright-notice: "REPLACE WITH YOUR ORGANIZATION";
+    /* === BRAND IDENTITY === now in palettes/default.css: --brand-*, --copyright-notice,
+       --font-family-*, --text-main/-muted, --color-note-*, --logo-front/-back */
 
-    /* === TYPOGRAPHY === */
-    --font-family-main:   'Helvetica Neue', Helvetica, Arial, sans-serif;
-    --font-family-header: "Arial", sans-serif;
-    --font-family-footer: "Arial", sans-serif;
-
+    /* === TITLE & SUBTITLE TYPOGRAPHY === (brand fonts live in palettes/default.css) */
     --title-size:         32pt;
     --title-weight:       300;
     --title-line-height:  1.1;
@@ -120,10 +138,6 @@
     --cover-revised-label:       "";
     --cover-copyright-label:     "\A9 ";  /* © prefix — full text comes from --copyright-notice */
 
-    /* === TEXT & BODY COLORS === */
-    --text-main:          #333333;   /* body copy, cover metadata block */
-    --text-muted:         #666666;   /* secondary text, captions */
-
     /* === RUNNING HEADERS & FOOTERS === */
     --running-head-size:  11pt;
     --footer-font-size:   10pt;
@@ -137,11 +151,10 @@
     --header-rule-color:   var(--brand-primary);
     --footer-rule-color:   var(--brand-primary);
 
-    /* === PAGE MARGINS & GAPS === */
+    /* === PAGE MARGINS & GAPS === (--gutter-margin lives in WEB / PRINT MODE above) */
     --top-margin:         .85in;
     --bottom-margin:      .65in;
     --standard-margin:    0.75in;
-    --gutter-margin:      .75in;
     --header-gap:         15pt;
     --footer-padding:     6pt;
 
@@ -194,13 +207,6 @@
     --footer-outside-content: counter(page);
     --footer-inside-content:  string(map-title);
 
-    /* === LOGO ASSETS (Base64 SVG) === */
-    /* Front Cover Logo: Typically your standard brand logo */
-    --logo-front: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzUwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDM1MCAxNTAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjM1MCIgaGVpZ2h0PSIxNTAiIHJ4PSIxMiIgZmlsbD0iIzMzMzMzMyIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiIGxldHRlci1zcGFjaW5nPSIxIj5SRVBMQUNFIExPR088L3RleHQ+PC9zdmc+");
-
-    /* Back Cover Logo: Typically a simplified or white version */
-    --logo-back:  url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzUwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDM1MCAxNTAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjM1MCIgaGVpZ2h0PSIxNTAiIHJ4PSIxMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjI0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSI+Q09NUEFOWSBMT0dPPC90ZXh0Pjwvc3ZnPg==");
-
     /* === STYLES2.0 MODULE TOKEN BRIDGE === do not rename (consumed by name); edit sources above, not here */
     --color-primary:            var(--brand-primary);    /* table headers, note borders, xref link color */
     --color-primary-dark:       var(--brand-secondary);  /* table header hover, heading accents */
@@ -215,16 +221,6 @@
     --font-size-base:           11pt;                     /* default body text size in element modules */
     --font-size-small:          9pt;                      /* captions, footnotes, table cell text */
     --font-size-xs:             8pt;                      /* fine print, metadata labels */
-
-    /* === NOTE ACCENT COLORS === border + background per note type */
-    --color-note-note:          var(--brand-primary);    /* left border on <note type="note"> */
-    --color-note-note-bg:       #005A9C1A;               /* background tint on <note type="note"> */
-    --color-note-tip:           #3f6c51;                 /* left border on <note type="tip"> */
-    --color-note-tip-bg:        #3f6c512c;               /* background tint on <note type="tip"> */
-    --color-note-warning:       #d95700;                 /* left border on <note type="warning"> */
-    --color-note-warning-bg:    #d9570027;               /* background tint on <note type="warning"> */
-    --color-note-important:     #ffa600;                 /* left border on <note type="important"> */
-    --color-note-important-bg:  #ffc25131;               /* background tint on <note type="important"> */
 
     /* === SPACING SCALE === margins/padding across all DITA element modules */
     --space-1:              5px;
@@ -309,6 +305,7 @@ body > .cover-page-container {
 
 .text-wrapper {
     position: absolute;
+    z-index: 10;   /* above .cover-logo (z-index: 5) — title/metadata must stay visible over any cover art */
     bottom: 0;
     left: 0;
     padding: var(--cover-inset);
@@ -837,7 +834,7 @@ h1.topictitle1, h2, h3, h4, h5, h6,
 }
 
 /* Back cover copyright — DITA builds: XSL outputs year + holder as text content.
-   Static HTML builds: leave div empty and set --copyright-notice in :root. */
+   Static HTML builds: leave div empty and set --copyright-notice in palettes/default.css. */
 .back-cover-copyright {
     font-size:   var(--footer-font-size);
     color:       var(--cover-text-color);

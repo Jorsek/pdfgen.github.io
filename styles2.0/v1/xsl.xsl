@@ -370,14 +370,19 @@
          ======================================================== -->
     <xsl:template name="get.map.title">
         <xsl:choose>
+            <!-- Bookmap FIRST: <booktitle> is itself classed "topic/title" (it's a direct
+                 child of the map, same as a plain map's <title>), so the generic check below
+                 would match the whole <booktitle> container — pulling in <booktitlealt> too —
+                 before we ever got here. Checked first so the specific <mainbooktitle> wins. -->
+            <xsl:when test="/normalized//*[contains(@class, ' map/map ')]//*[contains(@class, ' topic/title ')]//*[contains(@class, ' bookmap/mainbooktitle ')]">
+                <xsl:apply-templates select="/normalized//*[contains(@class, ' map/map ')]//*[contains(@class, ' topic/title ')]//*[contains(@class, ' bookmap/mainbooktitle ')]"/>
+            </xsl:when>
+            <!-- Plain ditamap: <title> as a direct child of <map>. -->
             <xsl:when test="/normalized//*[contains(@class, ' map/map ')]/*[contains(@class, ' topic/title ')]">
                 <xsl:apply-templates select="/normalized//*[contains(@class, ' map/map ')]/*[contains(@class, ' topic/title ')]"/>
             </xsl:when>
             <xsl:when test="/normalized//*[contains(@class, ' map/map ')]/@title">
                 <xsl:value-of select="/normalized//*[contains(@class, ' map/map ')]/@title"/>
-            </xsl:when>
-            <xsl:when test="/normalized//*[contains(@class, ' map/map ')]//*[contains(@class, ' topic/title ')]//*[contains(@class, ' bookmap/mainbooktitle ')]">
-                <xsl:apply-templates select="/normalized//*[contains(@class, ' map/map ')]//*[contains(@class, ' topic/title ')]//*[contains(@class, ' bookmap/mainbooktitle ')]"/>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:comment>No title specified</xsl:comment>

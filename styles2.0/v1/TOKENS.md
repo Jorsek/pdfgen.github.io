@@ -1,6 +1,6 @@
 # Token Reference — `style.css`
 
-Every custom property (`--token-name`) defined in `style.css`'s `:root` block, what it controls, and its default value. This is the single place to look up "what do I change for X" — for which *file* controls a given element instead, see `readme.md`.
+Every custom property (`--token-name`) in this scenario, what it controls, and its default value. This is the single place to look up "what do I change for X" — for which *file* controls a given element instead, see `readme.md`. Most tokens live in `style.css`'s `:root`; brand-identity tokens (colors, fonts, logos, note colors — the ones a different theme would swap) live in `palettes/default.css` instead, imported by `style.css`. Each section below is labeled with which file it's in.
 
 **How to override:** copy the token into your own scenario's CSS (or edit `style.css` directly if this scenario is yours to edit), after the `@import` of `style_styles2.0_imports.css`, and give it a new value. Because everything downstream reads through `var()`, one token change updates every place that token is used — no need to hunt through `dita/`, `styling/`, or `layout/` files.
 
@@ -8,15 +8,22 @@ Every custom property (`--token-name`) defined in `style.css`'s `:root` block, w
 
 ---
 
-## Global Logic
+## Web / Print Mode
 
-| Token | Default | Controls |
-|---|---|---|
-| `--page-break-logic` | `right` | Whether a new chapter/section starts on the next right-hand/odd page (`right`, standard duplex-print convention) or the next available page (`auto`). |
-| `--back-cover-break` | `right` | Same break behavior, applied specifically before the back cover. |
-| `--frontmatter-page-numbering` | `lower-roman` | Numbering style for front matter and TOC pages. `lower-roman` = i, ii, iii; `decimal` = 1, 2, 3. |
+`style.css`'s `:root` holds two versions of these six tokens: an active **PRINT** block and a commented-out **WEB** block directly below it. To switch modes, comment out the PRINT block and uncomment the WEB block (or vice versa) — there's no separate flag token, because CSS can't branch on a custom property's value. Whichever block is uncommented wins.
 
-## Branding Palette
+| Token | PRINT (default) | WEB | Controls |
+|---|---|---|---|
+| `--page-break-logic` | `right` | `auto` | Whether a new chapter/section starts on the next right-hand/odd page (forces blank pages — standard duplex-print convention) or the next available page. |
+| `--back-cover-break` | `right` | `auto` | Same break behavior, applied specifically before the back cover. |
+| `--frontmatter-page-numbering` | `lower-roman` | `decimal` | Numbering style for front matter and TOC pages. `lower-roman` = i, ii, iii; `decimal` = 1, 2, 3. |
+| `--gutter-margin` | `.75in` | `var(--standard-margin)` | Binding-side page margin. PRINT widens it for a bound/duplex document; WEB matches the other three margins since there's no binding. |
+| `--page-bleed` | `9pt` | `0` | CSS Paged Media `bleed` — how far the page extends past the trim box, for a commercial press. Irrelevant on screen, so WEB sets it to `0`. |
+| `--page-marks` | `crop cross` | `none` | CSS Paged Media `marks` — crop and registration marks for a commercial press. WEB has no press, so `none`. |
+
+## Branding Palette (`palettes/default.css`)
+
+To theme this scenario differently, swap the `palettes/default.css` import in `style.css` for another `palettes/*.css` file that redefines these same token names. See "Adding a theme" in `readme.md`.
 
 | Token | Default | Controls |
 |---|---|---|
@@ -24,19 +31,24 @@ Every custom property (`--token-name`) defined in `style.css`'s `:root` block, w
 | `--brand-secondary` | `#4A5568` | Footer text color; table header hover/heading accent color (via `--color-primary-dark`). |
 | `--brand-accent` | `#CCCCCC` | Title underline rule color; table and definition-list border color (via `--color-border`); step-number badge background (via `--color-bg-step`). |
 
-## Copyright
+## Copyright (`palettes/default.css`)
 
 | Token | Default | Controls |
 |---|---|---|
 | `--copyright-notice` | `"REPLACE WITH YOUR ORGANIZATION"` | Full copyright-holder text, shown after the © symbol on the front cover (`.cover-copyright::before`). DITA builds instead pull this from `<copyrholder>` via XSL on the back cover — this token is the static-HTML-build / CSS-driven fallback. |
 
-## Typography
+## Brand Fonts (`palettes/default.css`)
 
 | Token | Default | Controls |
 |---|---|---|
 | `--font-family-main` | `'Helvetica Neue', Helvetica, Arial, sans-serif` | Base font for the cover, chapter titles, body heading rules, and back cover text. |
 | `--font-family-header` | `"Arial", sans-serif` | Running header font at the top of body and TOC pages. |
 | `--font-family-footer` | `"Arial", sans-serif` | Running footer font at the bottom of body, TOC, and front-matter pages. |
+
+## Title & Subtitle Typography (`style.css`)
+
+| Token | Default | Controls |
+|---|---|---|
 | `--title-size` | `32pt` | Font size of chapter titles, the cover title, and the TOC heading. |
 | `--title-weight` | `300` | Font weight of the same three. |
 | `--title-line-height` | `1.1` | Line height of the same three. |
@@ -93,7 +105,7 @@ Each token below is text prepended to its field via `::before`. Default is an em
 | `--cover-revised-label` | `""` |
 | `--cover-copyright-label` | `"\A9 "` (© symbol — full text comes from `--copyright-notice`) |
 
-## Text & Body Colors
+## Text & Body Colors (`palettes/default.css`)
 
 | Token | Default | Controls |
 |---|---|---|
@@ -126,11 +138,10 @@ Each token below is text prepended to its field via `::before`. Default is an em
 | `--top-margin` | `.85in` | Top page margin (body/TOC/front-matter pages, excluding cover). |
 | `--bottom-margin` | `.65in` | Bottom page margin. |
 | `--standard-margin` | `0.75in` | Outer-edge margin on left/right (non-gutter) pages. |
-| `--gutter-margin` | `.75in` | Binding-side margin on left/right (duplex) pages — see `--page-break-logic` and the web/print note below. |
 | `--header-gap` | `15pt` | Space between the header rule and the page content that follows. |
 | `--footer-padding` | `6pt` | Space between the footer rule and the footer text above it. |
 
-> **Note for the print/web unification work:** `--gutter-margin` (distinct from `--standard-margin`) and `--frontmatter-page-numbering: lower-roman` are both duplex-print conventions with no on-screen equivalent — flagged here as the tokens a future `--pdf-mode` toggle would need to override. See the gap-analysis doc, Section 7.
+`--gutter-margin` moved to the Web / Print Mode table above — it switches with the other five web/print tokens rather than living here as a fixed value.
 
 ## Title & Hero Spacing
 
@@ -199,7 +210,7 @@ Not tokenized, and out of scope for this set: the `": "` separator in `.cause > 
 | `--footer-outside-content` | `counter(page)` | What renders in the outside-edge footer slot on body pages (page number, decimal). |
 | `--footer-inside-content` | `string(map-title)` | What renders in the inside-edge footer slot on body pages (document title). |
 
-## Logo Assets
+## Logo Assets (`palettes/default.css`)
 
 | Token | Default | Controls |
 |---|---|---|
@@ -226,7 +237,7 @@ These map the shared library's internal token names to this scenario's brand tok
 | `--font-size-small` | `9pt` | Captions, footnotes, table cell text size. |
 | `--font-size-xs` | `8pt` | Fine print, metadata label size. |
 
-### Note Type Colors
+### Note Type Colors (`palettes/default.css`)
 
 | Token | Default | Controls |
 |---|---|---|
@@ -270,4 +281,4 @@ These map the shared library's internal token names to this scenario's brand tok
 
 ---
 
-**Total: 159 tokens.** All defined once, in `style.css`'s `:root` — in both `Default_2.0/style.css` (the live scenario) and the `styles2.0/v1/style.css` starter copy new scenarios are built from. Keep the two in sync when either changes.
+**Total: 161 tokens** — 142 in `style.css`'s `:root`, 19 in `palettes/default.css`'s `:root` (brand identity, swappable per theme). `style.css` exists in two copies, `Default_2.0/style.css` (the live scenario) and `styles2.0/v1/style.css` (the starter copy new scenarios are built from) — keep them in sync when either changes. `palettes/default.css` is shared, GitHub-hosted, and imported by both — one copy, like `dita/`/`styling/`/`layout/`.
