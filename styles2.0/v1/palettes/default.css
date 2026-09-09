@@ -1,0 +1,47 @@
+/* palettes/default.css — brand identity: colors, fonts, logos, note accent
+   colors. Everything a different customer's brand would replace, isolated
+   from the layout/structure tokens that stay in style.css.
+   Hosted at: https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/palettes/default.css
+
+   TO ADD A THEME: copy this file, rename it (e.g. palettes/blue.css), change
+   the values, host it, then swap the @import in style.css (or your own
+   scenario's CSS tab) to point at your file instead. Every token name below
+   must stay the same — style.css and the DITA/styling modules consume them
+   by name via the "STYLES2.0 MODULE TOKEN BRIDGE" in style.css.
+   Full explanation: readme.md. Token-by-token: TOKENS.md. */
+
+:root {
+    /* === BRANDING PALETTE === */
+    --brand-primary:   #005A9C;
+    --brand-secondary: #4A5568;
+    --brand-accent:    #CCCCCC;
+
+    /* === COPYRIGHT === (DITA builds pull from <copyrholder> via XSL instead) */
+    --copyright-notice: "REPLACE WITH YOUR ORGANIZATION";
+
+    /* === BRAND FONTS === (title/subtitle sizing stays in style.css) */
+    --font-family-main:   'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --font-family-header: "Arial", sans-serif;
+    --font-family-footer: "Arial", sans-serif;
+
+    /* === TEXT & BODY COLORS === */
+    --text-main:  #333333;   /* body copy, cover metadata block */
+    --text-muted: #666666;   /* secondary text, captions */
+
+    /* === NOTE ACCENT COLORS === border + background per note type */
+    --color-note-note:         var(--brand-primary);
+    --color-note-note-bg:      #005A9C1A;
+    --color-note-tip:          #3f6c51;
+    --color-note-tip-bg:       #3f6c512c;
+    --color-note-warning:      #d95700;
+    --color-note-warning-bg:   #d9570027;
+    --color-note-important:    #ffa600;
+    --color-note-important-bg: #ffc25131;
+
+    /* === LOGO ASSETS (Base64 SVG) === */
+    /* Front Cover Logo: Typically your standard brand logo */
+    --logo-front: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzUwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDM1MCAxNTAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjM1MCIgaGVpZ2h0PSIxNTAiIHJ4PSIxMiIgZmlsbD0iIzMzMzMzMyIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiIGxldHRlci1zcGFjaW5nPSIxIj5SRVBMQUNFIExPR088L3RleHQ+PC9zdmc+");
+
+    /* Back Cover Logo: Typically a simplified or white version */
+    --logo-back: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzUwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDM1MCAxNTAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjM1MCIgaGVpZ2h0PSIxNTAiIHJ4PSIxMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjI0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSI+Q09NUEFOWSBMT0dPPC90ZXh0Pjwvc3ZnPg==");
+}
