@@ -127,8 +127,10 @@
 
             <!-- SECTION TOGGLES: comment/uncomment a line to disable/enable it. -->
 
-            <!-- Cover page -->
-            <xsl:call-template name="front.cover"/>
+            <!-- Cover page: off by default — cover-page.html's stub is the
+                 default cover. Uncomment to use this system-generated cover
+                 instead (see cover-page.html for how to switch). -->
+            <!-- <xsl:call-template name="front.cover"/> -->
             <xsl:call-template name="frontmatter.page"/>
             <!-- Table of contents -->
             <xsl:variable name="map" as="element()*">
