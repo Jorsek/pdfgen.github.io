@@ -49,7 +49,8 @@
    and uncomment WEB (or vice versa). Bundles every difference between a
    screen-read PDF and one meant for a duplex/bound printer or a commercial
    press: forced blank pages so sections start right-hand, binding-side
-   gutter margin, roman-numeral front matter, and bleed/crop marks.
+   gutter margin, and roman-numeral front matter. Bleed/crop marks default
+   off in both — turn on only for a commercial press, see readme.md.
    Full explanation: readme.md. Token-by-token: TOKENS.md.               */
 
 /* --- PRINT (active default) --- */
@@ -57,8 +58,8 @@
     --back-cover-break: right;
     --frontmatter-page-numbering: lower-roman;  /* lower-roman = i, ii, iii; decimal = 1, 2, 3 */
     --gutter-margin: .75in;              /* binding-side margin — distinct from --standard-margin below */
-    --page-bleed: 9pt;                   /* ~0.125in bleed allowance — commercial press only, see readme.md */
-    --page-marks: crop cross;            /* crop + registration marks — commercial press only; "none" otherwise */
+    --page-bleed: 0;                     /* ~0.125in bleed allowance — commercial press only, see readme.md */
+    --page-marks: none;                  /* crop + registration marks — commercial press only; "none" otherwise */
 
 /* --- WEB (uncomment this block and comment PRINT above to switch) ---
     --page-break-logic: auto;

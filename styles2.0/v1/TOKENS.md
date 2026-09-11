@@ -10,7 +10,7 @@ Every custom property (`--token-name`) in this scenario, what it controls, and i
 
 ## Web / Print Mode
 
-`style.css`'s `:root` holds two versions of these six tokens: an active **PRINT** block and a commented-out **WEB** block directly below it. To switch modes, comment out the PRINT block and uncomment the WEB block (or vice versa) — there's no separate flag token, because CSS can't branch on a custom property's value. Whichever block is uncommented wins.
+`style.css`'s `:root` holds two versions of these six tokens: an active **PRINT** block and a commented-out **WEB** block directly below it. To switch modes, comment out the PRINT block and uncomment the WEB block (or vice versa) — there's no separate flag token, because CSS can't branch on a custom property's value. Whichever block is uncommented wins. The last two tokens (bleed/marks) default identically in both blocks — they're really a separate "is this going to a commercial press" question, not a web-vs-print one — but live here for convenience since they're part of the same toggle mechanism.
 
 | Token | PRINT (default) | WEB | Controls |
 |---|---|---|---|
@@ -18,8 +18,8 @@ Every custom property (`--token-name`) in this scenario, what it controls, and i
 | `--back-cover-break` | `right` | `auto` | Same break behavior, applied specifically before the back cover. |
 | `--frontmatter-page-numbering` | `lower-roman` | `decimal` | Numbering style for front matter and TOC pages. `lower-roman` = i, ii, iii; `decimal` = 1, 2, 3. |
 | `--gutter-margin` | `.75in` | `var(--standard-margin)` | Binding-side page margin. PRINT widens it for a bound/duplex document; WEB matches the other three margins since there's no binding. |
-| `--page-bleed` | `9pt` | `0` | CSS Paged Media `bleed` — how far the page extends past the trim box, for a commercial press. Irrelevant on screen, so WEB sets it to `0`. |
-| `--page-marks` | `crop cross` | `none` | CSS Paged Media `marks` — crop and registration marks for a commercial press. WEB has no press, so `none`. |
+| `--page-bleed` | `0` | `0` | CSS Paged Media `bleed` — how far the page extends past the trim box, for a commercial press. Off by default in both modes; set to e.g. `9pt` only when sending this scenario to a commercial press. |
+| `--page-marks` | `none` | `none` | CSS Paged Media `marks` — crop and registration marks for a commercial press. Off by default in both modes; set to `crop cross` only for a commercial press. |
 
 ## Branding Palette (`palettes/default.css`)
 
