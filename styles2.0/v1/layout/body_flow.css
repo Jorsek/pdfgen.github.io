@@ -98,7 +98,7 @@ body > article {
         width: 20%;
     }
     @bottom-center {
-        content: "";
+        content: var(--footer-copyright-content); /* off by default */
         border-top: var(--running-rule-weight) solid var(--footer-rule-color);
         padding-top: var(--footer-padding);
         font-family: var(--font-family-footer);
@@ -167,7 +167,7 @@ body > article {
         vertical-align: top;
     }
     @bottom-center {
-        content: "";
+        content: var(--footer-copyright-content); /* off by default */
         border-top: var(--running-rule-weight) solid var(--footer-rule-color);
         padding-top: var(--footer-padding);
         width: 20%;

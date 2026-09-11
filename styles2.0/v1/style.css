@@ -199,6 +199,7 @@
     --toc-footer-inside:      string(map-title);
     --footer-outside-content: counter(page);
     --footer-inside-content:  string(map-title);
+    --footer-copyright-content: none;  /* off by default; set to string(copyright-notice) to show it in the footer */
 
     /* === STYLES2.0 MODULE TOKEN BRIDGE === do not rename (consumed by name); edit sources above, not here */
     --color-primary:            var(--brand-primary);    /* table headers, note borders, xref link color */
@@ -804,8 +805,19 @@ h1.topictitle1, h2, h3, h4, h5, h6,
     font-weight: bold;
 }
 
-/* Back cover copyright — DITA builds: XSL outputs year + holder as text content.
-   Static HTML builds: leave div empty and set --copyright-notice in palettes/default.css. */
+/* Captured once at body start (xsl.xsl's copyright.capture) and threaded
+   in via string(copyright-notice) — back cover below, and optionally the
+   footer (--footer-copyright-content). Hidden: not meant to be seen itself. */
+.copyright-capture {
+    display: block;
+    height: 0;
+    overflow: hidden;
+    string-set: copyright-notice content();
+}
+
+/* Back cover copyright — text comes from string(copyright-notice); see
+   .copyright-capture above. --copyright-notice (palettes/default.css) is
+   no longer read here. */
 .back-cover-copyright {
     font-size:   var(--footer-font-size);
     color:       var(--cover-text-color);
@@ -814,7 +826,10 @@ h1.topictitle1, h2, h3, h4, h5, h6,
     text-align:  center;
 }
 .back-cover-copyright::before {
-    content: "\A9 ";  /* symbol only — text content follows from XSL or div content */
+    content: "\A9 ";
+}
+.back-cover-copyright::after {
+    content: string(copyright-notice);
 }
 
 /* ########################################################################## */

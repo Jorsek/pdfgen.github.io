@@ -115,6 +115,9 @@
                 <xsl:attribute name="class" select="@outputclass"/>
             </xsl:if>
             <xsl:apply-templates select="." mode="addAttributesToBody"/>
+            <!-- Captures copyright first, before either cover — see
+                 copyright.capture. Runs regardless of which cover is active. -->
+            <xsl:call-template name="copyright.capture"/>
             <xsl:call-template name="setidaname"/>
             <xsl:apply-templates select="*[contains(@class, ' ditaot-d/ditaval-startprop ')]" mode="out-of-line"/>
             <xsl:call-template name="generateBreadcrumbs"/>
@@ -353,12 +356,13 @@
         </xsl:if>
     </xsl:template>
 
-    <xsl:template name="cover.meta.copyright">
-        <!-- Year = current build year. -->
+    <!-- Captures year + copyrholder once (see body start). CSS string-set
+         threads it into the back cover, footer, etc. — nothing calls this
+         template directly. -->
+    <xsl:template name="copyright.capture">
         <xsl:variable name="year" select="year-from-date(current-date())"/>
         <xsl:variable name="holder" select="normalize-space((             /normalized//*[contains(@class, ' map/topicmeta ') or contains(@class, ' bookmap/bookmeta ')]             //*[contains(@class, ' topic/copyrholder ')])[1])"/>
-        <!-- © symbol comes from CSS. -->
-        <div class="back-cover-copyright">
+        <span class="copyright-capture">
             <xsl:value-of select="$year"/>
             <xsl:text> </xsl:text>
             <xsl:choose>
@@ -367,7 +371,7 @@
                 </xsl:when>
                 <xsl:otherwise>REPLACE WITH YOUR ORGANIZATION. All rights reserved.</xsl:otherwise>
             </xsl:choose>
-        </div>
+        </span>
     </xsl:template>
 
     <!-- BACK COVER -->
@@ -398,7 +402,9 @@
                 <div class="url">
                     <xsl:value-of select="//*[contains(@class, ' map/topicmeta ')]/*[contains(@class, ' topic/data ')][@name='company-url']/@value"/>
                 </div>
-                <xsl:call-template name="cover.meta.copyright"/>
+                <!-- Text comes from CSS: string(copyright-notice), captured
+                     once at body start. See style.css .back-cover-copyright. -->
+                <div class="back-cover-copyright"></div>
             </div>
         </div>
     </xsl:template>

@@ -31,6 +31,7 @@ Add your own overrides in **your own scenario's CSS tab**, after importing `styl
 | Page margins | `--standard-margin`, `--top-margin`, `--bottom-margin` |
 | Cover background | `--cover-bg-color`, `--cover-hero-height` |
 | Running footer text | `--footer-inside-content`, `--footer-outside-content` |
+| Show copyright in the footer | `--footer-copyright-content` — off by default; set to `string(copyright-notice)`. Back cover shows it already; see `TOKENS.md`. |
 | TOC heading label | `--toc-text` |
 | A task/troubleshooting caption (prereq, context, cause, remedy, etc.) | Localized text — override via `variableFiles.url` (see below), not CSS. Two exceptions stay CSS tokens: `--label-steps-process`, `--label-info` (full detail in `TOKENS.md`). |
 | A metadata field's label | `--cover-*-label` (e.g. `--cover-version-label: "Ver. "`) |
@@ -84,7 +85,7 @@ Two separate layers generate text in this PDF, localized two different ways — 
 |---|---|
 | `style.css` | This scenario's layout/structure `:root` tokens (spacing scale, border widths, font sizes, page geometry), cover/front-matter/back-cover `@page` geometry and markup, TOC visual formatting, and chapter-hero rules. The one file meant to be imported wholesale, then built on per-customer. TOC- and body-page pagination mechanics (margins, running headers/footers) live in `layout/toc_flow.css` and `layout/body_flow.css` instead — see below. Brand-identity tokens (colors, fonts, logos, note colors) live in `palettes/default.css`, imported here — see below. |
 | `style_styles2.0_imports.css` | The manifest — what's active, what's optional, and the GitHub URL for every module. Start here to find a specific element. |
-| `xsl.xsl` | Controls document assembly: chapter body order, cover/back-cover/front-matter inclusion (each toggled by uncommenting a `call-template` line), cover metadata field extraction (subtitle, author, publisher, company, address, etc., with map vs. bookmap fallbacks), and the `get.map.title` fallback logic for the document title. |
+| `xsl.xsl` | Controls document assembly: chapter body order, cover/back-cover/front-matter inclusion (each toggled by uncommenting a `call-template` line), cover metadata field extraction (subtitle, author, publisher, company, address, etc., with map vs. bookmap fallbacks), the `get.map.title` fallback logic for the document title, and `copyright.capture` (captures the copyright line once at body start, regardless of which cover is active — see `TOKENS.md`). |
 | `cover-page.html` | The default static cover — this is what actually renders out of the box; `xsl.xsl`'s `front.cover` call is commented out to match. Populated with the same fields as `front.cover` (product name, version, platform, doc revision, author, created date; part number/audience/publisher/revised available but off by default). Edit the placeholder values directly. To use the system-generated cover instead (metadata pulled automatically from the ditamap/bookmap, no per-document edits), delete the contents and leave only `<span/>`, then uncomment the `front.cover` call-template line in `xsl.xsl`. |
 
 ### dita/ — one file per DITA element family
