@@ -6,11 +6,13 @@ Every custom property (`--token-name`) in this scenario, what it controls, and i
 
 **Types you'll see:** color (hex or `rgba()`), length (`pt`/`px`/`in`), font stack, string (quoted text — used directly as CSS `content`), and keyword (a fixed set of valid values, noted where relevant). A token whose value is `var(--other-token)` inherits from that token until overridden directly.
 
+**Localizing a string-valued token:** these are static CSS, not connected to `xsl.xsl`'s `variableFiles.url`/`getVariable` mechanism (see readme.md) — that's a separate, XSLT-driven layer for whatever `pdf_generator.xsl` itself generates. Moving these tokens' text into that same mechanism is an open item; see the project's gap-analysis doc.
+
 ---
 
 ## Web / Print Mode
 
-`style.css`'s `:root` holds two versions of these six tokens: an active **PRINT** block and a commented-out **WEB** block directly below it. To switch modes, comment out the PRINT block and uncomment the WEB block (or vice versa) — there's no separate flag token, because CSS can't branch on a custom property's value. Whichever block is uncommented wins.
+`style.css`'s `:root` holds two versions of these six tokens: an active **PRINT** block and a commented-out **WEB** block directly below it. To switch modes, comment out the PRINT block and uncomment the WEB block (or vice versa) — there's no separate flag token, because CSS can't branch on a custom property's value. Whichever block is uncommented wins. The last two tokens (bleed/marks) default identically in both blocks — they're really a separate "is this going to a commercial press" question, not a web-vs-print one — but live here for convenience since they're part of the same toggle mechanism.
 
 | Token | PRINT (default) | WEB | Controls |
 |---|---|---|---|
@@ -18,8 +20,8 @@ Every custom property (`--token-name`) in this scenario, what it controls, and i
 | `--back-cover-break` | `right` | `auto` | Same break behavior, applied specifically before the back cover. |
 | `--frontmatter-page-numbering` | `lower-roman` | `decimal` | Numbering style for front matter and TOC pages. `lower-roman` = i, ii, iii; `decimal` = 1, 2, 3. |
 | `--gutter-margin` | `.75in` | `var(--standard-margin)` | Binding-side page margin. PRINT widens it for a bound/duplex document; WEB matches the other three margins since there's no binding. |
-| `--page-bleed` | `9pt` | `0` | CSS Paged Media `bleed` — how far the page extends past the trim box, for a commercial press. Irrelevant on screen, so WEB sets it to `0`. |
-| `--page-marks` | `crop cross` | `none` | CSS Paged Media `marks` — crop and registration marks for a commercial press. WEB has no press, so `none`. |
+| `--page-bleed` | `0` | `0` | CSS Paged Media `bleed` — how far the page extends past the trim box, for a commercial press. Off by default in both modes; set to e.g. `9pt` only when sending this scenario to a commercial press. |
+| `--page-marks` | `none` | `none` | CSS Paged Media `marks` — crop and registration marks for a commercial press. Off by default in both modes; set to `crop cross` only for a commercial press. |
 
 ## Branding Palette (`palettes/default.css`)
 
@@ -166,26 +168,44 @@ Each token below is text prepended to its field via `::before`. Default is an em
 
 ## Configurable Labels — DITA Section & Note Captions
 
-Added 2026-09-09 to close the "labels tokenized inconsistently" gap — these follow the exact same pattern as `--toc-text` above. Each value is the full caption text, including any trailing `": "` that's part of the default.
+Added 2026-09-09, migrated 2026-09-11: task/troubleshooting captions are now generated natively in `xsl.xsl` via DITA-OT's `getVariable`/localization mechanism (see "Task & Troubleshooting Captions (XSLT-native)" below), not CSS. Only two captions remain CSS tokens — one has no native equivalent, the other is CSS-only and off by default.
 
 | Token | Default | Consumed by |
 |---|---|---|
-| `--label-prereq` | `"Before you begin"` | `dita/cause_condition_..._stepsection.css` → `.prereq::before` |
-| `--label-postreq` | `"Next steps"` | same file → `.postreq::before` |
-| `--label-steps-process` | `"Process"` | same file → `.steps::before` when the topic has `outputclass="process"` |
-| `--label-steps-procedure` | `"Procedure"` | same file → `.steps::before`, default (non-process) case |
-| `--label-context` | `"Context"` | same file → `.context::before` |
-| `--label-condition` | `"Condition"` | same file → `.condition::before` |
-| `--label-cause` | `"Cause"` | same file → `.cause::before` |
-| `--label-remedy` | `"Remedy"` | same file → `.remedy::before` |
-| `--label-example` | `"Example"` | same file → `.example::before` |
-| `--label-result` | `"Result"` | same file → `.result::before` |
+| `--label-steps-process` | `"Process"` | `dita/cause_condition_..._stepsection.css` → `article.process .steps::before` — no stock DITA-OT equivalent, stays CSS. |
 | `--label-info` | `"Info: "` | `dita/choices_info_..._troublesolution.css` → `.info::before` — **rule is commented out by default**; token is wired through so enabling it doesn't reintroduce a hardcoded string. |
-| `--label-stepxmp-example` | `"Example: "` | same file → `.stepxmp::before` |
-| `--label-stepresult-result` | `"Result: "` | same file → `.stepresult::before` |
-| `--label-troubleshooting` | `"Troubleshooting: "` | same file → `.steptroubleshooting::before` |
 
 Not tokenized, and out of scope for this set: the `": "` separator in `.cause > .title::after` / `.remedy > .title::after` — that's punctuation joining a title to body text, not a standalone caption.
+
+## Task & Troubleshooting Captions (XSLT-native)
+
+Migrated off CSS 2026-09-11 — see readme.md "Localizing generated text". These captions are now generated by `xsl.xsl` via `GENERATE-TASK-LABELS` (turned on) and DITA-OT's `getVariable` template, so they resolve through the same `strings.xml`/`variableFiles.url` chain as all other localized text — no more hardcoded English baked into CSS `content:` properties.
+
+Six use stock DITA-OT string keys (translated across DITA-OT's bundled locales already):
+
+| Element | String key | Default |
+|---|---|---|
+| `task/prereq` | `task_prereq` | "Before you begin" |
+| `task/context` | `task_context` | "Context" |
+| `task/postreq` | `task_postreq` | "Next steps" |
+| `task/result` (results) | `task_results` | "Results" |
+| `task/example` | `task_example` | "Example" |
+| `task/steps` (ordered/unordered) | `task_procedure` / `task_procedure_unordered` | "Procedure" |
+
+Six have no stock equivalent — custom `ps2_*` keys were added, each with a literal English fallback baked into `xsl.xsl` so output stays sensible even without a configured `variableFiles.url`:
+
+| Element | String key | Default fallback |
+|---|---|---|
+| `troubleshooting/condition` | `ps2_troubleshooting_condition` | "Condition" |
+| `troubleshooting/cause` | `ps2_troubleshooting_cause` | "Cause" |
+| `troubleshooting/remedy` | `ps2_troubleshooting_remedy` | "Remedy" |
+| `task/stepxmp` | `ps2_task_stepxmp` | "Example: " |
+| `task/stepresult` | `ps2_task_stepresult` | "Result: " |
+| `task/steptroubleshooting` | `ps2_task_steptroubleshooting` | "Troubleshooting: " |
+
+`task/info`'s override (`ps2_task_info`) is present in `xsl.xsl` but **commented out**, matching `--label-info`'s off-by-default state — enable both together if you want info captions.
+
+To localize any of these: override `variableFiles.url` in your scenario's `xsl.xsl` to point at your own `strings.xml` (starter param already in the file, commented out) and add the stock/`ps2_*` keys you need — see readme.md.
 
 ## Cover & Back Cover Geometry
 

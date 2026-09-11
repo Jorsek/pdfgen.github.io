@@ -1,15 +1,12 @@
-/* Style task topic and troubleshooting topic "parts". */
-.prereq::before,
-.postreq::before,
+/* Style task topic and troubleshooting topic "parts".
+   Prereq/postreq/context/cause/remedy/condition/result/example captions are
+   now native (xsl.xsl, GENERATE-TASK-LABELS) — .tasklabel .sectiontitle below
+   styles those; .steps::before/.steps-unordered::before remains for the
+   "process" outputclass variant only, still CSS-driven (see further down). */
 .steps::before,
 .steps-unordered::before,
 .stepsection,
-.cause::before,
-.remedy::before,
-.condition::before,
-.context::before,
-.result::before,
-.example::before {
+.tasklabel .sectiontitle {
   display: block;
   clear: both;
   font-style: normal;
@@ -17,15 +14,6 @@
   font-size: var(--font-size-base);
   letter-spacing: 0.025em;
   color: var(--color-body);
-}
-
-/* Fix the placement of cause, remedy, and condition captions. */
-.cause::before,
-.remedy::before {
-  margin-left: -1.2px;
-}
-.condition::before {
-  margin-left: -0.4px;
 }
 
 /* Set padding and margins for task topic and troubleshooting topic "parts". */
@@ -60,17 +48,11 @@
   margin-top: 5px;
 }
 
-/* Add captions before prerequisite elements.
-Caption text is configurable — see --label-prereq in style.css :root. */
-.prereq::before {
-  content: var(--label-prereq);
-}
+/* prereq caption is now native (xsl.xsl, GENERATE-TASK-LABELS) — was
+   .prereq::before { content: var(--label-prereq); } */
 
-/* Add captions before postrequisite elements.
-Caption text is configurable — see --label-postreq in style.css :root. */
-.postreq::before {
-  content: var(--label-postreq);
-}
+/* postreq caption is now native (xsl.xsl, GENERATE-TASK-LABELS) — was
+   .postreq::before { content: var(--label-postreq); } */
 
 /* Add captions before task topics with the @outputclass="process" attribute set on their root elements.
 Caption text is configurable — see --label-steps-process in style.css :root. */
@@ -79,13 +61,13 @@ article.process .steps-unordered::before {
   content: var(--label-steps-process);
 }
 
-/* Add captions before steps elements.
-Prevent the process-topic children from inheriting the "Process" caption.
-Caption text is configurable — see --label-steps-procedure in style.css :root. */
-article:not(.process) .steps::before,
-article:not(.process) .steps-unordered::before {
-  content: var(--label-steps-procedure);
-}
+/* Non-process steps ("Procedure") caption is now native (xsl.xsl,
+   GENERATE-TASK-LABELS → task_procedure/task_procedure_unordered) — was
+   article:not(.process) .steps::before / .steps-unordered::before
+   { content: var(--label-steps-procedure); }
+   NOTE: verify the two suppression rules below (stepsection-preceded,
+   inside .remedy) still work now that this caption is a .tasklabel div
+   rather than a ::before pseudo-element — they may need updating. */
 
 /* Hide the caption before steps elements if a stepsection element precedes the first step. */
 .stepsection ~ .steps::before,
@@ -99,41 +81,10 @@ article:not(.process) .steps-unordered::before {
   display: none;
 }
 
-/* Add captions before context elements.
-Caption text is configurable — see --label-context in style.css :root. */
-.context::before {
-  content: var(--label-context);
-}
-
-/* Add captions before condition elements.
-Caption text is configurable — see --label-condition in style.css :root. */
-.condition::before {
-  content: var(--label-condition);
-}
-
-/* Add captions before cause elements.
-Caption text is configurable — see --label-cause in style.css :root. */
-.cause::before {
-  content: var(--label-cause);
-}
-
-/* Add captions before remedy elements.
-Caption text is configurable — see --label-remedy in style.css :root. */
-.remedy::before {
-  content: var(--label-remedy);
-}
-
-/* Add captions before stepxmp and example elements.
-Caption text is configurable — see --label-example in style.css :root. */
-.example::before {
-  content: var(--label-example);
-}
-
-/* Add captions before stepresult and result elements.
-Caption text is configurable — see --label-result in style.css :root. */
-.result::before {
-  content: var(--label-result);
-}
+/* context, condition, cause, remedy, example, and result captions are all
+   now native (xsl.xsl, GENERATE-TASK-LABELS — condition/cause/remedy via
+   PS2's own ps2_troubleshooting_* keys, the rest via stock DITA-OT keys).
+   Were six rules here, each `.X::before { content: var(--label-X); }`. */
 
 /* Fix padding for stepsections. */
 .stepsection ~ .steps,

@@ -49,7 +49,8 @@
    and uncomment WEB (or vice versa). Bundles every difference between a
    screen-read PDF and one meant for a duplex/bound printer or a commercial
    press: forced blank pages so sections start right-hand, binding-side
-   gutter margin, roman-numeral front matter, and bleed/crop marks.
+   gutter margin, and roman-numeral front matter. Bleed/crop marks default
+   off in both — turn on only for a commercial press, see readme.md.
    Full explanation: readme.md. Token-by-token: TOKENS.md.               */
 
 /* --- PRINT (active default) --- */
@@ -57,8 +58,8 @@
     --back-cover-break: right;
     --frontmatter-page-numbering: lower-roman;  /* lower-roman = i, ii, iii; decimal = 1, 2, 3 */
     --gutter-margin: .75in;              /* binding-side margin — distinct from --standard-margin below */
-    --page-bleed: 9pt;                   /* ~0.125in bleed allowance — commercial press only, see readme.md */
-    --page-marks: crop cross;            /* crop + registration marks — commercial press only; "none" otherwise */
+    --page-bleed: 0;                     /* ~0.125in bleed allowance — commercial press only, see readme.md */
+    --page-marks: none;                  /* crop + registration marks — commercial press only; "none" otherwise */
 
 /* --- WEB (uncomment this block and comment PRINT above to switch) ---
     --page-break-logic: auto;
@@ -184,21 +185,12 @@
     --toc-dot-color:     var(--brand-primary);
     --toc-text-color:    var(--brand-primary);
 
-    /* === CONFIGURABLE LABELS (DITA section & note captions) === same pattern as --toc-text */
-    --label-prereq:             "Before you begin";  /* dita/cause_condition_..._stepsection.css → .prereq::before */
-    --label-postreq:            "Next steps";        /* same file → .postreq::before */
-    --label-steps-process:      "Process";           /* same file → .steps::before, article.process */
-    --label-steps-procedure:    "Procedure";         /* same file → .steps::before, default (not process) */
-    --label-context:            "Context";           /* same file → .context::before */
-    --label-condition:          "Condition";         /* same file → .condition::before */
-    --label-cause:               "Cause";             /* same file → .cause::before */
-    --label-remedy:              "Remedy";            /* same file → .remedy::before */
-    --label-example:             "Example";           /* same file → .example::before */
-    --label-result:              "Result";            /* same file → .result::before */
-    --label-info:                 "Info: ";            /* dita/choices_info_..._troublesolution.css → .info::before (disabled by default — see file) */
-    --label-stepxmp-example:     "Example: ";         /* same file → .stepxmp::before */
-    --label-stepresult-result:   "Result: ";          /* same file → .stepresult::before */
-    --label-troubleshooting:     "Troubleshooting: "; /* same file → .steptroubleshooting::before */
+    /* === CONFIGURABLE LABELS === most task/troubleshooting captions moved to
+       xsl.xsl (GENERATE-TASK-LABELS + getVariable) 2026-09-11 — see readme.md.
+       Two remain CSS-only: --label-steps-process has no native equivalent;
+       --label-info is CSS-only and off by default (see dita/choices_info_...). */
+    --label-steps-process: "Process";  /* dita/cause_condition_..._stepsection.css → article.process .steps::before */
+    --label-info:          "Info: ";   /* dita/choices_info_..._troublesolution.css → .info::before, disabled by default */
 
     /* === COVER & BACK COVER GEOMETRY  === */
     --cover-bg-color:     var(--brand-primary);
