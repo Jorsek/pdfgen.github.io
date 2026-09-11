@@ -23,13 +23,9 @@ Span the left border across the cause and remedy elements. */
   border-left: var(--border-width-accent) solid var(--color-border);
 }
 
-/* Style the step element children captions.
-   stepresult/stepxmp/steptroubleshooting captions are now native (xsl.xsl,
-   GENERATE-TASK-LABELS + PS2's own ps2_task_* keys) — rendered as a real
-   <span class="tasklabel-inline"> rather than ::before content, so this
-   rule now targets that span directly instead of a pseudo-element.
-   info stays CSS-only and off by default (its XSLT override is commented
-   out in xsl.xsl to match) — this rule still targets .info::before for it. */
+/* Step-child captions. stepresult/stepxmp/steptroubleshooting now native
+   (xsl.xsl) — targets their .tasklabel-inline span. info stays CSS-only,
+   off by default — still targets .info::before. */
 .tasklabel-inline,
 .info::before {
   font-weight: bold;
@@ -38,9 +34,8 @@ Span the left border across the cause and remedy elements. */
   color: var(--color-body);
 }
 
-/* Add a caption before info elements. Disabled by default — remove the
-comment markers here AND uncomment the matching override in xsl.xsl.
-Caption text is configurable — see --label-info in style.css :root.
+/* Info caption — off by default. Uncomment here AND in xsl.xsl to enable.
+   Configurable — --label-info in style.css :root.
 .info::before {
   content: var(--label-info);
 }

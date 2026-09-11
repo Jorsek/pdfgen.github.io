@@ -3,19 +3,14 @@
 
     <xsl:import href="../../../../../../../../sdk2/internal/pdf_generator/pdf_generator.xsl"/>
 
-    <!-- LOCALIZATION: uncomment, point at your org's strings.xml, to localize
-         generated text (via getVariable). See readme.md. -->
+    <!-- LOCALIZATION: uncomment, point at your strings.xml (getVariable). See readme.md. -->
     <!-- <xsl:param name="variableFiles.url">/db/organizations/[ORG-NAME]/repositories/master/_configuration/documents/language_strings/strings.xml</xsl:param> -->
 
-    <!-- TASK/TROUBLESHOOTING LABELS: turns on DITA-OT's native getVariable-driven
-         captions (Before you begin, About this task, Results, etc.) in place of
-         style.css's old --label-* CSS content. See readme.md / TOKENS.md. -->
+    <!-- Turns on native getVariable captions for task/troubleshooting parts,
+         replacing the old CSS label tokens. See TOKENS.md. -->
     <xsl:param name="GENERATE-TASK-LABELS" select="'YES'"/>
 
-    <!-- No stock DITA-OT caption exists for these — same getVariable mechanism,
-         new PS2-namespaced keys, with a literal English fallback so an org that
-         hasn't set variableFiles.url still sees sensible text. Override the key
-         in your org's strings.xml to change the wording. -->
+    <!-- Custom keys below (no stock caption exists); English fallback if unset. -->
     <xsl:template match="*[contains(@class,' troubleshooting/condition ')]">
         <xsl:apply-templates select="." mode="generate-task-label">
             <xsl:with-param name="use-label">
@@ -55,8 +50,7 @@
         <xsl:apply-imports/>
     </xsl:template>
 
-    <!-- Inline captions (bold label + colon, same line as content — not a
-         standalone heading like the three above). -->
+    <!-- Inline captions: bold label + colon, same line as content. -->
     <xsl:template match="*[contains(@class,' task/stepxmp ')]" name="topic.task.stepxmp">
         <span class="tasklabel-inline">
             <xsl:variable name="v"><xsl:call-template name="getVariable"><xsl:with-param name="id" select="'ps2_task_stepxmp'"/></xsl:call-template></xsl:variable>
@@ -81,10 +75,7 @@
         <xsl:call-template name="generateItemGroupTaskElement"/>
     </xsl:template>
 
-    <!-- steptroubleshooting isn't matched anywhere in the base engine either —
-         unlike stepxmp/stepresult above, its underlying rendering is unverified
-         from this scenario, so this delegates via apply-imports instead of
-         reproducing generateItemGroupTaskElement by hand. -->
+    <!-- Base template unverified here; delegates via apply-imports instead. -->
     <xsl:template match="*[contains(@class,' task/steptroubleshooting ')]">
         <span class="tasklabel-inline">
             <xsl:variable name="v"><xsl:call-template name="getVariable"><xsl:with-param name="id" select="'ps2_task_steptroubleshooting'"/></xsl:call-template></xsl:variable>
@@ -97,9 +88,7 @@
         <xsl:apply-imports/>
     </xsl:template>
 
-    <!-- task/info caption is OFF by default (matches the old CSS default —
-         --label-info was disabled unless its comment markers were removed).
-         Uncomment to enable. -->
+    <!-- Off by default, matching the old CSS default. Uncomment to enable. -->
     <!--
     <xsl:template match="*[contains(@class,' task/info ')]" name="topic.task.info">
         <span class="tasklabel-inline">
@@ -114,29 +103,11 @@
     </xsl:template>
     -->
 
-    <!-- ############################################################################
-         START HERE — xsl_styles2.0.xsl
-         Controls document structure, section order, and metadata sourcing.
+    <!-- xsl_styles2.0.xsl: doc structure, sections, metadata. Safe: toggle
+         sections/cover fields below. Elsewhere: metadata is topicmeta, look
+         is style_styles2.0.css. Careful: chapterBody order, cover.meta.*. -->
 
-         SAFE TO EDIT
-         - Enable/disable sections (cover, TOC, front matter, back cover)
-         - Enable/disable cover metadata fields (uncomment call-template lines)
-
-
-         EDIT ELSEWHERE
-         - Metadata values            - ditamap topicmeta
-         - Visual appearance          - style_styles2.0.css
-
-         CHANGE CAREFULLY
-         - chapterBody template (document assembly order)
-         - Metadata extraction logic within each cover.meta.* template
-         ############################################################################ -->
-
-    <!-- ========================================================
-         CHAPTER BODY — controls document assembly order.
-         Enable or disable sections by commenting/uncommenting
-         the call-template lines below.
-         ======================================================== -->
+    <!-- CHAPTER BODY: document assembly order; toggle sections below. -->
     <xsl:template match="*[contains(@class, ' map/map ')]" mode="chapterBody">
         <body>
             <xsl:apply-templates select="*[contains(@class, ' ditaot-d/ditaval-startprop ')]/@outputclass" mode="add-ditaval-style"/>
@@ -154,12 +125,7 @@
             </xsl:if>
             <xsl:call-template name="gen-user-sidetoc"/>
 
-            <!-- ################################################################# -->
-            <!-- SECTION TOGGLES — Enable or disable major PDF sections.
-                 To turn a section off, wrap its line in comment markers.
-                 To turn a section on, remove the comment markers.
-                 Order here controls order in the output document. -->
-            <!-- ################################################################# -->
+            <!-- SECTION TOGGLES: comment/uncomment a line to disable/enable it. -->
 
             <!-- Cover page -->
             <xsl:call-template name="front.cover"/>
@@ -170,7 +136,7 @@
             </xsl:variable>
             <xsl:apply-templates select="$map" mode="toc"/>
 
-            <!-- Body content (always required — do not disable) -->
+            <!-- Body content (required) -->
             <xsl:call-template name="gen-user-footer"/>
             <xsl:call-template name="processFTR"/>
             <xsl:apply-templates select="*[contains(@class, ' ditaot-d/ditaval-endprop ')]" mode="out-of-line"/>
@@ -180,9 +146,7 @@
         </body>
     </xsl:template>
 
-    <!-- ========================================================
-         FRONT COVER
-         ======================================================== -->
+    <!-- FRONT COVER -->
     <xsl:template name="front.cover">
         <div class="cover-page-container">
             <div class="cover-page-content">
@@ -197,47 +161,40 @@
 
                 <div class="cover-meta-block">
 
-                    <!-- ################################ -->
-                    <!-- COVER METADATA — Optional fields displayed in the white band below the cover image,
-                         to the left of the logo. To enable a field, remove the comment markers around
-                         its call-template line. Fields appear in the order listed below.
-                         Each field is safe to enable or remove independently — no other fields,
-                         page numbering, or document flow will be affected.
-                         NOTE: subtitle is always shown and is rendered above in the title block,
-                         not here. To hide it, remove its call-template from the text-wrapper above -->
-                    <!-- ################################ -->
+                    <!-- COVER METADATA: uncomment a line to show that field.
+                         Subtitle is separate — edit the text-wrapper above. -->
 
-                    <!-- Product name — source: <prodname> in <prodinfo> -->
+                    <!-- Product name -->
                     <xsl:call-template name="cover.meta.prodname"/>
 
-                    <!-- Version — source: <vrm version="" release="" modification=""> in <vrmlist> -->
+                    <!-- Version -->
                     <xsl:call-template name="cover.meta.version"/>
 
-                    <!-- Platform — source: <platform> in <prodinfo>                                      -->
+                    <!-- Platform -->
                     <xsl:call-template name="cover.meta.platform"/>
 
-                    <!-- Part number — source: <bookpartno> (bookmap) or <data name="part-number">        -->
+                    <!-- Part number -->
                     <!-- <xsl:call-template name="cover.meta.part-number"/> -->
 
-                    <!-- Document revision — source: <edition> (bookmap) or <data name="doc-revision">   -->
+                    <!-- Document revision -->
                     <xsl:call-template name="cover.meta.doc-revision"/>
 
-                    <!-- Audience — source: <audience type=""> in topicmeta/bookmeta                      -->
+                    <!-- Audience -->
                     <!-- <xsl:call-template name="cover.meta.audience"/> -->
 
-                    <!-- Author — source: <author> in topicmeta/bookmeta                                  -->
+                    <!-- Author -->
                     <xsl:call-template name="cover.meta.author"/>
 
-                    <!-- Publisher — source: <publisher> (map) or <organization> (bookmap)                -->
+                    <!-- Publisher -->
                     <!-- <xsl:call-template name="cover.meta.publisher"/> -->
 
-                    <!-- Creation date — source: <created date=""> in <critdates>                         -->
+                    <!-- Creation date -->
                     <xsl:call-template name="cover.meta.created"/>
 
-                    <!-- Last revised date — source: <revised modified=""> in <critdates>                 -->
+                    <!-- Last revised date -->
                     <!-- <xsl:call-template name="cover.meta.revised"/> -->
 
-                    <!-- Copyright has moved to the back cover. -->
+                    <!-- Copyright: on the back cover instead. -->
 
                 </div>
 
@@ -246,9 +203,7 @@
         </div>
     </xsl:template>
 
-    <!-- ========================================================
-         COVER METADATA TEMPLATES
-         ======================================================== -->
+    <!-- COVER METADATA TEMPLATES -->
 
     <xsl:template name="cover.meta.subtitle">
         <xsl:variable name="v" select="(/normalized//*[contains(@class, ' map/topicmeta ') or contains(@class, ' bookmap/bookmeta ')]                                         //*[contains(@class, ' topic/data ')][@name='subtitle'])[1]/@value"/>
@@ -393,10 +348,10 @@
     </xsl:template>
 
     <xsl:template name="cover.meta.copyright">
-        <!-- Year is always the current build year; no need to maintain <copyryear> in the map. -->
+        <!-- Year = current build year. -->
         <xsl:variable name="year" select="year-from-date(current-date())"/>
         <xsl:variable name="holder" select="normalize-space((             /normalized//*[contains(@class, ' map/topicmeta ') or contains(@class, ' bookmap/bookmeta ')]             //*[contains(@class, ' topic/copyrholder ')])[1])"/>
-        <!-- Always render; © symbol is injected by .back-cover-copyright::before in CSS. -->
+        <!-- © symbol comes from CSS. -->
         <div class="back-cover-copyright">
             <xsl:value-of select="$year"/>
             <xsl:text> </xsl:text>
@@ -409,11 +364,7 @@
         </div>
     </xsl:template>
 
-    <!-- ========================================================
-         BACK COVER
-         To enable, add this to chapterBody:
-           <xsl:call-template name="back.cover"/>
-         ======================================================== -->
+    <!-- BACK COVER -->
     <xsl:template name="back.cover">
         <div class="back-cover-page-container">
             <div class="back-cover-logo"/>
@@ -446,11 +397,7 @@
         </div>
     </xsl:template>
 
-    <!-- ========================================================
-         FRONT MATTER
-         To enable, add this to chapterBody (before TOC):
-           <xsl:call-template name="frontmatter.page"/>
-         ======================================================== -->
+    <!-- FRONT MATTER -->
     <xsl:template name="frontmatter.page">
         <xsl:variable name="frontmatterContent" select="//*[contains(@class, ' bookmap/bookfrontmatter ')] | //*[contains(@class, ' map/topicref ')][@outputclass='front-matter']"/>
         <xsl:if test="$frontmatterContent">
@@ -476,15 +423,10 @@
         </div>
     </xsl:template>
 
-    <!-- ========================================================
-         MAP TITLE
-         ======================================================== -->
+    <!-- MAP TITLE -->
     <xsl:template name="get.map.title">
         <xsl:choose>
-            <!-- Bookmap FIRST: <booktitle> is itself classed "topic/title" (it's a direct
-                 child of the map, same as a plain map's <title>), so the generic check below
-                 would match the whole <booktitle> container — pulling in <booktitlealt> too —
-                 before we ever got here. Checked first so the specific <mainbooktitle> wins. -->
+            <!-- Bookmap first: booktitle is also topic/title, would match below otherwise. -->
             <xsl:when test="/normalized//*[contains(@class, ' map/map ')]//*[contains(@class, ' topic/title ')]//*[contains(@class, ' bookmap/mainbooktitle ')]">
                 <xsl:apply-templates select="/normalized//*[contains(@class, ' map/map ')]//*[contains(@class, ' topic/title ')]//*[contains(@class, ' bookmap/mainbooktitle ')]"/>
             </xsl:when>

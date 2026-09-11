@@ -1,21 +1,7 @@
-/* ═══════════════════════════════════════════════════════════════════
-   TOC PAGE FLOW — layout/toc_flow.css
-
-   @page geometry, margins, and running header/footer plumbing for the
-   table-of-contents pages (:first, :left, :right, :blank). Pagination
-   mechanics only — visual formatting of the TOC entries themselves
-   (nav, links, leader dots, the "Contents" heading) lives in style.css.
-
-   Extracted 2026-09-09 from style.css's "TABLE OF CONTENTS - LAYOUT"
-   section, where this content already existed but had no standalone
-   source file. Moved here because it's pure page-flow mechanics —
-   rarely redesigned per scenario — unlike the cover/back-cover markup,
-   which stays in style.css because customers commonly redesign it.
-
-   All values are tokens (var(--...)), defined in style.css's :root.
-   Override the token there, not the property here, unless you're
-   changing the actual page-flow structure itself.
-═══════════════════════════════════════════════════════════════════ */
+/* TOC PAGE FLOW — @page geometry/margins/running headers for TOC pages.
+   Pagination mechanics only; visual TOC formatting lives in style.css.
+   Values are tokens from style.css's :root — override there, not here,
+   unless changing page-flow structure itself. */
 
 /* General TOC Page */
 @page toc-flow {
@@ -26,12 +12,8 @@
     @bottom-right { content: counter(page, lower-roman); }
 }
 
-/* TOC First Page (Right - Page i)
-   Running headers are intentionally suppressed on the first TOC page —
-   the TOC heading itself acts as the visual anchor. Headers appear on page ii+.
-   counter-reset: page 0 — resets the page counter to 0 here so the first
-   printed number is 1 (i). Without this reset, the cover page increments the
-   counter first and the TOC starts at ii. */
+/* TOC first page: headers suppressed (heading is the anchor); counter-reset
+   restarts page numbering here so this page prints as i. */
 @page toc-flow:first {
     margin-top:    var(--top-margin);
     margin-bottom: var(--bottom-margin);
@@ -201,10 +183,7 @@
 }
 
 @page toc-flow:blank {
-    /* :blank matches intentionally empty pages inserted by Prince when a section
-       must start on a right-hand (odd) page and the previous section ended on an
-       odd page. Without this rule, the blank page inherits running headers and
-       footers from the surrounding flow, which looks incorrect in print. */
+    /* Forced blank pages (odd-page section starts) — suppress headers/footers. */
     @top-left   { content: none !important; border: none !important; }
     @top-center { content: none !important; border: none !important; }
     @top-right  { content: none !important; border: none !important; }

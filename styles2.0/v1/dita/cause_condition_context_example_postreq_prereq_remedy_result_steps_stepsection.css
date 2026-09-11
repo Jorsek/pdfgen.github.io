@@ -1,8 +1,5 @@
-/* Style task topic and troubleshooting topic "parts".
-   Prereq/postreq/context/cause/remedy/condition/result/example captions are
-   now native (xsl.xsl, GENERATE-TASK-LABELS) — .tasklabel .sectiontitle below
-   styles those; .steps::before/.steps-unordered::before remains for the
-   "process" outputclass variant only, still CSS-driven (see further down). */
+/* Task/troubleshooting "parts" styling. Most captions are now native XSLT
+   (.tasklabel .sectiontitle below); "process" steps caption stays CSS. */
 .steps::before,
 .steps-unordered::before,
 .stepsection,
@@ -48,26 +45,20 @@
   margin-top: 5px;
 }
 
-/* prereq caption is now native (xsl.xsl, GENERATE-TASK-LABELS) — was
-   .prereq::before { content: var(--label-prereq); } */
+/* prereq caption now native (xsl.xsl). */
 
-/* postreq caption is now native (xsl.xsl, GENERATE-TASK-LABELS) — was
-   .postreq::before { content: var(--label-postreq); } */
+/* postreq caption now native (xsl.xsl). */
 
-/* Add captions before task topics with the @outputclass="process" attribute set on their root elements.
-Caption text is configurable — see --label-steps-process in style.css :root. */
+/* "Process" caption for outputclass="process" topics.
+   Configurable — --label-steps-process in style.css :root. */
 article.process .steps::before,
 article.process .steps-unordered::before {
   content: var(--label-steps-process);
 }
 
-/* Non-process steps ("Procedure") caption is now native (xsl.xsl,
-   GENERATE-TASK-LABELS → task_procedure/task_procedure_unordered) — was
-   article:not(.process) .steps::before / .steps-unordered::before
-   { content: var(--label-steps-procedure); }
-   NOTE: verify the two suppression rules below (stepsection-preceded,
-   inside .remedy) still work now that this caption is a .tasklabel div
-   rather than a ::before pseudo-element — they may need updating. */
+/* "Procedure" caption now native (xsl.xsl). NOTE: verify the two
+   suppression rules below still work now this is a .tasklabel div,
+   not a ::before pseudo-element. */
 
 /* Hide the caption before steps elements if a stepsection element precedes the first step. */
 .stepsection ~ .steps::before,
@@ -81,10 +72,8 @@ article.process .steps-unordered::before {
   display: none;
 }
 
-/* context, condition, cause, remedy, example, and result captions are all
-   now native (xsl.xsl, GENERATE-TASK-LABELS — condition/cause/remedy via
-   PS2's own ps2_troubleshooting_* keys, the rest via stock DITA-OT keys).
-   Were six rules here, each `.X::before { content: var(--label-X); }`. */
+/* context/condition/cause/remedy/example/result captions now native
+   (xsl.xsl) — were six ::before rules here. */
 
 /* Fix padding for stepsections. */
 .stepsection ~ .steps,
