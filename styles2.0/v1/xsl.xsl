@@ -131,7 +131,10 @@
                  default cover. Uncomment to use this system-generated cover
                  instead (see cover-page.html for how to switch). -->
             <!-- <xsl:call-template name="front.cover"/> -->
-            <xsl:call-template name="frontmatter.page"/>
+
+            <!-- Front matter: off by default. Uncomment to include any
+                 bookfrontmatter/front-matter topicrefs in the map. -->
+            <!-- <xsl:call-template name="frontmatter.page"/> -->
             <!-- Table of contents -->
             <xsl:variable name="map" as="element()*">
                 <xsl:apply-templates select="." mode="normalize-map"/>
@@ -144,7 +147,8 @@
             <xsl:apply-templates select="*[contains(@class, ' ditaot-d/ditaval-endprop ')]" mode="out-of-line"/>
             <xsl:apply-templates select="/normalized/*[contains(@class, ' topic/topic ')]                 [not(@id = /normalized/map//*[contains(@class, ' map/topicref ')][@outputclass='front-matter']/@href/substring-after(., '#'))]" mode="child.topic"/>
 
-            <xsl:call-template name="back.cover"/>
+            <!-- Back cover: off by default. Uncomment to include it. -->
+            <!-- <xsl:call-template name="back.cover"/> -->
         </body>
     </xsl:template>
 
