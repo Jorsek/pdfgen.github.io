@@ -8,8 +8,9 @@
    see readme.md. */
 
 @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/style_styles2.0_imports.css");
-/* Brand identity (colors, fonts, logos, note colors) — swap this import for
-   a different palettes/*.css file to reskin. See readme.md / TOKENS.md. */
+/* Brand identity (colors, fonts, logos, note colors) — defaults only. To
+   rebrand, override these tokens in YOUR OWN scenario's :root below this
+   import, don't edit or replace this file. See readme.md / TOKENS.md. */
 @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/palettes/default.css");
 
 /* ##########################################################################

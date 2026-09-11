@@ -23,7 +23,7 @@ Every custom property (`--token-name`) in this scenario, what it controls, and i
 
 ## Branding Palette (`palettes/default.css`)
 
-To theme this scenario differently, swap the `palettes/default.css` import in `style.css` for another `palettes/*.css` file that redefines these same token names. See "Adding a theme" in `readme.md`.
+To rebrand this scenario, copy the tokens below into your own scenario's `:root`, after the `@import` lines, and change the values there — you don't need GitHub access or a place to host a file, just your own scenario's CSS tab. See "Rebranding this scenario" in `readme.md`.
 
 | Token | Default | Controls |
 |---|---|---|
