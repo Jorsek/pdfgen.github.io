@@ -23,11 +23,15 @@ Span the left border across the cause and remedy elements. */
   border-left: var(--border-width-accent) solid var(--color-border);
 }
 
-/* Style the step element children captions. */
-.stepresult::before,
-.info::before,
-.stepxmp::before,
-.steptroubleshooting {
+/* Style the step element children captions.
+   stepresult/stepxmp/steptroubleshooting captions are now native (xsl.xsl,
+   GENERATE-TASK-LABELS + PS2's own ps2_task_* keys) — rendered as a real
+   <span class="tasklabel-inline"> rather than ::before content, so this
+   rule now targets that span directly instead of a pseudo-element.
+   info stays CSS-only and off by default (its XSLT override is commented
+   out in xsl.xsl to match) — this rule still targets .info::before for it. */
+.tasklabel-inline,
+.info::before {
   font-weight: bold;
   font-style: normal;
   letter-spacing: 0.025em;
@@ -35,30 +39,12 @@ Span the left border across the cause and remedy elements. */
 }
 
 /* Add a caption before info elements. Disabled by default — remove the
-comment markers to enable. Caption text is configurable — see --label-info
-in style.css :root.
+comment markers here AND uncomment the matching override in xsl.xsl.
+Caption text is configurable — see --label-info in style.css :root.
 .info::before {
   content: var(--label-info);
 }
 */
-
-/* Add a caption before step example and example elements.
-Caption text is configurable — see --label-stepxmp-example in style.css :root. */
-.stepxmp::before {
-  content: var(--label-stepxmp-example);
-}
-
-/* Add a caption before stepresult and result elements.
-Caption text is configurable — see --label-stepresult-result in style.css :root. */
-.stepresult::before{
-  content: var(--label-stepresult-result);
-}
-
-/* Add a task label before steptroubleshooting elements.
-Caption text is configurable — see --label-troubleshooting in style.css :root. */
-.steptroubleshooting::before {
-  content: var(--label-troubleshooting);
-}
 
 /* Fix the dotted border transition between elements. */
 .choices ~ .stepresult,

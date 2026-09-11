@@ -32,7 +32,7 @@ Add your own overrides in **your own scenario's CSS tab**, after importing `styl
 | Cover background | `--cover-bg-color`, `--cover-hero-height` |
 | Running footer text | `--footer-inside-content`, `--footer-outside-content` |
 | TOC heading label | `--toc-text` |
-| A DITA section/note caption | `--label-*` (e.g. `--label-prereq`, `--label-remedy` — full list in `TOKENS.md`) |
+| A task/troubleshooting caption (prereq, context, cause, remedy, etc.) | Localized text — override via `variableFiles.url` (see below), not CSS. Two exceptions stay CSS tokens: `--label-steps-process`, `--label-info` (full detail in `TOKENS.md`). |
 | A metadata field's label | `--cover-*-label` (e.g. `--cover-version-label: "Ver. "`) |
 | The logo | `--logo-front` / `--logo-back` (Base64 SVG or `url()`) — default values in `palettes/default.css`, override in your own scenario |
 | A DITA element's style | Open `style_styles2.0_imports.css`, find the section, edit that file |
@@ -59,9 +59,9 @@ Full token list and what each one controls: `TOKENS.md`.
 
 Two separate layers generate text in this PDF, localized two different ways — don't confuse them.
 
-**Base-engine text** (whatever `pdf_generator.xsl` itself generates) uses standard DITA-OT `getVariable`/`strings.xml` lookup. To localize it, point `xsl.xsl`'s `variableFiles.url` param (commented out near the top, under `LOCALIZATION`) at your own org's `strings.xml` document in the CCMS — no CSS, no GitHub, just that one param and a document your org already owns.
+**Base-engine text** (whatever `pdf_generator.xsl` itself generates, plus, as of 2026-09-11, every task/troubleshooting caption — prereq, context, postreq, results, example, procedure, condition, cause, remedy, stepxmp, stepresult, steptroubleshooting) uses standard DITA-OT `getVariable`/`strings.xml` lookup. To localize it, point `xsl.xsl`'s `variableFiles.url` param (commented out near the top, under `LOCALIZATION`) at your own org's `strings.xml` document in the CCMS, and add whichever keys you need (stock DITA-OT keys, or PS2's own `ps2_*` keys — full list in `TOKENS.md`) — no CSS, no GitHub, just that one param and a document your org already owns.
 
-**PS2's own CSS captions** — `--label-*`, `--toc-text`, `--cover-*-label`, and similar `content:` tokens documented in `TOKENS.md` — are static CSS values `variableFiles.url` can't reach; Prince renders CSS as authored; it can't re-run an XSLT lookup through a `content:` property. These are a separate, still-open gap — see the project's gap-analysis doc for the current plan to move them into the same `getVariable` mechanism where feasible.
+**PS2's own CSS captions** — now just `--label-steps-process` and `--label-info`, plus `--toc-text`, `--cover-*-label`, and similar `content:` tokens documented in `TOKENS.md` — are static CSS values `variableFiles.url` can't reach; Prince renders CSS as authored; it can't re-run an XSLT lookup through a `content:` property. `--label-steps-process` has no native DITA-OT equivalent and stays CSS-only; `--label-info` is CSS-only and off by default. Customers can still override either value directly in their scenario's `:root`, or rewrite them per-locale, same as any other CSS token.
 
 ## Where to make a change
 

@@ -7,6 +7,113 @@
          generated text (via getVariable). See readme.md. -->
     <!-- <xsl:param name="variableFiles.url">/db/organizations/[ORG-NAME]/repositories/master/_configuration/documents/language_strings/strings.xml</xsl:param> -->
 
+    <!-- TASK/TROUBLESHOOTING LABELS: turns on DITA-OT's native getVariable-driven
+         captions (Before you begin, About this task, Results, etc.) in place of
+         style.css's old --label-* CSS content. See readme.md / TOKENS.md. -->
+    <xsl:param name="GENERATE-TASK-LABELS" select="'YES'"/>
+
+    <!-- No stock DITA-OT caption exists for these — same getVariable mechanism,
+         new PS2-namespaced keys, with a literal English fallback so an org that
+         hasn't set variableFiles.url still sees sensible text. Override the key
+         in your org's strings.xml to change the wording. -->
+    <xsl:template match="*[contains(@class,' troubleshooting/condition ')]">
+        <xsl:apply-templates select="." mode="generate-task-label">
+            <xsl:with-param name="use-label">
+                <xsl:variable name="v"><xsl:call-template name="getVariable"><xsl:with-param name="id" select="'ps2_troubleshooting_condition'"/></xsl:call-template></xsl:variable>
+                <xsl:choose>
+                    <xsl:when test="normalize-space($v)"><xsl:value-of select="$v"/></xsl:when>
+                    <xsl:otherwise>Condition</xsl:otherwise>
+                </xsl:choose>
+            </xsl:with-param>
+        </xsl:apply-templates>
+        <xsl:apply-imports/>
+    </xsl:template>
+
+    <xsl:template match="*[contains(@class,' troubleshooting/cause ')]">
+        <xsl:apply-templates select="." mode="generate-task-label">
+            <xsl:with-param name="use-label">
+                <xsl:variable name="v"><xsl:call-template name="getVariable"><xsl:with-param name="id" select="'ps2_troubleshooting_cause'"/></xsl:call-template></xsl:variable>
+                <xsl:choose>
+                    <xsl:when test="normalize-space($v)"><xsl:value-of select="$v"/></xsl:when>
+                    <xsl:otherwise>Cause</xsl:otherwise>
+                </xsl:choose>
+            </xsl:with-param>
+        </xsl:apply-templates>
+        <xsl:apply-imports/>
+    </xsl:template>
+
+    <xsl:template match="*[contains(@class,' troubleshooting/remedy ')]">
+        <xsl:apply-templates select="." mode="generate-task-label">
+            <xsl:with-param name="use-label">
+                <xsl:variable name="v"><xsl:call-template name="getVariable"><xsl:with-param name="id" select="'ps2_troubleshooting_remedy'"/></xsl:call-template></xsl:variable>
+                <xsl:choose>
+                    <xsl:when test="normalize-space($v)"><xsl:value-of select="$v"/></xsl:when>
+                    <xsl:otherwise>Remedy</xsl:otherwise>
+                </xsl:choose>
+            </xsl:with-param>
+        </xsl:apply-templates>
+        <xsl:apply-imports/>
+    </xsl:template>
+
+    <!-- Inline captions (bold label + colon, same line as content — not a
+         standalone heading like the three above). -->
+    <xsl:template match="*[contains(@class,' task/stepxmp ')]" name="topic.task.stepxmp">
+        <span class="tasklabel-inline">
+            <xsl:variable name="v"><xsl:call-template name="getVariable"><xsl:with-param name="id" select="'ps2_task_stepxmp'"/></xsl:call-template></xsl:variable>
+            <xsl:choose>
+                <xsl:when test="normalize-space($v)"><xsl:value-of select="$v"/></xsl:when>
+                <xsl:otherwise>Example</xsl:otherwise>
+            </xsl:choose>
+            <xsl:text>: </xsl:text>
+        </span>
+        <xsl:call-template name="generateItemGroupTaskElement"/>
+    </xsl:template>
+
+    <xsl:template match="*[contains(@class,' task/stepresult ')]" name="topic.task.stepresult">
+        <span class="tasklabel-inline">
+            <xsl:variable name="v"><xsl:call-template name="getVariable"><xsl:with-param name="id" select="'ps2_task_stepresult'"/></xsl:call-template></xsl:variable>
+            <xsl:choose>
+                <xsl:when test="normalize-space($v)"><xsl:value-of select="$v"/></xsl:when>
+                <xsl:otherwise>Result</xsl:otherwise>
+            </xsl:choose>
+            <xsl:text>: </xsl:text>
+        </span>
+        <xsl:call-template name="generateItemGroupTaskElement"/>
+    </xsl:template>
+
+    <!-- steptroubleshooting isn't matched anywhere in the base engine either —
+         unlike stepxmp/stepresult above, its underlying rendering is unverified
+         from this scenario, so this delegates via apply-imports instead of
+         reproducing generateItemGroupTaskElement by hand. -->
+    <xsl:template match="*[contains(@class,' task/steptroubleshooting ')]">
+        <span class="tasklabel-inline">
+            <xsl:variable name="v"><xsl:call-template name="getVariable"><xsl:with-param name="id" select="'ps2_task_steptroubleshooting'"/></xsl:call-template></xsl:variable>
+            <xsl:choose>
+                <xsl:when test="normalize-space($v)"><xsl:value-of select="$v"/></xsl:when>
+                <xsl:otherwise>Troubleshooting</xsl:otherwise>
+            </xsl:choose>
+            <xsl:text>: </xsl:text>
+        </span>
+        <xsl:apply-imports/>
+    </xsl:template>
+
+    <!-- task/info caption is OFF by default (matches the old CSS default —
+         --label-info was disabled unless its comment markers were removed).
+         Uncomment to enable. -->
+    <!--
+    <xsl:template match="*[contains(@class,' task/info ')]" name="topic.task.info">
+        <span class="tasklabel-inline">
+            <xsl:variable name="v"><xsl:call-template name="getVariable"><xsl:with-param name="id" select="'ps2_task_info'"/></xsl:call-template></xsl:variable>
+            <xsl:choose>
+                <xsl:when test="normalize-space($v)"><xsl:value-of select="$v"/></xsl:when>
+                <xsl:otherwise>Info</xsl:otherwise>
+            </xsl:choose>
+            <xsl:text>: </xsl:text>
+        </span>
+        <xsl:call-template name="generateItemGroupTaskElement"/>
+    </xsl:template>
+    -->
+
     <!-- ############################################################################
          START HERE — xsl_styles2.0.xsl
          Controls document structure, section order, and metadata sourcing.

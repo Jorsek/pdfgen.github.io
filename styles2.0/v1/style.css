@@ -185,21 +185,12 @@
     --toc-dot-color:     var(--brand-primary);
     --toc-text-color:    var(--brand-primary);
 
-    /* === CONFIGURABLE LABELS (DITA section & note captions) === same pattern as --toc-text */
-    --label-prereq:             "Before you begin";  /* dita/cause_condition_..._stepsection.css → .prereq::before */
-    --label-postreq:            "Next steps";        /* same file → .postreq::before */
-    --label-steps-process:      "Process";           /* same file → .steps::before, article.process */
-    --label-steps-procedure:    "Procedure";         /* same file → .steps::before, default (not process) */
-    --label-context:            "Context";           /* same file → .context::before */
-    --label-condition:          "Condition";         /* same file → .condition::before */
-    --label-cause:               "Cause";             /* same file → .cause::before */
-    --label-remedy:              "Remedy";            /* same file → .remedy::before */
-    --label-example:             "Example";           /* same file → .example::before */
-    --label-result:              "Result";            /* same file → .result::before */
-    --label-info:                 "Info: ";            /* dita/choices_info_..._troublesolution.css → .info::before (disabled by default — see file) */
-    --label-stepxmp-example:     "Example: ";         /* same file → .stepxmp::before */
-    --label-stepresult-result:   "Result: ";          /* same file → .stepresult::before */
-    --label-troubleshooting:     "Troubleshooting: "; /* same file → .steptroubleshooting::before */
+    /* === CONFIGURABLE LABELS === most task/troubleshooting captions moved to
+       xsl.xsl (GENERATE-TASK-LABELS + getVariable) 2026-09-11 — see readme.md.
+       Two remain CSS-only: --label-steps-process has no native equivalent;
+       --label-info is CSS-only and off by default (see dita/choices_info_...). */
+    --label-steps-process: "Process";  /* dita/cause_condition_..._stepsection.css → article.process .steps::before */
+    --label-info:          "Info: ";   /* dita/choices_info_..._troublesolution.css → .info::before, disabled by default */
 
     /* === COVER & BACK COVER GEOMETRY  === */
     --cover-bg-color:     var(--brand-primary);
