@@ -6,13 +6,15 @@
 
 ```
 style.css                      ← YOU ARE HERE — :root tokens (layout/structure
-                                  only), @page layout for cover/front-matter/
-                                  back-cover, TOC visual formatting, chapter hero
+                                  only), OPTIONAL FEATURES toggles, @page layout
+                                  for cover/front-matter/back-cover, TOC visual
+                                  formatting, chapter hero
   ├─ palettes/default.css             (brand identity: colors, fonts, logos,
   │                                     note colors — the tokens most partners rebrand)
   └─ style_styles2.0_imports.css      (element module manifest)
        ├─ dita/*.css            (DITA element reference — tables, lists, notes…)
-       ├─ styling/*.css         (optional formatting toggles)
+       ├─ styling/*.css         (5 always-on; the 8 everyday optional toggles
+       │                         live as commented @imports in style.css instead)
        └─ layout/*.css          (page-break control; toc_flow.css / body_flow.css
                                   own TOC- and body-page pagination mechanics)
 ```
@@ -23,6 +25,7 @@ Add your own overrides in **your own scenario's CSS tab**, after importing `styl
 | To change | Edit |
 |---|---|
 | Web PDF vs. print PDF | The **WEB / PRINT MODE** block at the top of `style.css`'s `:root` — comment out the active block, uncomment the other. See `TOKENS.md`. |
+| Turn on an optional feature (chapter numbering, image shadows, etc.) | The **OPTIONAL FEATURES** block right above `:root` in `style.css` — uncomment the line you want. |
 | Theme / brand identity | Copy the tokens you want from `palettes/default.css` into **your own scenario's CSS tab**, after the imports, and change the values there — see "Rebranding this scenario" below. |
 | Brand colors | `--brand-primary`, `--brand-secondary` — default values in `palettes/default.css`, override in your own scenario |
 | Page margins | `--standard-margin`, `--top-margin`, `--bottom-margin` |
@@ -110,7 +113,9 @@ Full token list and what each one controls: `TOKENS.md`.
 | `suggestions.css` | Colors DITA change-tracking marks (insert/delete/split) red with strikethrough or underline, for showing suggested edits. |
 | `typography.css` | Imports the Roboto web font, sets it as the base body font, and sizes/line-height for body text. |
 
-### styling/ — optional (commented out by default)
+### styling/ — optional
+
+Toggled from `style.css`'s own **OPTIONAL FEATURES** block (uncomment a line there), not from here — that's the file every scenario can actually edit.
 
 | File | What's in it |
 |---|---|
@@ -122,8 +127,8 @@ Full token list and what each one controls: `TOKENS.md`.
 | `round_corners.css` | Rounded corners on notes, tables, code, images, and troubleSolution blocks, sized by the `--radius` token. |
 | `link_page_number.css` | Appends " on page N" after cross-reference links, except glossary, external, and step/substep links. |
 | `table_of_contents.css` | Hides the redundant map title above the TOC, adds a "Contents" heading, sets the leader-dot "title .... page#" TOC formatting. |
-| `table_of_contents_page_numbering.css` | ⚠️ **Not currently functional** — its own header says "use with `header_footer.css`," which isn't present in this folder. Adds upper-roman page numbers to TOC pages and resets page-1 counters at the cover/TOC/body boundaries, but has no page context to attach to without it. |
-| `table_of_contents_page_numbering_alternate.css` | ⚠️ Same issue — depends on `header_footer_alternate.css`, also not present. |
+
+Two more exist but stay toggled from `style_styles2.0_imports.css` instead, since they're not functional as shipped (each needs a `header_footer*.css` this build doesn't include): `table_of_contents_page_numbering.css` and `table_of_contents_page_numbering_alternate.css`.
 
 ### layout/
 
