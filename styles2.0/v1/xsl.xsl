@@ -3,6 +3,10 @@
 
     <xsl:import href="../../../../../../../../sdk2/internal/pdf_generator/pdf_generator.xsl"/>
 
+    <!-- LOCALIZATION: uncomment, point at your org's strings.xml, to localize
+         generated text (via getVariable). See readme.md. -->
+    <!-- <xsl:param name="variableFiles.url">/db/organizations/[ORG-NAME]/repositories/master/_configuration/documents/language_strings/strings.xml</xsl:param> -->
+
     <!-- ############################################################################
          START HERE — xsl_styles2.0.xsl
          Controls document structure, section order, and metadata sourcing.

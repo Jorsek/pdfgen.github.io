@@ -6,6 +6,8 @@ Every custom property (`--token-name`) in this scenario, what it controls, and i
 
 **Types you'll see:** color (hex or `rgba()`), length (`pt`/`px`/`in`), font stack, string (quoted text — used directly as CSS `content`), and keyword (a fixed set of valid values, noted where relevant). A token whose value is `var(--other-token)` inherits from that token until overridden directly.
 
+**Localizing a string-valued token:** these are static CSS, not connected to `xsl.xsl`'s `variableFiles.url`/`getVariable` mechanism (see readme.md) — that's a separate, XSLT-driven layer for whatever `pdf_generator.xsl` itself generates. Moving these tokens' text into that same mechanism is an open item; see the project's gap-analysis doc.
+
 ---
 
 ## Web / Print Mode

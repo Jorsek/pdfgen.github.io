@@ -55,6 +55,14 @@ If you *do* maintain the shared `styles2.0/v1` library itself (Heretto engineeri
 
 Full token list and what each one controls: `TOKENS.md`.
 
+## Localizing generated text
+
+Two separate layers generate text in this PDF, localized two different ways — don't confuse them.
+
+**Base-engine text** (whatever `pdf_generator.xsl` itself generates) uses standard DITA-OT `getVariable`/`strings.xml` lookup. To localize it, point `xsl.xsl`'s `variableFiles.url` param (commented out near the top, under `LOCALIZATION`) at your own org's `strings.xml` document in the CCMS — no CSS, no GitHub, just that one param and a document your org already owns.
+
+**PS2's own CSS captions** — `--label-*`, `--toc-text`, `--cover-*-label`, and similar `content:` tokens documented in `TOKENS.md` — are static CSS values `variableFiles.url` can't reach; Prince renders CSS as authored; it can't re-run an XSLT lookup through a `content:` property. These are a separate, still-open gap — see the project's gap-analysis doc for the current plan to move them into the same `getVariable` mechanism where feasible.
+
 ## Where to make a change
 
 | Safe to edit directly | Edit elsewhere instead |
