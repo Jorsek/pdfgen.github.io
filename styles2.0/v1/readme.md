@@ -6,13 +6,15 @@
 
 ```
 style.css                      ← YOU ARE HERE — :root tokens (layout/structure
-                                  only), @page layout for cover/front-matter/
-                                  back-cover, TOC visual formatting, chapter hero
+                                  only), OPTIONAL FEATURES toggles, @page layout
+                                  for cover/front-matter/back-cover, TOC visual
+                                  formatting, chapter hero
   ├─ palettes/default.css             (brand identity: colors, fonts, logos,
-  │                                     note colors — swap this file for a theme)
+  │                                     note colors — the tokens most partners rebrand)
   └─ style_styles2.0_imports.css      (element module manifest)
        ├─ dita/*.css            (DITA element reference — tables, lists, notes…)
-       ├─ styling/*.css         (optional formatting toggles)
+       ├─ styling/*.css         (5 always-on; the 8 everyday optional toggles
+       │                         live as commented @imports in style.css instead)
        └─ layout/*.css          (page-break control; toc_flow.css / body_flow.css
                                   own TOC- and body-page pagination mechanics)
 ```
@@ -23,24 +25,33 @@ Add your own overrides in **your own scenario's CSS tab**, after importing `styl
 | To change | Edit |
 |---|---|
 | Web PDF vs. print PDF | The **WEB / PRINT MODE** block at the top of `style.css`'s `:root` — comment out the active block, uncomment the other. See `TOKENS.md`. |
-| Theme / brand identity | Swap the `palettes/default.css` import in `style.css` for another `palettes/*.css` file (colors, fonts, logos, note colors) — see "Adding a theme" below. |
-| Brand colors | `--brand-primary`, `--brand-secondary` in `palettes/default.css` |
+| Turn on an optional feature (chapter numbering, image shadows, etc.) | The **OPTIONAL FEATURES** block right above `:root` in `style.css` — uncomment the line you want. |
+| Theme / brand identity | Copy the tokens you want from `palettes/default.css` into **your own scenario's CSS tab**, after the imports, and change the values there — see "Rebranding this scenario" below. |
+| Brand colors | `--brand-primary`, `--brand-secondary` — default values in `palettes/default.css`, override in your own scenario |
 | Page margins | `--standard-margin`, `--top-margin`, `--bottom-margin` |
 | Cover background | `--cover-bg-color`, `--cover-hero-height` |
 | Running footer text | `--footer-inside-content`, `--footer-outside-content` |
 | TOC heading label | `--toc-text` |
 | A DITA section/note caption | `--label-*` (e.g. `--label-prereq`, `--label-remedy` — full list in `TOKENS.md`) |
 | A metadata field's label | `--cover-*-label` (e.g. `--cover-version-label: "Ver. "`) |
-| The logo | `--logo-front` / `--logo-back` (Base64 SVG or `url()`) in `palettes/default.css` |
+| The logo | `--logo-front` / `--logo-back` (Base64 SVG or `url()`) — default values in `palettes/default.css`, override in your own scenario |
 | A DITA element's style | Open `style_styles2.0_imports.css`, find the section, edit that file |
 
-## Adding a theme
+## Rebranding this scenario
 
-`palettes/default.css` holds every brand-identity token (colors, fonts, logos, note-type colors) in one place, kept separate from `style.css`'s layout/structure tokens on purpose. To ship a second visual theme:
+`palettes/default.css` holds every brand-identity token (colors, fonts, logos, note-type colors) in one place, kept separate from `style.css`'s layout/structure tokens, so there's a single place to look up "what's brand-specific here." It's a **read-only reference for its defaults** — most developers, partners, and customers don't have GitHub access or anywhere to host a replacement file, so "swap which file gets imported" isn't a workflow available to you. What is available, and is the normal way to change any token in this whole architecture:
 
-1. Copy `palettes/default.css`, rename it (e.g. `palettes/blue.css`), change the values — keep every token name identical, since `style.css` and the DITA/styling modules consume them by name (see the "STYLES2.0 MODULE TOKEN BRIDGE" in `style.css`).
-2. Host the new file (same GitHub Pages pattern as everything else in `styles2.0/v1/`).
-3. In `style.css` — or in your own scenario's CSS tab, after importing `style.css` — swap the `@import` to point at your file instead of `palettes/default.css`.
+1. Open `palettes/default.css` (the URL it's imported from, or `TOKENS.md`'s "Branding Palette" table) to see the current token names and values.
+2. In **your own scenario's CSS tab** — the same `style.css` you're already looking at — add a `:root { }` block *after* the `@import` lines at the top, with just the tokens you want to change, e.g.:
+   ```css
+   :root {
+       --brand-primary: #7A1FA2;
+       --logo-front: url("data:image/svg+xml;base64,…");
+   }
+   ```
+3. That's it. Your declaration comes later in the file than the imported one, so it wins for that token — same as any other override in this scenario — and nothing else needs to change. Token names must match exactly (see `TOKENS.md`); everything you don't redeclare keeps its default from `palettes/default.css`.
+
+If you *do* maintain the shared `styles2.0/v1` library itself (Heretto engineering, with push access to the GitHub Pages host) — not the usual case — you can also add a genuinely new file (e.g. `palettes/blue.css`) and point a scenario's `@import` at it instead. That's a real second path, but it's for whoever owns this repo, not something a partner or customer scenario can do on its own.
 
 Full token list and what each one controls: `TOKENS.md`.
 
@@ -48,7 +59,7 @@ Full token list and what each one controls: `TOKENS.md`.
 
 | Safe to edit directly | Edit elsewhere instead |
 |---|---|
-| Brand colors, fonts, logos, note colors → `palettes/default.css` (or your own `palettes/*.css`) | Cover structure / content order → `xsl.xsl` |
+| Brand colors, fonts, logos, note colors → override in your own scenario's `:root` (defaults live in `palettes/default.css`) | Cover structure / content order → `xsl.xsl` |
 | Spacing, margins, cover geometry → `style.css`'s `:root` | Section on/off (cover, TOC, etc.) → `xsl.xsl` |
 | TOC label and formatting → `style.css`'s `:root` + `nav` rules | Metadata sources → ditamap `topicmeta` |
 | Metadata field appearance → `.cover-*` rules in `style.css` | DITA element styles → `style_styles2.0_imports.css` → `dita/` or `styling/` |
@@ -102,7 +113,9 @@ Full token list and what each one controls: `TOKENS.md`.
 | `suggestions.css` | Colors DITA change-tracking marks (insert/delete/split) red with strikethrough or underline, for showing suggested edits. |
 | `typography.css` | Imports the Roboto web font, sets it as the base body font, and sizes/line-height for body text. |
 
-### styling/ — optional (commented out by default)
+### styling/ — optional
+
+Toggled from `style.css`'s own **OPTIONAL FEATURES** block (uncomment a line there), not from here — that's the file every scenario can actually edit.
 
 | File | What's in it |
 |---|---|
@@ -114,8 +127,8 @@ Full token list and what each one controls: `TOKENS.md`.
 | `round_corners.css` | Rounded corners on notes, tables, code, images, and troubleSolution blocks, sized by the `--radius` token. |
 | `link_page_number.css` | Appends " on page N" after cross-reference links, except glossary, external, and step/substep links. |
 | `table_of_contents.css` | Hides the redundant map title above the TOC, adds a "Contents" heading, sets the leader-dot "title .... page#" TOC formatting. |
-| `table_of_contents_page_numbering.css` | ⚠️ **Not currently functional** — its own header says "use with `header_footer.css`," which isn't present in this folder. Adds upper-roman page numbers to TOC pages and resets page-1 counters at the cover/TOC/body boundaries, but has no page context to attach to without it. |
-| `table_of_contents_page_numbering_alternate.css` | ⚠️ Same issue — depends on `header_footer_alternate.css`, also not present. |
+
+Two more exist but stay toggled from `style_styles2.0_imports.css` instead, since they're not functional as shipped (each needs a `header_footer*.css` this build doesn't include): `table_of_contents_page_numbering.css` and `table_of_contents_page_numbering_alternate.css`.
 
 ### layout/
 

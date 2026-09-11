@@ -90,18 +90,13 @@
 @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/layout/body_flow.css");
 
 /* ── Optional modules ───────────────────────────────────────────── */
-/* Remove comment markers to enable. Each module is independent.    */
+/* The everyday toggles (page_flow, chapter_numbering, etc.) moved to
+   style.css's own "OPTIONAL FEATURES" block — edit them there instead.
+   These two are non-functional as shipped (need a header_footer.css
+   this build doesn't include), kept here rather than exposed there. */
 
-/* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/page_flow.css");           <- tighter widow/orphan control (recommended for print) */
-/* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/chapter_numbering.css");   <- numbered chapters (1., 2., 3.) */
-/* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/figure_no_numbering.css"); <- removes figure numbering labels */
-/* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/table_no_numbering.css");  <- removes table numbering labels  */
-/* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/image_shadows.css");       <- drop shadows on images          */
-/* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/round_corners.css");       <- rounds notes, tables, and code  */
-/* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/link_page_number.css");    <- appends page numbers after links */
-/* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/table_of_contents.css");                     <- custom TOC heading + spacing */
-/* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/table_of_contents_page_numbering.css");      <- adds page numbers to TOC entries */
-/* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/table_of_contents_page_numbering_alternate.css"); <- alternate TOC page-number style */
+/* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/table_of_contents_page_numbering.css");      <- needs header_footer.css */
+/* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/table_of_contents_page_numbering_alternate.css"); <- needs header_footer_alternate.css */
 
 /* ── Your overrides ──────────────────────────────────────────────
    Add them in YOUR OWN scenario's CSS tab, below your @import of

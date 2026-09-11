@@ -8,9 +8,20 @@
    see readme.md. */
 
 @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/style_styles2.0_imports.css");
-/* Brand identity (colors, fonts, logos, note colors) — swap this import for
-   a different palettes/*.css file to reskin. See readme.md / TOKENS.md. */
+/* Brand identity (colors, fonts, logos, note colors) — defaults only. To
+   rebrand, override these tokens in YOUR OWN scenario's :root below this
+   import, don't edit or replace this file. See readme.md / TOKENS.md. */
 @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/palettes/default.css");
+
+/* ── OPTIONAL FEATURES — uncomment a line to turn it on. Off by default. ── */
+/* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/page_flow.css");          tighter widow/orphan control */
+/* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/chapter_numbering.css");  numbered chapters (1., 2., 3.) */
+/* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/figure_no_numbering.css"); removes figure numbering */
+/* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/table_no_numbering.css");  removes table numbering */
+/* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/image_shadows.css");       drop shadows on images */
+/* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/round_corners.css");       rounds notes, tables, code */
+/* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/link_page_number.css");    page numbers after links */
+/* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/table_of_contents.css");   custom TOC heading + spacing */
 
 /* ##########################################################################
    GLOBAL SETTINGS
