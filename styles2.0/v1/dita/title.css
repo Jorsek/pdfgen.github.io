@@ -10,14 +10,15 @@
 }
 
 /* Style every title in a consistent way.
-Ensure that the titles children are styled in a consistent way. */
+Color is set on the title itself only (below), not on .title * — so
+inline children (ph, b, i, xref, keyword, etc.) inherit it instead of
+being pinned to one color regardless of the title's own color. */
 .title,
 .title *,
 .table--title-label,
 .fig--title-label,
 figcaption:not(figcaption > .desc) {
   font-family: var(--font-body);
-  color: var(--color-body);
   border: none;
   text-align: left;
   font-style: normal;
@@ -27,6 +28,12 @@ figcaption:not(figcaption > .desc) {
   background-color: transparent;
   padding: 0px;
   margin: var(--space-5) 0px 0px 0px;
+}
+.title,
+.table--title-label,
+.fig--title-label,
+figcaption:not(figcaption > .desc) {
+  color: var(--color-body);
 }
 
 /* Remove margins for image and table titles. */

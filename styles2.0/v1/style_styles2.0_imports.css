@@ -1,44 +1,8 @@
-/* ═══════════════════════════════════════════════════════════════════
-   STYLES2.0 ELEMENT IMPORTS — style_styles2.0_imports.css
-   Hosted at: https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/style_styles2.0_imports.css
-
-   Single manifest for all DITA element, formatting, and page-break
-   modules. Imported by style.css, which owns :root tokens, @page
-   layout, cover, TOC, and chapter structure.
-
-   PDF ONLY. This scenario does not ship the site/Zendesk-oriented
-   modules that exist in the shared upstream module library (title_site,
-   title_zendesk, no_breadcrumbs, zendesk_fixes, and the *_jorsek header/
-   footer variants) — they don't apply to PDF output.
-
-   WHY ABSOLUTE URLS, NOT RELATIVE PATHS
-   ──────────────────────────────────────
-   These imports are resolved by Prince at PDF render time over plain
-   HTTPS — the same way it fetches a linked image or web font. That's
-   a different, more stable path than the Heretto CCMS's own internal
-   document-by-UUID resolution, which is why every import below is a
-   full URL rather than a relative filename.
-
-   HOW TO USE
-   ──────────
-   • Find styling for an element → locate its section below and open
-     the file. These are reference — don't edit them (see OVERRIDES
-     in readme.md).
-   • Enable an optional module   → remove the comment markers on its line
-   • Disable an active module    → wrap its line in comment markers
-   • Pin to this version         → this file lives under /styles2.0/v1/. A
-     future breaking change ships as /styles2.0/v2/, not an edit to v1, so
-     nothing changes under you without an explicit version bump.
-
-   OVERRIDES
-   ─────────
-   This file does not import a shared "custom.css" — overrides are
-   scenario-specific, not shared. In YOUR OWN CCMS scenario's CSS tab,
-   after importing this file (or style.css), add your own overrides
-   directly: redeclare a :root token, or copy a rule block from the
-   relevant file below and edit it there. See readme.md for what each
-   file contains.
-═══════════════════════════════════════════════════════════════════ */
+/* style_styles2.0_imports.css — manifest for all DITA element/layout
+   modules, imported by style.css. Absolute URLs: Prince resolves these
+   over HTTPS at render time. Reference only — don't edit; override in
+   your own scenario's CSS tab instead. Pinned to v1 — breaking changes
+   ship as v2. See readme.md. */
 
 /* ── Paragraphs & body structure ────────────────────────────────── */
 @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/dita/paragraph.css");
@@ -90,14 +54,11 @@
 @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/layout/body_flow.css");
 
 /* ── Optional modules ───────────────────────────────────────────── */
-/* The everyday toggles (page_flow, chapter_numbering, etc.) moved to
-   style.css's own "OPTIONAL FEATURES" block — edit them there instead.
-   These two are non-functional as shipped (need a header_footer.css
-   this build doesn't include), kept here rather than exposed there. */
+/* Other toggles live in style.css's OPTIONAL FEATURES block. These two
+   need a header_footer.css this build doesn't include — non-functional. */
 
 /* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/table_of_contents_page_numbering.css");      <- needs header_footer.css */
 /* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/table_of_contents_page_numbering_alternate.css"); <- needs header_footer_alternate.css */
 
 /* ── Your overrides ──────────────────────────────────────────────
-   Add them in YOUR OWN scenario's CSS tab, below your @import of
-   this file (or of style.css) — not here. See readme.md.          */
+   Add them in your own scenario's CSS tab, below this import. See readme.md. */

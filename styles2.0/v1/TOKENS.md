@@ -33,11 +33,17 @@ To rebrand this scenario, copy the tokens below into your own scenario's `:root`
 | `--brand-secondary` | `#4A5568` | Footer text color; table header hover/heading accent color (via `--color-primary-dark`). |
 | `--brand-accent` | `#CCCCCC` | Title underline rule color; table and definition-list border color (via `--color-border`); step-number badge background (via `--color-bg-step`). |
 
-## Copyright (`palettes/default.css`)
+## Copyright
+
+Captured once (year + `<copyrholder>`) at the very top of `<body>` in `xsl.xsl` (`copyright.capture`), independent of which cover is active. CSS threads that single value wherever it's wanted via `string(copyright-notice)` — no per-location recomputation, so every placement always agrees.
 
 | Token | Default | Controls |
 |---|---|---|
-| `--copyright-notice` | `"REPLACE WITH YOUR ORGANIZATION"` | Full copyright-holder text, shown after the © symbol on the front cover (`.cover-copyright::before`). DITA builds instead pull this from `<copyrholder>` via XSL on the back cover — this token is the static-HTML-build / CSS-driven fallback. |
+| `--footer-copyright-content` | `none` | Off by default. Set to `string(copyright-notice)` (in `layout/body_flow.css`'s `@bottom-center` rules) to show the copyright line in the running footer. |
+
+Already wired in by default: the back cover (`.back-cover-copyright::after { content: string(copyright-notice); }`). Front matter is customer-authored DITA content, not auto-generated — no token needed there.
+
+`--copyright-notice` (`palettes/default.css`) is a separate, older static token no longer read by the back cover; it only still feeds the unused `.cover-copyright` rule (front cover has never actually called a copyright template — "Copyright: on the back cover instead").
 
 ## Brand Fonts (`palettes/default.css`)
 

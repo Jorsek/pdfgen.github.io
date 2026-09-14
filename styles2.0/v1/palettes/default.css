@@ -1,14 +1,6 @@
-/* palettes/default.css — brand identity: colors, fonts, logos, note accent
-   colors. Everything a different customer's brand would replace, isolated
-   from the layout/structure tokens that stay in style.css.
-   Hosted at: https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/palettes/default.css
-
-   TO ADD A THEME: copy this file, rename it (e.g. palettes/blue.css), change
-   the values, host it, then swap the @import in style.css (or your own
-   scenario's CSS tab) to point at your file instead. Every token name below
-   must stay the same — style.css and the DITA/styling modules consume them
-   by name via the "STYLES2.0 MODULE TOKEN BRIDGE" in style.css.
-   Full explanation: readme.md. Token-by-token: TOKENS.md. */
+/* palettes/default.css — brand identity: colors, fonts, logos, note colors.
+   Defaults only — override these tokens in your own scenario's :root below
+   its import; don't edit or replace this file. See readme.md / TOKENS.md. */
 
 :root {
     /* === BRANDING PALETTE === */

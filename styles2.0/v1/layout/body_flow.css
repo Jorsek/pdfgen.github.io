@@ -1,21 +1,7 @@
-/* ═══════════════════════════════════════════════════════════════════
-   BODY PAGE FLOW — layout/body_flow.css
-
-   Page assignment plus @page geometry, margins, and running header/
-   footer plumbing for the main body content (:first, :left, :right,
-   :blank). Pagination mechanics only — the chapter-hero title styling
-   itself lives in style.css.
-
-   Extracted 2026-09-09 from style.css's "MAIN BODY CONTENT" section,
-   where this content already existed but had no standalone source
-   file. Moved here because it's pure page-flow mechanics — rarely
-   redesigned per scenario — unlike the cover/back-cover markup, which
-   stays in style.css because customers commonly redesign it.
-
-   All values are tokens (var(--...)), defined in style.css's :root.
-   Override the token there, not the property here, unless you're
-   changing the actual page-flow structure itself.
-═══════════════════════════════════════════════════════════════════ */
+/* BODY PAGE FLOW — page assignment, @page geometry/margins/running
+   headers for body content. Pagination only; chapter-title styling
+   lives in style.css. Values are tokens from style.css's :root —
+   override there, not here, unless changing page-flow structure. */
 
 body > article {
     page: body-flow;
@@ -112,7 +98,7 @@ body > article {
         width: 20%;
     }
     @bottom-center {
-        content: "";
+        content: var(--footer-copyright-content); /* off by default */
         border-top: var(--running-rule-weight) solid var(--footer-rule-color);
         padding-top: var(--footer-padding);
         font-family: var(--font-family-footer);
@@ -181,7 +167,7 @@ body > article {
         vertical-align: top;
     }
     @bottom-center {
-        content: "";
+        content: var(--footer-copyright-content); /* off by default */
         border-top: var(--running-rule-weight) solid var(--footer-rule-color);
         padding-top: var(--footer-padding);
         width: 20%;

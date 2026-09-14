@@ -1,11 +1,6 @@
-/* style.css — starter default, hosted at .../styles2.0/v1/style.css. Brand
-   tokens (:root below), @page layout, cover/TOC/back-cover markup. Full guide
-   (architecture, common customizations, safe/unsafe-to-edit map): readme.md.
-   Element styles (tables, notes, lists…): one import away, in
-   style_styles2.0_imports.css → dita/ + styling/.
-   Import this file wholesale into your own scenario's CSS tab, then add YOUR
-   overrides below that import in your own scenario — there is no custom.css;
-   see readme.md. */
+/* style.css — shared starter (styles2.0/v1). Brand tokens, @page layout,
+   cover/back-cover markup. Element styles: style_styles2.0_imports.css.
+   Import into your scenario, then add overrides below it. See readme.md. */
 
 @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/style_styles2.0_imports.css");
 /* Brand identity (colors, fonts, logos, note colors) — defaults only. To
@@ -44,14 +39,9 @@
    palettes/default.css import above, not here.
    ########################################################################## */
 :root {
-/* ══════════════════════════════════════════════════════════════════════
-   WEB / PRINT MODE — active block wins. To switch, comment out PRINT below
-   and uncomment WEB (or vice versa). Bundles every difference between a
-   screen-read PDF and one meant for a duplex/bound printer or a commercial
-   press: forced blank pages so sections start right-hand, binding-side
-   gutter margin, and roman-numeral front matter. Bleed/crop marks default
-   off in both — turn on only for a commercial press, see readme.md.
-   Full explanation: readme.md. Token-by-token: TOKENS.md.               */
+/* WEB / PRINT MODE — active block wins; comment PRINT/uncomment WEB (or
+   vice versa) to switch. Bleed/marks default off in both. See readme.md,
+   TOKENS.md. */
 
 /* --- PRINT (active default) --- */
     --page-break-logic: right;           /* right = sections start on the next odd page (forces blanks); auto = next available page */
@@ -209,6 +199,7 @@
     --toc-footer-inside:      string(map-title);
     --footer-outside-content: counter(page);
     --footer-inside-content:  string(map-title);
+    --footer-copyright-content: none;  /* off by default; set to string(copyright-notice) to show it in the footer */
 
     /* === STYLES2.0 MODULE TOKEN BRIDGE === do not rename (consumed by name); edit sources above, not here */
     --color-primary:            var(--brand-primary);    /* table headers, note borders, xref link color */
@@ -318,9 +309,8 @@ body > .cover-page-container {
 }
 
 .cover-title {
-    /* string-set captures the cover title text into the named string "map-title".
-       This is consumed by @page footer rules via string(map-title) to populate
-       the inside footer on body and TOC pages. Must appear before those pages render. */
+    /* Captures the title into string(map-title), used by footer rules on
+       body/TOC pages. Must render before those pages. */
     string-set: map-title content();
     font-size: var(--title-size);
     font-weight: var(--title-weight);
@@ -337,9 +327,8 @@ body > .cover-page-container {
 }
 
 h1.title {
-    /* Prince XML emits a default h1.title from the bookmap title. We hide it
-       because the cover already renders the title via .cover-title above.
-       Removing this rule causes a duplicate title to appear on the cover page. */
+    /* Hides Prince's default h1.title (cover already shows it via
+       .cover-title) — removing this rule duplicates the title. */
     position: absolute;
     visibility: hidden;
     height: 0; width: 0;
@@ -364,12 +353,8 @@ h1.title {
 /* ##########################################################################
    FRONT MATTER - copyright, preface, legal notices - TBD
    ########################################################################## */
-/* Trigger the page flow.
-   prince-page-group: start  — tells Prince this element begins a new page group,
-     so :first pseudo-page rules apply to its first page rather than the document's first page.
-     Without this, @page front-matter:first never fires correctly.
-   break-before  — controls whether the section starts on the next right-hand (odd)
-     page or the next available page. Value comes from --page-break-logic in :root. */
+/* Triggers the page flow: prince-page-group starts a new page group (so
+   :first rules fire); break-before uses --page-break-logic from :root. */
 .front-matter-container {
     page: front-matter;
     prince-page-group: start;
@@ -424,21 +409,9 @@ h1.title {
 /* ##########################################################################
    TOC & BODY PAGE FLOW
    ########################################################################## */
-/* Moved 2026-09-09 to the shared library — pure page-flow mechanics
-   (margins, running headers/footers, blank-page suppression), rarely
-   redesigned per scenario, unlike the cover/back-cover markup below,
-   which stays here because customers commonly redesign it.
-
-   Edit the tokens above (--standard-margin, --gutter-margin, --top-margin,
-   --header-gap, --footer-*, etc.), not these files, unless you're
-   changing the actual page-flow structure itself.
-
-     TOC pages  → styles2.0/v1/layout/toc_flow.css
-     Body pages → styles2.0/v1/layout/body_flow.css
-
-   Both import automatically via style_styles2.0_imports.css — no action
-   needed here. body > article's page assignment (page: body-flow) also
-   now lives in body_flow.css. */
+/* TOC/body page-flow mechanics live in layout/toc_flow.css and
+   layout/body_flow.css (imported automatically). Edit the tokens above,
+   not those files, unless changing page-flow structure itself. */
 /* ########################################################################## */
 
 /* ##########################################################################
@@ -690,12 +663,8 @@ h1.topictitle1, h2, h3, h4, h5, h6,
 
 .cover-meta-block {
     position:        absolute;
-    /* Vertically centers the block in the white band below the hero image.
-       The white band spans from --cover-hero-height to the bottom of the 11in page.
-       Its midpoint = (11in + --cover-hero-height) / 2.
-       transform: translateY(-50%) then shifts the block up by half its own rendered height,
-       so the block's center sits exactly on that midpoint regardless of how many fields are shown.
-       If metadata overflows the band, that is an intentional design boundary — reduce field count. */
+    /* Centers the block in the white band below the hero image, regardless
+       of how many fields are shown. Overflow: reduce field count. */
     top:             calc((11in + var(--cover-hero-height)) / 2);
     transform:       translateY(-50%);
     left:            var(--cover-inset);
@@ -836,8 +805,19 @@ h1.topictitle1, h2, h3, h4, h5, h6,
     font-weight: bold;
 }
 
-/* Back cover copyright — DITA builds: XSL outputs year + holder as text content.
-   Static HTML builds: leave div empty and set --copyright-notice in palettes/default.css. */
+/* Captured once at body start (xsl.xsl's copyright.capture) and threaded
+   in via string(copyright-notice) — back cover below, and optionally the
+   footer (--footer-copyright-content). Hidden: not meant to be seen itself. */
+.copyright-capture {
+    display: block;
+    height: 0;
+    overflow: hidden;
+    string-set: copyright-notice content();
+}
+
+/* Back cover copyright — text comes from string(copyright-notice); see
+   .copyright-capture above. --copyright-notice (palettes/default.css) is
+   no longer read here. */
 .back-cover-copyright {
     font-size:   var(--footer-font-size);
     color:       var(--cover-text-color);
@@ -846,7 +826,10 @@ h1.topictitle1, h2, h3, h4, h5, h6,
     text-align:  center;
 }
 .back-cover-copyright::before {
-    content: "\A9 ";  /* symbol only — text content follows from XSL or div content */
+    content: "\A9 ";
+}
+.back-cover-copyright::after {
+    content: string(copyright-notice);
 }
 
 /* ########################################################################## */
