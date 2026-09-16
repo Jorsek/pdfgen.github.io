@@ -151,4 +151,4 @@ Two more exist but stay toggled from `style_styles2.0_imports.css` instead, sinc
 
 | File | What's in it |
 |---|---|
-| `default.css` | Brand identity: `--brand-*` colors, `--copyright-notice`, `--font-family-*`, `--text-main`/`-muted`, `--color-note-*`, `--logo-front`/`-back`. Imported by `style.css`. Moved out of `style.css` 2026-09-09 so a different brand/theme is "swap this one file" — see "Adding a theme" above. |
+| `default.css` | Brand identity: `--brand-*` colors, `--copyright-notice`, `--font-family-*`, `--text-main`/`-muted`, `--color-note-*`, `--logo-front`/`-back`. Imported by `style.css`. Moved out of `style.css` 2026-09-09 to isolate every brand-specific token in one place — see "Rebranding this scenario" above. |
