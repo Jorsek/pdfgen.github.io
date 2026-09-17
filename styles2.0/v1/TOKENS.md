@@ -35,13 +35,15 @@ To rebrand this scenario, copy the tokens below into your own scenario's `:root`
 
 ## Copyright
 
-Captured once (year + `<copyrholder>`) at the very top of `<body>` in `xsl.xsl` (`copyright.capture`), independent of which cover is active. CSS threads that single value wherever it's wanted via `string(copyright-notice)` — no per-location recomputation, so every placement always agrees.
+Year + `<copyrholder>` is computed once in `xsl.xsl` (`copyright.text`) and reused everywhere it's needed — no per-location recomputation, so every placement always agrees.
+
+The back cover (`copyright.text` called directly into `.back-cover-copyright`) always works, regardless of which cover is active — this is a direct, static computation, not threaded through CSS. The optional running-footer line is different: it needs a value computed early enough to read on every page, which only `front.cover` can provide (via a hidden `copyright.capture` span feeding CSS's `string(copyright-notice)`). A body-level capture running before the first cover was tried and found to conflict with `body_flow.css`'s `prince-page-group: start`, so this only works when `front.cover`, not the static `cover-page.html`, is the active cover.
 
 | Token | Default | Controls |
 |---|---|---|
-| `--footer-copyright-content` | `none` | Off by default. Set to `string(copyright-notice)` (in `layout/body_flow.css`'s `@bottom-center` rules) to show the copyright line in the running footer. |
+| `--footer-copyright-content` | `""` | Off by default (empty, not `none` — `none` would drop the `@bottom-center` box entirely and gap the footer rule line). Set to `string(copyright-notice)` (in `layout/body_flow.css`'s `@bottom-center` rules) to show the copyright line in the running footer. Requires `front.cover` to be the active cover. |
 
-Already wired in by default: the back cover (`.back-cover-copyright::after { content: string(copyright-notice); }`). Front matter is customer-authored DITA content, not auto-generated — no token needed there.
+Front matter is customer-authored DITA content, not auto-generated — no token needed there.
 
 `--copyright-notice` (`palettes/default.css`) is a separate, older static token no longer read by the back cover; it only still feeds the unused `.cover-copyright` rule (front cover has never actually called a copyright template — "Copyright: on the back cover instead").
 
