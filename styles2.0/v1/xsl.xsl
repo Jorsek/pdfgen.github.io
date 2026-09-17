@@ -18,9 +18,6 @@
                 <xsl:attribute name="class" select="@outputclass"/>
             </xsl:if>
             <xsl:apply-templates select="." mode="addAttributesToBody"/>
-            <!-- Captures copyright first, before either cover — see
-                 copyright.capture. Runs regardless of which cover is active. -->
-            <xsl:call-template name="copyright.capture"/>
             <xsl:call-template name="setidaname"/>
             <xsl:apply-templates select="*[contains(@class, ' ditaot-d/ditaval-startprop ')]" mode="out-of-line"/>
             <xsl:call-template name="generateBreadcrumbs"/>
@@ -61,6 +58,13 @@
     <!-- FRONT COVER -->
     <xsl:template name="front.cover">
         <div class="cover-page-container">
+            <!-- Feeds the optional footer-copyright token (see TOKENS.md)
+                 via string(copyright-notice); see copyright.capture. Nested in
+                 real, visible cover content so it's safely part of normal page
+                 flow. Only runs when front.cover is the active cover — the
+                 back cover computes its own copy directly (copyright.text), so
+                 it's correct either way. -->
+            <xsl:call-template name="copyright.capture"/>
             <div class="cover-page-content">
                 <div class="cover-top-area">
                     <div class="text-wrapper">
@@ -259,21 +263,26 @@
         </xsl:if>
     </xsl:template>
 
-    <!-- Captures year + copyrholder once (see body start). CSS string-set
-         threads it into the back cover, footer, etc. — nothing calls this
-         template directly. -->
-    <xsl:template name="copyright.capture">
+    <!-- Copyright text: year + copyright holder (or fallback). No markup —
+         callers wrap it as needed. Single source of truth for both uses below. -->
+    <xsl:template name="copyright.text">
         <xsl:variable name="year" select="year-from-date(current-date())"/>
         <xsl:variable name="holder" select="normalize-space((             /normalized//*[contains(@class, ' map/topicmeta ') or contains(@class, ' bookmap/bookmeta ')]             //*[contains(@class, ' topic/copyrholder ')])[1])"/>
+        <xsl:value-of select="$year"/>
+        <xsl:text> </xsl:text>
+        <xsl:choose>
+            <xsl:when test="$holder != ''">
+                <xsl:value-of select="$holder"/>
+            </xsl:when>
+            <xsl:otherwise>REPLACE WITH YOUR ORGANIZATION. All rights reserved.</xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+    <!-- Hidden capture for the footer token only — see front.cover, where
+         this is called from. Nothing else calls this directly. -->
+    <xsl:template name="copyright.capture">
         <span class="copyright-capture">
-            <xsl:value-of select="$year"/>
-            <xsl:text> </xsl:text>
-            <xsl:choose>
-                <xsl:when test="$holder != ''">
-                    <xsl:value-of select="$holder"/>
-                </xsl:when>
-                <xsl:otherwise>REPLACE WITH YOUR ORGANIZATION. All rights reserved.</xsl:otherwise>
-            </xsl:choose>
+            <xsl:call-template name="copyright.text"/>
         </span>
     </xsl:template>
 
@@ -305,9 +314,11 @@
                 <div class="url">
                     <xsl:value-of select="//*[contains(@class, ' map/topicmeta ')]/*[contains(@class, ' topic/data ')][@name='company-url']/@value"/>
                 </div>
-                <!-- Text comes from CSS: string(copyright-notice), captured
-                     once at body start. See style.css .back-cover-copyright. -->
-                <div class="back-cover-copyright"></div>
+                <!-- Computed directly (copyright.text) — always correct
+                     whether or not front.cover ran. -->
+                <div class="back-cover-copyright">
+                    <xsl:call-template name="copyright.text"/>
+                </div>
             </div>
         </div>
     </xsl:template>

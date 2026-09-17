@@ -199,7 +199,7 @@
     --toc-footer-inside:      string(map-title);
     --footer-outside-content: counter(page);
     --footer-inside-content:  string(map-title);
-    --footer-copyright-content: "";  /* off by default; "none" would drop the box entirely and gap the footer rule. Set to string(copyright-notice) to show it in the footer */
+    --footer-copyright-content: "";  /* off by default; "none" would drop the box entirely and gap the footer rule. Set to string(copyright-notice) to show it in the footer — requires front.cover (not cover-page.html) to be the active cover, since that's what captures the value */
 
     /* === STYLES2.0 MODULE TOKEN BRIDGE === do not rename (consumed by name); edit sources above, not here */
     --color-primary:            var(--brand-primary);    /* table headers, note borders, xref link color */
@@ -805,12 +805,14 @@ h1.topictitle1, h2, h3, h4, h5, h6,
     font-weight: bold;
 }
 
-/* Captured once at body start (xsl.xsl's copyright.capture) and threaded
-   in via string(copyright-notice) — back cover below, and optionally the
-   footer (--footer-copyright-content). Hidden: not meant to be seen itself.
-   position:absolute takes it out of normal flow — it renders as a body-level
-   sibling before the first article, and in-flow content there was found to
-   conflict with body_flow.css's prince-page-group:start on that article. */
+/* Feeds the optional footer token (--footer-copyright-content) via
+   string(copyright-notice). Called from xsl.xsl's front.cover only — nested
+   inside real, visible cover content, not a bare body-level sibling before
+   the first article (that combination was found to conflict with
+   body_flow.css's prince-page-group:start). Hidden: not meant to be seen
+   itself. Only populates the footer when front.cover is the active cover;
+   the back cover always computes its own copy directly (see below), so it's
+   correct either way. */
 .copyright-capture {
     position: absolute;
     width: 0;
@@ -819,9 +821,9 @@ h1.topictitle1, h2, h3, h4, h5, h6,
     string-set: copyright-notice content();
 }
 
-/* Back cover copyright — text comes from string(copyright-notice); see
-   .copyright-capture above. --copyright-notice (palettes/default.css) is
-   no longer read here. */
+/* Back cover copyright — text comes directly from xsl.xsl's copyright.text
+   (always correct, regardless of which cover is active). CSS only adds the
+   © prefix. */
 .back-cover-copyright {
     font-size:   var(--footer-font-size);
     color:       var(--cover-text-color);
@@ -831,9 +833,6 @@ h1.topictitle1, h2, h3, h4, h5, h6,
 }
 .back-cover-copyright::before {
     content: "\A9 ";
-}
-.back-cover-copyright::after {
-    content: string(copyright-notice);
 }
 
 /* ########################################################################## */
