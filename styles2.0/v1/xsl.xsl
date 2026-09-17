@@ -6,103 +6,6 @@
     <!-- LOCALIZATION: uncomment, point at your strings.xml (getVariable). See readme.md. -->
     <!-- <xsl:param name="variableFiles.url">/db/organizations/[ORG-NAME]/repositories/master/_configuration/documents/language_strings/strings.xml</xsl:param> -->
 
-    <!-- Turns on native getVariable captions for task/troubleshooting parts,
-         replacing the old CSS label tokens. See TOKENS.md. -->
-    <xsl:param name="GENERATE-TASK-LABELS" select="'YES'"/>
-
-    <!-- Custom keys below (no stock caption exists); English fallback if unset. -->
-    <xsl:template match="*[contains(@class,' troubleshooting/condition ')]">
-        <xsl:apply-templates select="." mode="generate-task-label">
-            <xsl:with-param name="use-label">
-                <xsl:variable name="v"><xsl:call-template name="getVariable"><xsl:with-param name="id" select="'ps2_troubleshooting_condition'"/></xsl:call-template></xsl:variable>
-                <xsl:choose>
-                    <xsl:when test="normalize-space($v)"><xsl:value-of select="$v"/></xsl:when>
-                    <xsl:otherwise>Condition</xsl:otherwise>
-                </xsl:choose>
-            </xsl:with-param>
-        </xsl:apply-templates>
-        <xsl:apply-imports/>
-    </xsl:template>
-
-    <xsl:template match="*[contains(@class,' troubleshooting/cause ')]">
-        <xsl:apply-templates select="." mode="generate-task-label">
-            <xsl:with-param name="use-label">
-                <xsl:variable name="v"><xsl:call-template name="getVariable"><xsl:with-param name="id" select="'ps2_troubleshooting_cause'"/></xsl:call-template></xsl:variable>
-                <xsl:choose>
-                    <xsl:when test="normalize-space($v)"><xsl:value-of select="$v"/></xsl:when>
-                    <xsl:otherwise>Cause</xsl:otherwise>
-                </xsl:choose>
-            </xsl:with-param>
-        </xsl:apply-templates>
-        <xsl:apply-imports/>
-    </xsl:template>
-
-    <xsl:template match="*[contains(@class,' troubleshooting/remedy ')]">
-        <xsl:apply-templates select="." mode="generate-task-label">
-            <xsl:with-param name="use-label">
-                <xsl:variable name="v"><xsl:call-template name="getVariable"><xsl:with-param name="id" select="'ps2_troubleshooting_remedy'"/></xsl:call-template></xsl:variable>
-                <xsl:choose>
-                    <xsl:when test="normalize-space($v)"><xsl:value-of select="$v"/></xsl:when>
-                    <xsl:otherwise>Remedy</xsl:otherwise>
-                </xsl:choose>
-            </xsl:with-param>
-        </xsl:apply-templates>
-        <xsl:apply-imports/>
-    </xsl:template>
-
-    <!-- Inline captions: bold label + colon, same line as content. -->
-    <xsl:template match="*[contains(@class,' task/stepxmp ')]" name="topic.task.stepxmp">
-        <span class="tasklabel-inline">
-            <xsl:variable name="v"><xsl:call-template name="getVariable"><xsl:with-param name="id" select="'ps2_task_stepxmp'"/></xsl:call-template></xsl:variable>
-            <xsl:choose>
-                <xsl:when test="normalize-space($v)"><xsl:value-of select="$v"/></xsl:when>
-                <xsl:otherwise>Example</xsl:otherwise>
-            </xsl:choose>
-            <xsl:text>: </xsl:text>
-        </span>
-        <xsl:call-template name="generateItemGroupTaskElement"/>
-    </xsl:template>
-
-    <xsl:template match="*[contains(@class,' task/stepresult ')]" name="topic.task.stepresult">
-        <span class="tasklabel-inline">
-            <xsl:variable name="v"><xsl:call-template name="getVariable"><xsl:with-param name="id" select="'ps2_task_stepresult'"/></xsl:call-template></xsl:variable>
-            <xsl:choose>
-                <xsl:when test="normalize-space($v)"><xsl:value-of select="$v"/></xsl:when>
-                <xsl:otherwise>Result</xsl:otherwise>
-            </xsl:choose>
-            <xsl:text>: </xsl:text>
-        </span>
-        <xsl:call-template name="generateItemGroupTaskElement"/>
-    </xsl:template>
-
-    <!-- Base template unverified here; delegates via apply-imports instead. -->
-    <xsl:template match="*[contains(@class,' task/steptroubleshooting ')]">
-        <span class="tasklabel-inline">
-            <xsl:variable name="v"><xsl:call-template name="getVariable"><xsl:with-param name="id" select="'ps2_task_steptroubleshooting'"/></xsl:call-template></xsl:variable>
-            <xsl:choose>
-                <xsl:when test="normalize-space($v)"><xsl:value-of select="$v"/></xsl:when>
-                <xsl:otherwise>Troubleshooting</xsl:otherwise>
-            </xsl:choose>
-            <xsl:text>: </xsl:text>
-        </span>
-        <xsl:apply-imports/>
-    </xsl:template>
-
-    <!-- Off by default, matching the old CSS default. Uncomment to enable. -->
-    <!--
-    <xsl:template match="*[contains(@class,' task/info ')]" name="topic.task.info">
-        <span class="tasklabel-inline">
-            <xsl:variable name="v"><xsl:call-template name="getVariable"><xsl:with-param name="id" select="'ps2_task_info'"/></xsl:call-template></xsl:variable>
-            <xsl:choose>
-                <xsl:when test="normalize-space($v)"><xsl:value-of select="$v"/></xsl:when>
-                <xsl:otherwise>Info</xsl:otherwise>
-            </xsl:choose>
-            <xsl:text>: </xsl:text>
-        </span>
-        <xsl:call-template name="generateItemGroupTaskElement"/>
-    </xsl:template>
-    -->
-
     <!-- xsl_styles2.0.xsl: doc structure, sections, metadata. Safe: toggle
          sections/cover fields below. Elsewhere: metadata is topicmeta, look
          is style_styles2.0.css. Careful: chapterBody order, cover.meta.*. -->
@@ -455,5 +358,103 @@
         </xsl:choose>
     </xsl:template>
 
+    <!-- TASK & TROUBLESHOOTING CAPTIONS: native getVariable labels, below the doc-structure templates above. -->
+
+    <!-- Turns on native getVariable captions for task/troubleshooting parts,
+         replacing the old CSS label tokens. See TOKENS.md. -->
+    <xsl:param name="GENERATE-TASK-LABELS" select="'YES'"/>
+
+    <!-- Custom keys below (no stock caption exists); English fallback if unset. -->
+    <xsl:template match="*[contains(@class,' troubleshooting/condition ')]">
+        <xsl:apply-templates select="." mode="generate-task-label">
+            <xsl:with-param name="use-label">
+                <xsl:variable name="v"><xsl:call-template name="getVariable"><xsl:with-param name="id" select="'ps2_troubleshooting_condition'"/></xsl:call-template></xsl:variable>
+                <xsl:choose>
+                    <xsl:when test="normalize-space($v)"><xsl:value-of select="$v"/></xsl:when>
+                    <xsl:otherwise>Condition</xsl:otherwise>
+                </xsl:choose>
+            </xsl:with-param>
+        </xsl:apply-templates>
+        <xsl:apply-imports/>
+    </xsl:template>
+
+    <xsl:template match="*[contains(@class,' troubleshooting/cause ')]">
+        <xsl:apply-templates select="." mode="generate-task-label">
+            <xsl:with-param name="use-label">
+                <xsl:variable name="v"><xsl:call-template name="getVariable"><xsl:with-param name="id" select="'ps2_troubleshooting_cause'"/></xsl:call-template></xsl:variable>
+                <xsl:choose>
+                    <xsl:when test="normalize-space($v)"><xsl:value-of select="$v"/></xsl:when>
+                    <xsl:otherwise>Cause</xsl:otherwise>
+                </xsl:choose>
+            </xsl:with-param>
+        </xsl:apply-templates>
+        <xsl:apply-imports/>
+    </xsl:template>
+
+    <xsl:template match="*[contains(@class,' troubleshooting/remedy ')]">
+        <xsl:apply-templates select="." mode="generate-task-label">
+            <xsl:with-param name="use-label">
+                <xsl:variable name="v"><xsl:call-template name="getVariable"><xsl:with-param name="id" select="'ps2_troubleshooting_remedy'"/></xsl:call-template></xsl:variable>
+                <xsl:choose>
+                    <xsl:when test="normalize-space($v)"><xsl:value-of select="$v"/></xsl:when>
+                    <xsl:otherwise>Remedy</xsl:otherwise>
+                </xsl:choose>
+            </xsl:with-param>
+        </xsl:apply-templates>
+        <xsl:apply-imports/>
+    </xsl:template>
+
+    <!-- Inline captions: bold label + colon, same line as content. -->
+    <xsl:template match="*[contains(@class,' task/stepxmp ')]" name="topic.task.stepxmp">
+        <span class="tasklabel-inline">
+            <xsl:variable name="v"><xsl:call-template name="getVariable"><xsl:with-param name="id" select="'ps2_task_stepxmp'"/></xsl:call-template></xsl:variable>
+            <xsl:choose>
+                <xsl:when test="normalize-space($v)"><xsl:value-of select="$v"/></xsl:when>
+                <xsl:otherwise>Example</xsl:otherwise>
+            </xsl:choose>
+            <xsl:text>: </xsl:text>
+        </span>
+        <xsl:call-template name="generateItemGroupTaskElement"/>
+    </xsl:template>
+
+    <xsl:template match="*[contains(@class,' task/stepresult ')]" name="topic.task.stepresult">
+        <span class="tasklabel-inline">
+            <xsl:variable name="v"><xsl:call-template name="getVariable"><xsl:with-param name="id" select="'ps2_task_stepresult'"/></xsl:call-template></xsl:variable>
+            <xsl:choose>
+                <xsl:when test="normalize-space($v)"><xsl:value-of select="$v"/></xsl:when>
+                <xsl:otherwise>Result</xsl:otherwise>
+            </xsl:choose>
+            <xsl:text>: </xsl:text>
+        </span>
+        <xsl:call-template name="generateItemGroupTaskElement"/>
+    </xsl:template>
+
+    <!-- Base template unverified here; delegates via apply-imports instead. -->
+    <xsl:template match="*[contains(@class,' task/steptroubleshooting ')]">
+        <span class="tasklabel-inline">
+            <xsl:variable name="v"><xsl:call-template name="getVariable"><xsl:with-param name="id" select="'ps2_task_steptroubleshooting'"/></xsl:call-template></xsl:variable>
+            <xsl:choose>
+                <xsl:when test="normalize-space($v)"><xsl:value-of select="$v"/></xsl:when>
+                <xsl:otherwise>Troubleshooting</xsl:otherwise>
+            </xsl:choose>
+            <xsl:text>: </xsl:text>
+        </span>
+        <xsl:apply-imports/>
+    </xsl:template>
+
+    <!-- Off by default, matching the old CSS default. Uncomment to enable. -->
+    <!--
+    <xsl:template match="*[contains(@class,' task/info ')]" name="topic.task.info">
+        <span class="tasklabel-inline">
+            <xsl:variable name="v"><xsl:call-template name="getVariable"><xsl:with-param name="id" select="'ps2_task_info'"/></xsl:call-template></xsl:variable>
+            <xsl:choose>
+                <xsl:when test="normalize-space($v)"><xsl:value-of select="$v"/></xsl:when>
+                <xsl:otherwise>Info</xsl:otherwise>
+            </xsl:choose>
+            <xsl:text>: </xsl:text>
+        </span>
+        <xsl:call-template name="generateItemGroupTaskElement"/>
+    </xsl:template>
+    -->
 
 </xsl:stylesheet>
