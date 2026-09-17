@@ -199,7 +199,7 @@
     --toc-footer-inside:      string(map-title);
     --footer-outside-content: counter(page);
     --footer-inside-content:  string(map-title);
-    --footer-copyright-content: none;  /* off by default; set to string(copyright-notice) to show it in the footer */
+    --footer-copyright-content: "";  /* off by default; "none" would drop the box entirely and gap the footer rule. Set to string(copyright-notice) to show it in the footer */
 
     /* === STYLES2.0 MODULE TOKEN BRIDGE === do not rename (consumed by name); edit sources above, not here */
     --color-primary:            var(--brand-primary);    /* table headers, note borders, xref link color */
