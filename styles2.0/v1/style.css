@@ -807,9 +807,13 @@ h1.topictitle1, h2, h3, h4, h5, h6,
 
 /* Captured once at body start (xsl.xsl's copyright.capture) and threaded
    in via string(copyright-notice) — back cover below, and optionally the
-   footer (--footer-copyright-content). Hidden: not meant to be seen itself. */
+   footer (--footer-copyright-content). Hidden: not meant to be seen itself.
+   position:absolute takes it out of normal flow — it renders as a body-level
+   sibling before the first article, and in-flow content there was found to
+   conflict with body_flow.css's prince-page-group:start on that article. */
 .copyright-capture {
-    display: block;
+    position: absolute;
+    width: 0;
     height: 0;
     overflow: hidden;
     string-set: copyright-notice content();
