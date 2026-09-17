@@ -92,6 +92,8 @@ Eleven optional fields can appear in the metadata block (enabled/disabled per do
 
 All color/size fields other than subtitle default via `var(--cover-meta-font-size, 9pt)` / `var(--cover-meta-color, rgba(255,255,255,0.90))`.
 
+The Copyright row above (`--cover-copyright-*`, and `--cover-copyright-label` below) styles a `.cover-copyright` rule that nothing in `xsl.xsl` renders — front cover copyright was never wired up; see "Copyright" section above for what's actually active.
+
 Additional subtitle-only token: **`--cover-subtitle-margin-top`** (`10pt`) — space above the subtitle line.
 
 ## Cover Metadata — Field Labels
@@ -307,4 +309,4 @@ These map the shared library's internal token names to this scenario's brand tok
 
 ---
 
-**Total: 161 tokens** — 142 in `style.css`'s `:root`, 19 in `palettes/default.css`'s `:root` (brand identity, swappable per theme). `style.css` exists in two copies, `Default_2.0/style.css` (the live scenario) and `styles2.0/v1/style.css` (the starter copy new scenarios are built from) — keep them in sync when either changes. `palettes/default.css` is shared, GitHub-hosted, and imported by both — one copy, like `dita/`/`styling/`/`layout/`.
+**Total: 150 tokens** — 131 in `style.css`'s `:root`, 19 in `palettes/default.css`'s `:root` (brand identity, swappable per theme). `style.css` exists in two copies, `Default_2.0/style.css` (the live scenario) and `styles2.0/v1/style.css` (the starter copy new scenarios are built from) — keep them in sync when either changes. `palettes/default.css` is shared, GitHub-hosted, and imported by both — one copy, like `dita/`/`styling/`/`layout/`.
