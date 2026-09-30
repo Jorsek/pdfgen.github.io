@@ -51,9 +51,9 @@ Front matter is customer-authored DITA content, not auto-generated — no token 
 
 | Token | Default | Controls |
 |---|---|---|
-| `--font-family-main` | `'Helvetica Neue', Helvetica, Arial, sans-serif` | Base font for the cover, chapter titles, body heading rules, and back cover text. |
-| `--font-family-header` | `"Arial", sans-serif` | Running header font at the top of body and TOC pages. |
-| `--font-family-footer` | `"Arial", sans-serif` | Running footer font at the bottom of body, TOC, and front-matter pages. |
+| `--font-family-main` | `'Helvetica Neue', Helvetica, Arial, "Liberation Sans", Arimo, sans-serif` | Base font for the cover, chapter titles, body heading rules, and back cover text. Liberation Sans/Arimo are metric-compatible Arial substitutes for renderers without Arial installed. |
+| `--font-family-header` | `"Arial", "Liberation Sans", Arimo, sans-serif` | Running header font at the top of body and TOC pages. |
+| `--font-family-footer` | `"Arial", "Liberation Sans", Arimo, sans-serif` | Running footer font at the bottom of body, TOC, and front-matter pages. |
 
 ## Title & Subtitle Typography (`style.css`)
 

@@ -21,17 +21,6 @@
   page-break-before: avoid;
 }
 
-/* ── CHAPTER BREAKS ────────────────────────────────────────────────
-   Level-1 topic titles (h1.topictitle1) do not trigger a break by
-   themselves — the break is placed on the containing article so that
-   the title and its first lines of content land together on the new
-   page.                                                             */
-
-/* Do not break pages before chapters (level-1 topics) that do not contain children topics. */
-.topictitle1 {
-  page-break-before: avoid;
-}
-
 /* Insert a page-break before chapters (level-1 topics) that contain children topics. */
 article:has(>.topictitle1) {
   page-break-before: always;
@@ -48,6 +37,13 @@ article:has(>.topictitle1) {
    break-before: avoid on the :first-child content reinforces the
    bond from the content side, preventing a forced break between
    the heading and its immediate child.                              */
+
+/* h1 — chapter/topic titles. Keeps the title (and any border-bottom rule
+   it carries) with the content that follows. */
+.topictitle1 {
+  break-after: avoid;
+  page-break-after: avoid;
+}
 
 /* h2 — section/chapter subtitles */
 .topictitle2,
@@ -160,6 +156,12 @@ pre.codeblock,
 .userinput,
 .dd {
   break-inside: auto;
+}
+
+/* Tables break between rows, never through the middle of a row. */
+tr {
+  break-inside: avoid;
+  page-break-inside: avoid;
 }
 
 /* ── ELEMENTS THAT MUST NOT BREAK ─────────────────────────────────
