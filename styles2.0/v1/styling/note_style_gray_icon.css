@@ -1,0 +1,17 @@
+/* NOTE STYLE — Option 1: icon and gray. Uniform gray box for every @type —
+   no border, no per-type color coding. Only the icon shape (and the native
+   caption text) tells note types apart. Off by default. Builds on the
+   shared box/typography and icon-per-type glyphs in dita/note.css. Color
+   below is a placeholder (reusing --color-bg-subtle) — adjust freely, it
+   wasn't matched precisely against a reference design. */
+
+.note {
+  border-left: none;
+  background-color: var(--color-bg-subtle);
+}
+
+/* No per-type color coding in this style — title and icon (which inherits
+   .note__title's color) both stay the default body text color. */
+.note__title {
+  color: var(--color-body);
+}

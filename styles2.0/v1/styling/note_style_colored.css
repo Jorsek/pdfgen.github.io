@@ -1,0 +1,58 @@
+/* NOTE STYLE — Option 4: colored. Full-tint background + colored left
+   border per @type. This is the active default — an exact extraction of
+   what dita/note.css rendered before the note-style toggle existed, so
+   turning this on changes nothing. Builds on the shared box/typography in
+   dita/note.css. To switch styles, comment this import out in style.css's
+   OPTIONAL FEATURES block and uncomment exactly one other note_style_*.css
+   import instead — don't enable more than one at a time. */
+
+.note {
+  border-left: var(--border-width-accent) solid var(--color-note-note);
+  background-color: var(--color-note-note-bg);
+}
+
+.note_note,
+.note_trouble {
+  border-color: var(--color-note-note);
+  background-color: var(--color-note-note-bg);
+}
+.note_note > .note__title,
+.note_trouble > .note__title {
+  color: var(--color-note-note);
+}
+
+.note_tip,
+.note_fastpath {
+  border-color: var(--color-note-tip);
+  background-color: var(--color-note-tip-bg);
+}
+.note_tip > .note__title,
+.note_fastpath > .note__title {
+  color: var(--color-note-tip);
+}
+
+.note_important,
+.note_remember,
+.note_restriction {
+  border-color: var(--color-note-important);
+  background-color: var(--color-note-important-bg);
+}
+.note_important > .note__title,
+.note_remember > .note__title,
+.note_restriction > .note__title {
+  color: var(--color-note-important);
+}
+
+.note_attention,
+.note_caution,
+.note_warning,
+.note_danger {
+  border-color: var(--color-note-warning);
+  background-color: var(--color-note-warning-bg);
+}
+.note_attention > .note__title,
+.note_caution > .note__title,
+.note_warning > .note__title,
+.note_danger > .note__title {
+  color: var(--color-note-warning);
+}

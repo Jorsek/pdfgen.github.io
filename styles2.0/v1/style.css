@@ -18,6 +18,15 @@
 /* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/link_page_number.css");    page numbers after links */
 /* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/table_of_contents.css");   custom TOC heading + spacing */
 
+/* ── NOTE STYLE — unlike the features above, exactly one of these four
+   must stay active (notes always need some look). To switch, comment out
+   the active line and uncomment a different one — don't enable more than
+   one. See TOKENS.md. ── */
+@import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/note_style_colored.css");     /* Option 4: colored — active default, today's look */
+/* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/note_style_bordered.css");    Option 2: full-box border, no background, no icon */
+/* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/note_style_highlight.css");   Option 3: neutral gray box, colored icon + left accent */
+/* @import url("https://jorsek.github.io/pdfgen.github.io/styles2.0/v1/styling/note_style_gray_icon.css");   Option 1: uniform gray box, icon only, no color coding */
+
 /* ##########################################################################
    GLOBAL SETTINGS
    ########################################################################## */
