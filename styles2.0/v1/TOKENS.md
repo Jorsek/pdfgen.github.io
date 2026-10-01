@@ -35,13 +35,15 @@ To rebrand this scenario, copy the tokens below into your own scenario's `:root`
 
 ## Copyright
 
-Captured once (year + `<copyrholder>`) at the very top of `<body>` in `xsl.xsl` (`copyright.capture`), independent of which cover is active. CSS threads that single value wherever it's wanted via `string(copyright-notice)` — no per-location recomputation, so every placement always agrees.
+Year + `<copyrholder>` is computed once in `xsl.xsl` (`copyright.text`) and reused everywhere it's needed — no per-location recomputation, so every placement always agrees.
+
+The back cover (`copyright.text` called directly into `.back-cover-copyright`) always works, regardless of which cover is active — this is a direct, static computation, not threaded through CSS. The optional running-footer line is different: it needs a value computed early enough to read on every page, which only `front.cover` can provide (via a hidden `copyright.capture` span feeding CSS's `string(copyright-notice)`). A body-level capture running before the first cover was tried and found to conflict with `body_flow.css`'s `prince-page-group: start`, so this only works when `front.cover`, not the static `cover-page.html`, is the active cover.
 
 | Token | Default | Controls |
 |---|---|---|
-| `--footer-copyright-content` | `none` | Off by default. Set to `string(copyright-notice)` (in `layout/body_flow.css`'s `@bottom-center` rules) to show the copyright line in the running footer. |
+| `--footer-copyright-content` | `""` | Off by default (empty, not `none` — `none` would drop the `@bottom-center` box entirely and gap the footer rule line). Set to `string(copyright-notice)` (in `layout/body_flow.css`'s `@bottom-center` rules) to show the copyright line in the running footer. Requires `front.cover` to be the active cover. |
 
-Already wired in by default: the back cover (`.back-cover-copyright::after { content: string(copyright-notice); }`). Front matter is customer-authored DITA content, not auto-generated — no token needed there.
+Front matter is customer-authored DITA content, not auto-generated — no token needed there.
 
 `--copyright-notice` (`palettes/default.css`) is a separate, older static token no longer read by the back cover; it only still feeds the unused `.cover-copyright` rule (front cover has never actually called a copyright template — "Copyright: on the back cover instead").
 
@@ -49,9 +51,18 @@ Already wired in by default: the back cover (`.back-cover-copyright::after { con
 
 | Token | Default | Controls |
 |---|---|---|
-| `--font-family-main` | `'Helvetica Neue', Helvetica, Arial, sans-serif` | Base font for the cover, chapter titles, body heading rules, and back cover text. |
-| `--font-family-header` | `"Arial", sans-serif` | Running header font at the top of body and TOC pages. |
-| `--font-family-footer` | `"Arial", sans-serif` | Running footer font at the bottom of body, TOC, and front-matter pages. |
+| `--font-family-main` | `'Helvetica Neue', Helvetica, Arial, "Liberation Sans", Arimo, sans-serif` | Base font for the cover, chapter titles, body heading rules, and back cover text. Liberation Sans/Arimo are metric-compatible Arial substitutes for renderers without Arial installed. |
+| `--font-family-header` | `"Arial", "Liberation Sans", Arimo, sans-serif` | Running header font at the top of body and TOC pages. |
+| `--font-family-footer` | `"Arial", "Liberation Sans", Arimo, sans-serif` | Running footer font at the bottom of body, TOC, and front-matter pages. |
+
+## Figure & Table Caption Placement (`style.css`)
+
+Both default to above — set explicitly rather than left to the renderer's implicit default — and apply the same way to every figure and table. Neither token touches numbering (always computed in XSLT via `preceding::`, independent of CSS) or anything else's layout.
+
+| Token | Default | Controls |
+|---|---|---|
+| `--table-caption-side` | `top` | Fed directly into `caption-side` (`dita/choicetable_table.css`) — the native CSS property built for exactly this. `top` = above, `bottom` = below. No side effects. |
+| `--figure-caption-order` | `-1` | Fed into `order` on the figure's `figcaption` (`dita/figure_image.css`), inside a column flex container. `-1` = above (matches the caption's natural DOM position), `1` = below. Making `.fig` a flex container means float has no effect on its direct children per spec; `figure_image.css`'s `imageleft`/`imageright`/`imagecenter` rules already carry a matching `align-self` for that case, so image alignment inside figures is unaffected either way. |
 
 ## Title & Subtitle Typography (`style.css`)
 
@@ -264,6 +275,19 @@ These map the shared library's internal token names to this scenario's brand tok
 | `--font-size-base` | `11pt` | Default body text size in element modules. |
 | `--font-size-small` | `9pt` | Captions, footnotes, table cell text size. |
 | `--font-size-xs` | `8pt` | Fine print, metadata label size. |
+
+## Note Styles
+
+Four selectable looks for `<note>`/`<troubleshooting>` boxes, each its own file in `styling/`, toggled from style.css's OPTIONAL FEATURES block like any other optional module — except exactly one must stay active (there's always some note look, unlike the fully-optional toggles above it). `dita/note.css` holds only what's shared across all four: box layout, title typography, and the icon glyph each `@type` maps to.
+
+| File | Look | Active by default? |
+|---|---|---|
+| `styling/note_style_colored.css` | Option 4 — full-tint background + colored left border per type | Yes — matches what shipped before this toggle existed |
+| `styling/note_style_bordered.css` | Option 2 — thin full-box border per type, no background, no icon | No |
+| `styling/note_style_highlight.css` | Option 3 — neutral gray box, colored icon + thin left-border accent per type | No |
+| `styling/note_style_gray_icon.css` | Option 1 — uniform gray box for every type, icon only, no per-type color coding | No |
+
+To switch: comment out the active `@import` line in style.css and uncomment a different one. Colors in the three non-default files are placeholders reusing the existing `--color-note-*` tokens — they weren't matched precisely against a reference design, so adjust freely.
 
 ### Note Type Colors (`palettes/default.css`)
 

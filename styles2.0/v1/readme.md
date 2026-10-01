@@ -26,6 +26,7 @@ Add your own overrides in **your own scenario's CSS tab**, after importing `styl
 |---|---|
 | Web PDF vs. print PDF | The **WEB / PRINT MODE** block at the top of `style.css`'s `:root` — comment out the active block, uncomment the other. See `TOKENS.md`. |
 | Turn on an optional feature (chapter numbering, image shadows, etc.) | The **OPTIONAL FEATURES** block right above `:root` in `style.css` — uncomment the line you want. |
+| Note box style (colored, bordered, highlighted, or gray+icon) | The **NOTE STYLE** block right below OPTIONAL FEATURES in `style.css` — comment out the active line, uncomment a different one. Exactly one must stay active. See `TOKENS.md`. |
 | Theme / brand identity | Copy the tokens you want from `palettes/default.css` into **your own scenario's CSS tab**, after the imports, and change the values there — see "Rebranding this scenario" below. |
 | Brand colors | `--brand-primary`, `--brand-secondary` — default values in `palettes/default.css`, override in your own scenario |
 | Page margins | `--standard-margin`, `--top-margin`, `--bottom-margin` |
@@ -33,6 +34,7 @@ Add your own overrides in **your own scenario's CSS tab**, after importing `styl
 | Running footer text | `--footer-inside-content`, `--footer-outside-content` |
 | Show copyright in the footer | `--footer-copyright-content` — off by default; set to `string(copyright-notice)`. Back cover shows it already; see `TOKENS.md`. |
 | TOC heading label | `--toc-text` |
+| Figure/table caption placement (above/below) | `--table-caption-side` (`top`/`bottom`) and `--figure-caption-order` (`-1`/`1`) — both default to above, neither affects numbering or layout. See `TOKENS.md`. |
 | A task/troubleshooting caption (prereq, context, cause, remedy, etc.) | Localized text — override via `variableFiles.url` (see below), not CSS. Two exceptions stay CSS tokens: `--label-steps-process`, `--label-info` (full detail in `TOKENS.md`). |
 | A metadata field's label | `--cover-*-label` (e.g. `--cover-version-label: "Ver. "`) |
 | The logo | `--logo-front` / `--logo-back` (Base64 SVG or `url()`) — default values in `palettes/default.css`, override in your own scenario |
@@ -85,7 +87,7 @@ Two separate layers generate text in this PDF, localized two different ways — 
 |---|---|
 | `style.css` | This scenario's layout/structure `:root` tokens (spacing scale, border widths, font sizes, page geometry), cover/front-matter/back-cover `@page` geometry and markup, TOC visual formatting, and chapter-hero rules. The one file meant to be imported wholesale, then built on per-customer. TOC- and body-page pagination mechanics (margins, running headers/footers) live in `layout/toc_flow.css` and `layout/body_flow.css` instead — see below. Brand-identity tokens (colors, fonts, logos, note colors) live in `palettes/default.css`, imported here — see below. |
 | `style_styles2.0_imports.css` | The manifest — what's active, what's optional, and the GitHub URL for every module. Start here to find a specific element. |
-| `xsl.xsl` | Controls document assembly: chapter body order, cover/back-cover/front-matter inclusion (each toggled by uncommenting a `call-template` line), cover metadata field extraction (subtitle, author, publisher, company, address, etc., with map vs. bookmap fallbacks), the `get.map.title` fallback logic for the document title, and `copyright.capture` (captures the copyright line once at body start, regardless of which cover is active — see `TOKENS.md`). |
+| `xsl.xsl` | Controls document assembly: chapter body order, cover/back-cover/front-matter inclusion (each toggled by uncommenting a `call-template` line), cover metadata field extraction (subtitle, author, publisher, company, address, etc., with map vs. bookmap fallbacks), the `get.map.title` fallback logic for the document title, and copyright (`copyright.text` — computed directly for the back cover; `copyright.capture`, called from `front.cover` only, additionally feeds the optional running-footer copyright token — see `TOKENS.md`). |
 | `cover-page.html` | The default static cover — this is what actually renders out of the box; `xsl.xsl`'s `front.cover` call is commented out to match. Populated with the same fields as `front.cover` (product name, version, platform, doc revision, author, created date; part number/audience/publisher/revised available but off by default). Edit the placeholder values directly. To use the system-generated cover instead (metadata pulled automatically from the ditamap/bookmap, no per-document edits), delete the contents and leave only `<span/>`, then uncomment the `front.cover` call-template line in `xsl.xsl`. |
 
 ### dita/ — one file per DITA element family
@@ -102,7 +104,7 @@ Two separate layers generate text in this PDF, localized two different ways — 
 | `choices_steps_substeps_numbering.css` | The circular numbered badges before steps/substeps/choices and the counters driving them (decimal steps, lower-alpha substeps, square-bullet unordered steps). *Requires `typography.css` + `ordered_list_unordered_list_step_substep_choice.css`.* |
 | `choices_info_stepresult_stepexample_solution_substeps_troublesolution.css` | Spacing for step-result, step-example, info, and solution/troubleSolution blocks in tasks and troubleshooting topics; the troubleSolution left-border rule. |
 | `cause_condition_context_example_postreq_prereq_remedy_result_steps_stepsection.css` | The bold generated captions and spacing for task/troubleshooting "parts": prereq, postreq, context, cause, remedy, condition, result, example, stepsection. |
-| `note.css` | All note types (note, tip, important, remember, restriction, warning, caution, danger, attention, trouble, fastpath): icon font, per-type colored border/background/label. |
+| `note.css` | Shared across every note style: icon font, box layout, title typography, and the icon glyph each `@type` maps to (note, tip, important, remember, restriction, warning, caution, danger, attention, trouble, fastpath). Colors/borders/background come from whichever `styling/note_style_*.css` is active — see below. |
 | `codeblock_codeph.css` | Code block and inline code: monospace font, background, left-border accent on codeblock, bordered screen blocks. |
 | `figure_image.css` | Figure/image margins and overflow handling; smaller margins inside task-topic children; inline sizing for images used in commands. |
 | `xref_related_links.css` | Inline cross-reference/link color; generates "step N"/"substep N" text for links into steps; related-links section spacing and bold captions. |
@@ -138,6 +140,17 @@ Toggled from `style.css`'s own **OPTIONAL FEATURES** block (uncomment a line the
 | `table_of_contents.css` | Hides the redundant map title above the TOC, adds a "Contents" heading, sets the leader-dot "title .... page#" TOC formatting. |
 
 Two more exist but stay toggled from `style_styles2.0_imports.css` instead, since they're not functional as shipped (each needs a `header_footer*.css` this build doesn't include): `table_of_contents_page_numbering.css` and `table_of_contents_page_numbering_alternate.css`.
+
+### styling/ — note styles (exactly one active)
+
+Also toggled from style.css's OPTIONAL FEATURES block, but unlike everything above, notes always need some look — comment out the active one and uncomment a different one, don't just add one. Full detail in `TOKENS.md`'s "Note Styles" section.
+
+| File | What's in it |
+|---|---|
+| `note_style_colored.css` | Active by default. Full-tint background + colored left border per `@type`. |
+| `note_style_bordered.css` | Thin full-box border per `@type`, no background, no icon. |
+| `note_style_highlight.css` | Neutral gray box for every type, with a colored icon and thin left-border accent per `@type`. |
+| `note_style_gray_icon.css` | Uniform gray box for every type, icon only, no per-type color coding. |
 
 ### layout/
 

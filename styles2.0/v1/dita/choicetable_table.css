@@ -5,6 +5,15 @@ table {
   table-layout: auto;
 }
 
+/* CAPTION PLACEMENT: native CSS property, built for exactly this — moves
+   the table's <caption> (title + tabledesc) above/below the table body
+   with no effect on numbering (computed in XSLT via preceding::, not CSS)
+   or on anything else's layout. See --table-caption-side in style.css /
+   TOKENS.md. */
+caption {
+  caption-side: var(--table-caption-side);
+}
+
 /* Remove the table and choicetable borders completely. */
 table,
 table * {

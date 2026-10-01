@@ -1,0 +1,56 @@
+/* NOTE STYLE — Option 2: borders. Thin full-box border per @type, no
+   background tint, no icon — label caption text only. Off by default.
+   Builds on the shared box/typography in dita/note.css. Colors below are
+   placeholders (reusing the existing --color-note-* tokens) — adjust freely,
+   they weren't matched precisely against a reference design. */
+
+.note__title::before {
+  display: none; /* no icon in this style */
+}
+
+.note {
+  border: 1px solid var(--color-note-note);
+  background-color: transparent;
+}
+
+.note_note,
+.note_trouble {
+  border-color: var(--color-note-note);
+}
+.note_note > .note__title,
+.note_trouble > .note__title {
+  color: var(--color-note-note);
+}
+
+.note_tip,
+.note_fastpath {
+  border-color: var(--color-note-tip);
+}
+.note_tip > .note__title,
+.note_fastpath > .note__title {
+  color: var(--color-note-tip);
+}
+
+.note_important,
+.note_remember,
+.note_restriction {
+  border-color: var(--color-note-important);
+}
+.note_important > .note__title,
+.note_remember > .note__title,
+.note_restriction > .note__title {
+  color: var(--color-note-important);
+}
+
+.note_attention,
+.note_caution,
+.note_warning,
+.note_danger {
+  border-color: var(--color-note-warning);
+}
+.note_attention > .note__title,
+.note_caution > .note__title,
+.note_warning > .note__title,
+.note_danger > .note__title {
+  color: var(--color-note-warning);
+}

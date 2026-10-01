@@ -12,9 +12,9 @@
     --copyright-notice: "REPLACE WITH YOUR ORGANIZATION";
 
     /* === BRAND FONTS === (title/subtitle sizing stays in style.css) */
-    --font-family-main:   'Helvetica Neue', Helvetica, Arial, sans-serif;
-    --font-family-header: "Arial", sans-serif;
-    --font-family-footer: "Arial", sans-serif;
+    --font-family-main:   'Helvetica Neue', Helvetica, Arial, "Liberation Sans", Arimo, sans-serif;
+    --font-family-header: "Arial", "Liberation Sans", Arimo, sans-serif;
+    --font-family-footer: "Arial", "Liberation Sans", Arimo, sans-serif;
 
     /* === TEXT & BODY COLORS === */
     --text-main:  #333333;   /* body copy, cover metadata block */
