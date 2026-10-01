@@ -6,6 +6,25 @@
   margin: var(--space-2) 0px var(--space-2) 0px;
 }
 
+/* CAPTION PLACEMENT: no native "caption-side" exists for figure/figcaption
+   (unlike <table>/<caption> below), so this uses a column flex container
+   with order on just the figcaption — only the caption moves; any other
+   children (multiple images, etc.) keep their normal relative order since
+   they share the same default order value. Doesn't touch DOM order or
+   numbering (computed in XSLT via preceding::, independent of this). See
+   --figure-caption-order in style.css / TOKENS.md.
+   Side effect: .fig's direct children become flex items, so float has no
+   effect on them per spec — the imageleft/imageright/imagecenter rules
+   below add align-self alongside the existing float so that alignment
+   still works the same for images placed directly inside a figure. */
+.fig {
+  display: flex;
+  flex-direction: column;
+}
+.fig > figcaption {
+  order: var(--figure-caption-order);
+}
+
 /* Prevent large images from overflowing. */
 img {
   max-width: 100%;
@@ -43,21 +62,36 @@ img {
   box-shadow: none;
 }
 
-/* Position images and figure titles horizontally. */
+/* Position images and figure titles horizontally. float still works for
+   standalone images outside a .fig. Inside a .fig, direct children are now
+   flex items (see CAPTION PLACEMENT above) — float has no effect there, so
+   align-self provides the equivalent alignment for that case instead. */
 .imageleft,
 .fig:has(.imageleft) * {
     text-align: left;
     float: left;
+}
+.fig > .imageleft,
+.fig:has(.imageleft) > * {
+    align-self: flex-start;
 }
 .imageright,
 .fig:has(.imageright) * {
     text-align: right;
     float: right;
 }
+.fig > .imageright,
+.fig:has(.imageright) > * {
+    align-self: flex-end;
+}
 .imagecenter,
 .fig:has(.imagecenter) * {
     text-align: center;
     float: center;
+}
+.fig > .imagecenter,
+.fig:has(.imagecenter) > * {
+    align-self: center;
 }
 
 /* Remove additional spacing before and after image elements with the @placement="break" attribute assigned. */

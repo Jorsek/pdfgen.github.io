@@ -55,6 +55,15 @@ Front matter is customer-authored DITA content, not auto-generated — no token 
 | `--font-family-header` | `"Arial", "Liberation Sans", Arimo, sans-serif` | Running header font at the top of body and TOC pages. |
 | `--font-family-footer` | `"Arial", "Liberation Sans", Arimo, sans-serif` | Running footer font at the bottom of body, TOC, and front-matter pages. |
 
+## Figure & Table Caption Placement (`style.css`)
+
+Both default to above — set explicitly rather than left to the renderer's implicit default — and apply the same way to every figure and table. Neither token touches numbering (always computed in XSLT via `preceding::`, independent of CSS) or anything else's layout.
+
+| Token | Default | Controls |
+|---|---|---|
+| `--table-caption-side` | `top` | Fed directly into `caption-side` (`dita/choicetable_table.css`) — the native CSS property built for exactly this. `top` = above, `bottom` = below. No side effects. |
+| `--figure-caption-order` | `-1` | Fed into `order` on the figure's `figcaption` (`dita/figure_image.css`), inside a column flex container. `-1` = above (matches the caption's natural DOM position), `1` = below. Making `.fig` a flex container means float has no effect on its direct children per spec; `figure_image.css`'s `imageleft`/`imageright`/`imagecenter` rules already carry a matching `align-self` for that case, so image alignment inside figures is unaffected either way. |
+
 ## Title & Subtitle Typography (`style.css`)
 
 | Token | Default | Controls |

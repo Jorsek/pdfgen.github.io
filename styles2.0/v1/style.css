@@ -162,6 +162,14 @@
     --header-rule-color:   var(--brand-primary);
     --footer-rule-color:   var(--brand-primary);
 
+    /* === FIGURE & TABLE CAPTION PLACEMENT === both default to above, set
+       explicitly rather than left to the renderer's default. Neither token
+       touches figure/table numbering (computed in XSLT, independent of
+       this) or anything else's layout. See dita/figure_image.css,
+       dita/choicetable_table.css, TOKENS.md. */
+    --table-caption-side:    top;  /* top = above (default); bottom = below. Native CSS caption-side — zero side effects. */
+    --figure-caption-order:  -1;   /* -1 = above (default, matches figcaption's natural DOM position); 1 = below */
+
     /* === PAGE MARGINS & GAPS === (--gutter-margin lives in WEB / PRINT MODE above) */
     --top-margin:         .85in;
     --bottom-margin:      .65in;

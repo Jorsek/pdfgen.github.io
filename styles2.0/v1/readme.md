@@ -34,6 +34,7 @@ Add your own overrides in **your own scenario's CSS tab**, after importing `styl
 | Running footer text | `--footer-inside-content`, `--footer-outside-content` |
 | Show copyright in the footer | `--footer-copyright-content` — off by default; set to `string(copyright-notice)`. Back cover shows it already; see `TOKENS.md`. |
 | TOC heading label | `--toc-text` |
+| Figure/table caption placement (above/below) | `--table-caption-side` (`top`/`bottom`) and `--figure-caption-order` (`-1`/`1`) — both default to above, neither affects numbering or layout. See `TOKENS.md`. |
 | A task/troubleshooting caption (prereq, context, cause, remedy, etc.) | Localized text — override via `variableFiles.url` (see below), not CSS. Two exceptions stay CSS tokens: `--label-steps-process`, `--label-info` (full detail in `TOKENS.md`). |
 | A metadata field's label | `--cover-*-label` (e.g. `--cover-version-label: "Ver. "`) |
 | The logo | `--logo-front` / `--logo-back` (Base64 SVG or `url()`) — default values in `palettes/default.css`, override in your own scenario |
