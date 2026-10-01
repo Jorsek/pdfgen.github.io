@@ -4,7 +4,7 @@
     <xsl:import href="../../../../../../../../sdk2/internal/pdf_generator/pdf_generator.xsl"/>
 
     <!-- LOCALIZATION: uncomment, point at your strings.xml (getVariable). See readme.md. -->
-    <!-- <xsl:param name="variableFiles.url">/db/organizations/[ORG-NAME]/repositories/master/_configuration/documents/language_strings/strings.xml</xsl:param> -->
+    <!-- <xsl:param name="variableFiles.url">/db/organizations/[ORG-NAME]/repositories/master/__configuration/documents/language_strings/strings.xml</xsl:param> -->
 
     <!-- xsl_styles2.0.xsl: doc structure, sections, metadata. Safe: toggle
          sections/cover fields below. Elsewhere: metadata is topicmeta, look
