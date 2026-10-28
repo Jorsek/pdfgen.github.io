@@ -21,9 +21,10 @@
   page-break-before: avoid;
 }
 
-/* Insert a page-break before chapters (level-1 topics) that contain children topics. */
+/* Chapters start on the page set by --page-break-logic: right (print default) starts on the next odd page and inserts a blank page when needed, auto starts on the next available page. */
 article:has(>.topictitle1) {
-  page-break-before: always;
+  break-before: var(--page-break-logic);
+  page-break-before: var(--page-break-logic);
   break-inside: auto;
 }
 
